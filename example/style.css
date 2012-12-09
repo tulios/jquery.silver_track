@@ -1,0 +1,30 @@
+.view-port {
+  width: 940px;
+  border: 1px solid black;
+
+  overflow: hidden;
+  margin: auto;
+}
+
+.slider-container {
+  position: relative;
+  margin: 0;
+  padding: 0;
+
+  height: 150px;
+}
+
+.slider-container .item {
+  position: absolute;
+
+  width: 224px;
+  height: 150px;
+
+  margin-right: 16px;
+  margin-bottom: 16px;
+}
+
+.slider-container .item p {
+  padding: 0;
+  margin: 0;
+}
