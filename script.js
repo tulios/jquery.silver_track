@@ -11,6 +11,11 @@ jQuery(function() {
     }));
 
     track.start();
+
+    $("a.reload", example.parent()).click(function(e) {
+      e.preventDefault();
+      track.restart();
+    });
   });
 
 });

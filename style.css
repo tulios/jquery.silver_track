@@ -38,6 +38,10 @@ h2 {
   color: #999;
 }
 
+.actions {
+  margin-top: 10px;
+}
+
 .track {
   width: 100%;
   position: relative;
