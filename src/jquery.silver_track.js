@@ -23,7 +23,8 @@
 
   $.fn.silverTrack.options = {
     perPage: 4,
-    itemClass: "item"
+    itemClass: "item",
+    cover: false
   };
 
   var SilverTrack = function (container, opts) {
@@ -33,7 +34,6 @@
     this.paginationEnabled = true;
     this.currentPage = 1;
 
-    this.itemWidth = this._calculateItemWidth();
     this._init();
   };
 
@@ -41,16 +41,18 @@
 
     next: function() {
       var page = this.currentPage + 1;
-      this._paginate(page, function(items) {
+      var useCover = this.opts.cover && (this.currentPage === 1);
+      this._paginate(page, useCover, function(items) {
         this.currentPage = page;
-        return (items.length * this.itemWidth) + this._calculateContainerLeft();
+        return this._calculateWidth(items, useCover) + this._calculateContainerLeft();
       });
     },
 
     prev: function() {
-      this._paginate(this.currentPage, function(items) {
+      var useCover = this.opts.cover && (this.currentPage === 2);
+      this._paginate(this.currentPage, useCover, function(items) {
         this.currentPage -= 1;
-        return this._calculateContainerLeft() - (items.length * this.itemWidth);
+        return this._calculateContainerLeft() - this._calculateWidth(items, useCover);
       });
     },
 
@@ -58,17 +60,23 @@
       var self = this;
       this.container.css({"left": "0px"});
 
-      this._items().each(function(index, value) {
-        $(value).css({"left": (self.itemWidth * index) + "px"});
+      this.itemWidth = this._calculateItemWidth();
+      this.coverWidth = this._calculateCoverWidth();
+
+      var width = 0;
+      this._items(true).each(function(index, value) {
+        var item = $(value);
+        item.css({"left": width + "px"});
+        width += item.outerWidth(true);
       });
     },
 
-    _paginate: function(newPage, calculateShift) {
+    _paginate: function(newPage, useCover, calculateShift) {
       if (!this.paginationEnabled || (newPage <= this.currentPage && this.currentPage === 1)) {
         return;
       }
 
-      var items = this._calculateItemsForPagination(newPage);
+      var items = useCover ? this._getCover() : this._calculateItemsForPagination(newPage);
       if (items.length > 0) {
         this.paginationEnabled = false;
         var shift = calculateShift.call(this, items);
@@ -88,16 +96,33 @@
     },
 
     _calculateItemsForPagination: function(page) {
-      var delta = (page * this.opts.perPage);
+      var delta = this.opts.cover ? (page - 1) * this.opts.perPage : page * this.opts.perPage;
       return this._items().slice(delta - this.opts.perPage, delta);
     },
 
-    _items: function() {
-      return $("." + this.opts.itemClass, this.container);
+    _items: function(ignoreCoverFilter) {
+      var items = $("." + this.opts.itemClass, this.container);
+      return !ignoreCoverFilter && this.opts.cover ? items.not(":first") : items;
+    },
+
+    _getCover: function() {
+      return $("." + this.opts.itemClass + ":first", this.container);
+    },
+
+    _calculateWidth: function(items, isCover) {
+      if (this.opts.cover && isCover) {
+        return this.coverWidth;
+      }
+
+      return items.length * this.itemWidth;
     },
 
     _calculateItemWidth: function() {
-      return $("." + this.opts.itemClass + ":first", this.container).outerWidth(true);
+      return $("." + this.opts.itemClass).not("." + this.opts.coverClass).outerWidth(true);
+    },
+
+    _calculateCoverWidth: function() {
+      return this.opts.cover ? this._getCover().outerWidth(true) : 0;
     }
 
   }

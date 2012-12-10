@@ -1,14 +1,18 @@
 jQuery(function() {
 
-  var track = $(".slider-container").silverTrack();
-  $("a.next").click(function(e) {
-    e.preventDefault();
-    track.next();
-  });
+  $(".slider-container").each(function() {
+    var example = $(this);
 
-  $("a.prev").click(function(e) {
-    e.preventDefault();
-    track.prev();
+    var track = example.silverTrack(example.hasClass("big") || example.hasClass("huge") ? {cover: true} : {});
+    $("a.next", example.parent().parent()).click(function(e) {
+      e.preventDefault();
+      track.next();
+    });
+
+    $("a.prev", example.parent().parent()).click(function(e) {
+      e.preventDefault();
+      track.prev();
+    });
   });
 
 });
