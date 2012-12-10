@@ -77,7 +77,25 @@
       return this;
     },
 
-    recalculate: function() {
+    restart: function() {
+      this.paginationEnabled = true;
+      this.currentPage = 1;
+      this._init();
+      this._executeAll("afterRestart");
+    },
+
+    _init: function() {
+      this._positionElements();
+      this._calculateTotalPages();
+    },
+
+    _executeAll: function(name, args) {
+      for (var i = 0; i < this.plugins.length; i++) {
+        this._callFunction(this.plugins[i], name, args);
+      }
+    },
+
+    _positionElements: function() {
       var self = this;
       this.container.css({"left": "0px"});
       this.itemWidth = this._calculateItemWidth();
@@ -91,25 +109,17 @@
       });
     },
 
-    _init: function() {
-      this.recalculate();
-      var items = this._items();
+    _callFunction: function(obj, name, args) {
+      if(obj && name && typeof obj[name] === 'function') {
+        obj[name].apply(obj, [this].concat(args || []));
+      }
+    },
+
+    _calculateTotalPages: function() {
       this.totalPages = Math.ceil(this._items().length/this.opts.perPage);
 
       if (this.opts.cover) {
         this.totalPages += 1;
-      }
-    },
-
-    _executeAll: function(name, args) {
-      for (var i = 0; i < this.plugins.length; i++) {
-        this._callFunction(this.plugins[i], name, args);
-      }
-    },
-
-    _callFunction: function(obj, name, args) {
-      if(obj && name && typeof obj[name] === 'function') {
-        obj[name].apply(obj, [this].concat(args || []));
       }
     },
 
@@ -177,6 +187,7 @@
     onInstall: function(track) {},
     beforeStart: function(track) {},
     afterStart: function(track) {},
+    afterRestart: function(track) {},
     beforeAnimation: function(track) {},
     afterAnimation: function(track) {},
 
