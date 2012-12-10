@@ -84,6 +84,4 @@ TODO
     <td>Installs a plugin. Check out the plugins section to see which callbacks are available</td>
     <td>plugin</td>
   </tr>
-
 </table>
-
