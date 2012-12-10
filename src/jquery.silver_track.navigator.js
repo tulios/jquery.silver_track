@@ -48,6 +48,10 @@
       this.track.hasNext() ? this._enable(this.next) : this._disable(this.next);
     },
 
+    afterRestart: function() {
+      this.afterStart();
+    },
+
     _enable: function(element) {
       element.removeClass(this.opts.disabledClass);
     },
