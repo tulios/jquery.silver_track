@@ -31,16 +31,29 @@
   SilverTrack.Navigator.prototype = $.extend({}, SilverTrack.Plugin, {
     onInstall: function(track) {
       this.track = track;
-      this.next.removeClass(this.opts.disabledClass);
     },
 
-    beforePagination: function(track, direction, page, useCover) {
-      if (direction === "prev" && page === 1) {
-        this.prev.addClass(this.opts.disabledClass);
-
-      } else {
-        this.prev.removeClass(this.opts.disabledClass);
+    afterStart: function() {
+      if (this.track.hasPrev()) {
+        this._enable(this.prev);
       }
+
+      if (this.track.hasNext()) {
+        this._enable(this.next);
+      }
+    },
+
+    afterAnimation: function() {
+      this.track.hasPrev() ? this._enable(this.prev) : this._disable(this.prev);
+      this.track.hasNext() ? this._enable(this.next) : this._disable(this.next);
+    },
+
+    _enable: function(element) {
+      element.removeClass(this.opts.disabledClass);
+    },
+
+    _disable: function(element) {
+      element.addClass(this.opts.disabledClass);
     }
   });
 

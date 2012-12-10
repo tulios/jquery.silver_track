@@ -32,6 +32,7 @@
     this.container = container;
     this.paginationEnabled = true;
     this.currentPage = 1;
+    this.totalPages = null;
     this.plugins = [];
   };
 
@@ -46,7 +47,8 @@
     next: function() {
       var page = this.currentPage + 1;
       var useCover = this.opts.cover && (this.currentPage === 1);
-      this._paginate(page, useCover, {name: "next", page: page},  function(items) {
+      var event = {name: "next", page: page, cover: useCover};
+      this._paginate(page, event,  function(items) {
         this.currentPage = page;
         return this._calculateWidth(items, useCover) + this._calculateContainerLeft();
       });
@@ -54,10 +56,19 @@
 
     prev: function() {
       var useCover = this.opts.cover && (this.currentPage === 2);
-      this._paginate(this.currentPage, useCover, {name: "prev", page: this.currentPage - 1}, function(items) {
+      var event = {name: "prev", page: this.currentPage - 1, cover: useCover};
+      this._paginate(this.currentPage, event, function(items) {
         this.currentPage -= 1;
         return this._calculateContainerLeft() - this._calculateWidth(items, useCover);
       });
+    },
+
+    hasPrev: function() {
+      return !(this.currentPage === 1);
+    },
+
+    hasNext: function() {
+      return !(this.currentPage === this.totalPages);
     },
 
     install: function(plugin) {
@@ -66,10 +77,9 @@
       return this;
     },
 
-    _init: function() {
+    recalculate: function() {
       var self = this;
       this.container.css({"left": "0px"});
-
       this.itemWidth = this._calculateItemWidth();
       this.coverWidth = this._calculateCoverWidth();
 
@@ -79,6 +89,16 @@
         item.css({"left": width + "px"});
         width += item.outerWidth(true);
       });
+    },
+
+    _init: function() {
+      this.recalculate();
+      var items = this._items();
+      this.totalPages = Math.ceil(this._items().length/this.opts.perPage);
+
+      if (this.opts.cover) {
+        this.totalPages += 1;
+      }
     },
 
     _executeAll: function(name, args) {
@@ -93,13 +113,13 @@
       }
     },
 
-    _paginate: function(newPage, useCover, event, calculateShift) {
+    _paginate: function(newPage, event, calculateShift) {
       if (!this.paginationEnabled || (newPage <= this.currentPage && this.currentPage === 1)) {
         return;
       }
 
-      this._executeAll("beforePagination", [event.name, event.page, useCover]);
-      var items = useCover ? this._getCover() : this._calculateItemsForPagination(newPage);
+      this._executeAll("beforePagination", [event]);
+      var items = event.cover ? this._getCover() : this._calculateItemsForPagination(newPage);
       if (items.length > 0) {
         this.paginationEnabled = false;
         var shift = calculateShift.call(this, items);
@@ -109,10 +129,10 @@
 
     _animate: function(shift) {
       var self = this;
-      this._executeAll("beforeAnimate");
+      this._executeAll("beforeAnimation");
       this.container.animate({"left": "-" + shift + "px"}, "slow", function() {
         self.paginationEnabled = true;
-        self._executeAll("afterAnimate");
+        self._executeAll("afterAnimation");
       });
     },
 
@@ -157,9 +177,17 @@
     onInstall: function(track) {},
     beforeStart: function(track) {},
     afterStart: function(track) {},
-    beforeAnimate: function(track) {},
-    afterAnimate: function(track) {},
-    beforePagination: function(track, direction, page, useCover) {}
+    beforeAnimation: function(track) {},
+    afterAnimation: function(track) {},
+
+    /* Event format
+     *  {
+     *    name: "prev", // or "next"
+     *    page: 1,
+     *    cover: false
+     *  }
+     */
+    beforePagination: function(track, event) {}
   }
 
   window.SilverTrack = SilverTrack;
