@@ -49,7 +49,7 @@
     },
 
     afterRestart: function() {
-      this.afterStart();
+      this.afterAnimation();
     },
 
     _enable: function(element) {
