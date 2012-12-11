@@ -71,17 +71,17 @@
       return !(this.currentPage === this.totalPages);
     },
 
-    install: function(plugin) {
-      this.plugins.push(plugin);
-      this._callFunction(plugin, "onInstall");
-      return this;
-    },
-
     restart: function() {
       this.paginationEnabled = true;
       this.currentPage = 1;
       this._init();
       this._executeAll("afterRestart");
+    },
+
+    install: function(plugin) {
+      this.plugins.push(plugin);
+      this._callFunction(plugin, "onInstall");
+      return this;
     },
 
     _init: function() {
@@ -202,6 +202,6 @@
   }
 
   window.SilverTrack = SilverTrack;
-  window.SilverTrack = SilverTrack.Plugin;
+  window.SilverTrack.Plugin = SilverTrack.Plugin;
 
 })(jQuery, window, document);

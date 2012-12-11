@@ -1,0 +1,193 @@
+.track {
+  width: 100%;
+  position: relative;
+}
+
+.view-port {
+  width: 946px;
+  overflow: hidden;
+  margin: auto;
+  margin-bottom: 30px;
+
+  background: #F1F1F1;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.view-port h2 {
+  font-weight: 200;
+  font-family: Helvetica,Arial,Verdana,sans-serif;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  color: #999;
+}
+
+.view-port h2:hover {
+  color: #6A3;
+}
+
+.track a.prev, .track a.next {
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -32px;
+  width: 64px;
+  height: 64px;
+  background: url("img/arrows.png");
+  background-repeat: no-repeat;
+}
+
+.track a.prev.disabled, .track a.next.disabled {
+  display: none;
+}
+
+.track a.prev {
+  left: 0;
+  background-position: 0 0;
+}
+
+.track a.prev:hover {
+  background-position: 0 -66px;
+}
+
+.track a.prev:active {
+  background-position: 0 -132px;
+}
+
+.track a.next {
+  right: 0;
+  background-position: -64px 0;
+}
+
+.track a.next:hover {
+  background-position: -64px -132px;
+}
+
+.track a.next:active {
+  background-position: -64px -198px;
+}
+
+.slider-container {
+  position: relative;
+  margin: 0;
+  padding: 0;
+
+  height: 150px;
+}
+
+.slider-container.big {
+  height: 288px;
+}
+
+.slider-container.huge {
+  height: 432px;
+}
+
+.slider-container .item {
+  position: absolute;
+
+  width: 224px;
+  height: 150px;
+
+  margin-right: 16px;
+  margin-bottom: 16px;
+}
+
+.slider-container .item img {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 2px solid white;
+}
+
+.slider-container.big .item,
+.slider-container.big .item .img-area {
+  height: 288px;
+}
+
+.slider-contaiber.huge .item {
+  margin-bottom: 12px;
+}
+
+.slider-container .item p {
+  padding: 0;
+  margin: 0;
+}
+
+.slider-container .item.cover {
+  width: 940px;
+}
+
+.slider-container .item.cover-2 {
+  height: 432px;
+}
+
+.slider-container .item.cover img {
+  float: left;
+}
+
+.slider-container .item.cover-2 img {
+  float: none;
+}
+
+.slider-container .item.cover .img-area {
+  float: right;
+  margin-left: 16px;
+}
+
+.slider-container .item.cover-2 .img-area {
+  float: none;
+  margin-left: 0;
+  margin-top: 12px;
+}
+
+.slider-container .item.cover-2 .img-area .img-block:first-child {
+  margin-right: 14px;
+}
+
+.slider-container .item.cover .img-block {
+  height: 128px;
+}
+
+.slider-container .item.cover-2 .img-block {
+  float: left;
+}
+
+.img-block {
+  margin-bottom: 16px;
+}
+
+.editorial {
+  float: right;
+  width: 200px;
+
+  padding-right: 20px;
+  height: 272px;
+  background: white;
+}
+
+.editorial .title {
+  font-size: 24px;
+  margin: 20px 0 0 20px;
+}
+
+.editorial .desc {
+  font-size: 14px;
+  line-height: 18px;
+  padding-top: 8px;
+  margin-left: 20px;
+}
+
+.side-a, .side-b {
+  float: left;
+  width: 462px;
+}
+
+.side-a {
+  margin-right: 16px;
+}
+
+.side-a > img, .side-b > img {
+  width: 462px;
+  height: 272px;
+}
