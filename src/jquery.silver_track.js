@@ -182,26 +182,36 @@
 
   }
 
-  SilverTrack.Plugin = function(){};
-  SilverTrack.Plugin.prototype = {
-    onInstall: function(track) {},
-    beforeStart: function(track) {},
-    afterStart: function(track) {},
-    afterRestart: function(track) {},
-    beforeAnimation: function(track) {},
-    afterAnimation: function(track) {},
+  SilverTrack.Plugins = {};
 
-    /* Event format
-     *  {
-     *    name: "prev", // or "next"
-     *    page: 1,
-     *    cover: false
-     *  }
-     */
-    beforePagination: function(track, event) {}
+  $.silverTrackPlugin = function(name, obj) {
+    SilverTrack.Plugins[name] = function(settings){
+      this.options = $.extend({}, this.defaults, settings);
+      this.constructor();
+    };
+
+    SilverTrack.Plugins[name].prototype = $.extend({
+      defaultOptions: {},
+      constructor: function() {},
+
+      onInstall: function(track) {},
+      beforeStart: function(track) {},
+      afterStart: function(track) {},
+      afterRestart: function(track) {},
+      beforeAnimation: function(track) {},
+      afterAnimation: function(track) {},
+
+      /* Event format
+       *  {
+       *    name: "prev", // or "next"
+       *    page: 1,
+       *    cover: false
+       *  }
+       */
+      beforePagination: function(track, event) {}
+    }, obj);
   }
 
   window.SilverTrack = SilverTrack;
-  window.SilverTrack.Plugin = SilverTrack.Plugin;
 
 })(jQuery, window, document);

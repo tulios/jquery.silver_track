@@ -8,7 +8,8 @@ describe("SilverTrack", function() {
     
     $.fx.off = true;
 
-    plugin = new SilverTrack.Plugin();
+    $.silverTrackPlugin("Generic", {});
+    plugin = new SilverTrack.Plugins.Generic();
   });
 
   describe("Plugin initialization", function() {
