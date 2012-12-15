@@ -6,6 +6,13 @@
 
 (function ($, window, document) {
 
+  /*
+   * track.install(new SilverTrack.Plugins.Navigator({
+   *   prev: $("a.prev"),
+   *   next: $("a.next")
+   * }));
+   *
+   */
   $.silverTrackPlugin("Navigator", {
     defaults: {
       disabledClass: "disabled"
