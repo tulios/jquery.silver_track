@@ -10,6 +10,10 @@ jQuery(function() {
       next: $("a.next", example.parent().parent())
     }));
 
+    track.install(new SilverTrack.Plugins.BulletNavigator({
+      container: $(".bullet-pagination", example.parent().parent())
+    }));
+
     track.start();
 
     $("a.reload", example.parent()).click(function(e) {
