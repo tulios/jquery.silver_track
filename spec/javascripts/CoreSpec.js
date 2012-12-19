@@ -267,34 +267,49 @@ describe("SilverTrack", function() {
   });
 
   describe("#next", function() {
-    describe("without cover", function() {
-    });
-
-    describe("with cover", function() {
+    it("should call 'goToPage' incrementing currentPage", function() {
+      expect(track.currentPage).toBe(1);
+      spyOn(track, "goToPage");
+      track.next();
+      expect(track.goToPage).toHaveBeenCalledWith(2);
     });
   });
 
   describe("#hasNext", function() {
-    describe("without cover", function() {
+    it("should be true when currentPage is lower than totalPages", function() {
+      track.totalPages = 2;
+      expect(track.currentPage).toBe(1);
+      expect(track.hasNext()).toBe(true);
     });
 
-    describe("with cover", function() {
+    it("should be false when currentPage is equal to totalPages", function() {
+      track.currentPage = 2;
+      expect(track.currentPage).toBe(2);
+      expect(track.hasNext()).toBe(false);
     });
   });
 
   describe("#prev", function() {
-    describe("without cover", function() {
-    });
-
-    describe("with cover", function() {
+    it("should call 'goToPage' decrementing currentPage", function() {
+      track.currentPage = 2;
+      expect(track.currentPage).toBe(2);
+      spyOn(track, "goToPage");
+      track.prev();
+      expect(track.goToPage).toHaveBeenCalledWith(1);
     });
   });
 
   describe("#hasPrev", function() {
-    describe("without cover", function() {
+    it("should be true when currentPage is greater than 1", function() {
+      track.currentPage = 2;
+      expect(track.currentPage).toBe(2);
+      expect(track.hasPrev()).toBe(true);
     });
 
-    describe("with cover", function() {
+    it("should be false when currentPage is 1", function() {
+      track.currentPage = 1;
+      expect(track.currentPage).toBe(1);
+      expect(track.hasPrev()).toBe(false);
     });
   });
 
