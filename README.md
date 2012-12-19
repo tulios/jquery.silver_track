@@ -55,6 +55,11 @@ TODO
     <td></td>
   </tr>
   <tr>
+    <td>goToPage</td>
+    <td>Goes to a specific page when it exists</td>
+    <td>page</td>
+  </tr>
+  <tr>
     <td>next</td>
     <td>Goes to the next page when it exists</td>
     <td></td>

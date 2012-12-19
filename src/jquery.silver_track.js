@@ -44,23 +44,42 @@
       this._executeAll("afterStart");
     },
 
-    next: function() {
-      var page = this.currentPage + 1;
-      var useCover = this.opts.cover && (this.currentPage === 1);
-      var event = {name: "next", page: page, cover: useCover};
-      this._paginate(page, event,  function(items) {
+    goToPage: function(page) {
+      if (!this.paginationEnabled ||
+          (page <= this.currentPage && this.currentPage === 1) ||
+          page > this.totalPages ||
+          page === this.currentPage) {
+        return;
+      }
+
+      var useCover = this.opts.cover && (page === 1);
+      var direction = page > this.currentPage ? "next" : "prev";
+      var items = useCover ? this._getCover() : this._calculateItemsForPagination(page);
+
+      if (items.length > 0) {
+        var shift = this._calculateItemLeft(items.get(0));
+        if (items.length < this.opts.perPage && !useCover) {
+          shift -= this.itemWidth * (this.opts.perPage - items.length);
+        }
+
         this.currentPage = page;
-        return this._calculateWidth(items, useCover) + this._calculateContainerLeft();
-      });
+        this._executeAll("beforePagination", [{
+          name: direction,
+          page: page,
+          cover: useCover
+        }]);
+
+        this.paginationEnabled = false;
+        this._animate(shift);
+      }
+    },
+
+    next: function() {
+      this.goToPage(this.currentPage + 1);
     },
 
     prev: function() {
-      var useCover = this.opts.cover && (this.currentPage === 2);
-      var event = {name: "prev", page: this.currentPage - 1, cover: useCover};
-      this._paginate(this.currentPage, event, function(items) {
-        this.currentPage -= 1;
-        return this._calculateContainerLeft() - this._calculateWidth(items, useCover);
-      });
+      this.goToPage(this.currentPage - 1);
     },
 
     hasPrev: function() {
@@ -89,40 +108,6 @@
       this._calculateTotalPages();
     },
 
-    _executeAll: function(name, args) {
-      for (var i = 0; i < this.plugins.length; i++) {
-        this._callFunction(this.plugins[i], name, args);
-      }
-    },
-
-    _positionElements: function() {
-      var self = this;
-      this.container.css({"left": "0px"});
-      this.itemWidth = this._calculateItemWidth();
-      this.coverWidth = this._calculateCoverWidth();
-
-      var width = 0;
-      this._items(true).each(function(index, value) {
-        var item = $(value);
-        item.css({"left": width + "px"});
-        width += item.outerWidth(true);
-      });
-    },
-
-    _callFunction: function(obj, name, args) {
-      if(obj && name && typeof obj[name] === 'function') {
-        obj[name].apply(obj, [this].concat(args || []));
-      }
-    },
-
-    _calculateTotalPages: function() {
-      this.totalPages = Math.ceil(this._items().length/this.opts.perPage);
-
-      if (this.opts.cover) {
-        this.totalPages += 1;
-      }
-    },
-
     _paginate: function(newPage, event, calculateShift) {
       if (!this.paginationEnabled || (newPage <= this.currentPage && this.currentPage === 1)) {
         return;
@@ -137,6 +122,18 @@
       }
     },
 
+    _getItems: function(ignoreCoverFilter) {
+      if (!this._items) {
+        this._items = $("." + this.opts.itemClass, this.container);
+      }
+
+      return !ignoreCoverFilter && this.opts.cover ? this._items.not(":first") : this._items;
+    },
+
+    _getCover: function() {
+      return $("." + this.opts.itemClass + ":first", this.container);
+    },
+
     _animate: function(shift) {
       var self = this;
       this._executeAll("beforeAnimation");
@@ -146,22 +143,39 @@
       });
     },
 
+    _positionElements: function() {
+      var self = this;
+      this.container.css({"left": "0px"});
+      this.itemWidth = this._calculateItemWidth();
+      this.coverWidth = this._calculateCoverWidth();
+
+      var width = 0;
+      this._getItems(true).each(function(index, value) {
+        var item = $(value);
+        item.css({"left": width + "px"});
+        width += item.outerWidth(true);
+      });
+    },
+
+    _calculateTotalPages: function() {
+      this.totalPages = Math.ceil(this._getItems().length/this.opts.perPage);
+
+      if (this.opts.cover) {
+        this.totalPages += 1;
+      }
+    },
+
     _calculateContainerLeft: function() {
-      return Math.abs(parseInt(this.container.css("left"), 10));
+      return this._abs(this.container.css("left"));
+    },
+
+    _calculateItemLeft: function(item) {
+      return this._abs($(item).css("left"));
     },
 
     _calculateItemsForPagination: function(page) {
       var delta = this.opts.cover ? (page - 1) * this.opts.perPage : page * this.opts.perPage;
-      return this._items().slice(delta - this.opts.perPage, delta);
-    },
-
-    _items: function(ignoreCoverFilter) {
-      var items = $("." + this.opts.itemClass, this.container);
-      return !ignoreCoverFilter && this.opts.cover ? items.not(":first") : items;
-    },
-
-    _getCover: function() {
-      return $("." + this.opts.itemClass + ":first", this.container);
+      return this._getItems().slice(delta - this.opts.perPage, delta);
     },
 
     _calculateWidth: function(items, isCover) {
@@ -173,11 +187,29 @@
     },
 
     _calculateItemWidth: function() {
-      return $("." + this.opts.itemClass).not("." + this.opts.coverClass).outerWidth(true);
+      var complement = this.opts.cover ? ":eq(1)" : ":first";
+      var item = $("." + this.opts.itemClass + complement, this.container);
+      return item.outerWidth(true);
     },
 
     _calculateCoverWidth: function() {
       return this.opts.cover ? this._getCover().outerWidth(true) : 0;
+    },
+
+    _executeAll: function(name, args) {
+      for (var i = 0; i < this.plugins.length; i++) {
+        this._callFunction(this.plugins[i], name, args);
+      }
+    },
+
+    _callFunction: function(obj, name, args) {
+      if(obj && name && typeof obj[name] === 'function') {
+        obj[name].apply(obj, [this].concat(args || []));
+      }
+    },
+
+    _abs: function(string) {
+      return Math.abs(parseInt(string, 10));
     }
 
   }
