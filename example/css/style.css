@@ -16,7 +16,7 @@ h2 {
   z-index: 10;
   padding: 10px 50px 10px 10px;
   color: white;
-  background: url("img/blacktocat.png") #6A3 no-repeat 95% 50%;
+  background: url("../img/blacktocat.png") #6A3 no-repeat 95% 50%;
   font-weight: 700;
   box-shadow: 0 0 10px rgba(0, 0, 0, .5);
   border-bottom-left-radius: 2px;
@@ -77,7 +77,7 @@ h2 {
   margin-top: -32px;
   width: 64px;
   height: 64px;
-  background: url("img/arrows.png");
+  background: url("../img/arrows.png");
   background-repeat: no-repeat;
 }
 
