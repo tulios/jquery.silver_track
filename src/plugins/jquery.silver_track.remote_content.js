@@ -13,10 +13,12 @@
       type: "GET",
       params: {},
 
-      beforeSend: null,
-      onError: null,
-      process: null,
-      updateTotalPages: null
+      beforeStart: function(track) {},
+      beforeSend: function(track) {},
+      beforeAppend: function(track) {},
+      process: function(track, perPage, data) {},
+      updateTotalPages: function(track, data) {},
+      onError: function(track, jqXHR, textStatus, errorThrown) {}
     },
 
     constructor: function(options) {
@@ -31,10 +33,12 @@
     },
 
     afterStart: function() {
-      this._loadContent(this.track.currentPage, function() {
-        this.track.reloadItems();
-        this.track.restart();
-      });
+      this.options.beforeStart(this.track);
+      if (this.options.lazy) {
+        this._loadContent(this.track.currentPage, function() {
+          this.track.restart();
+        });
+      }
     },
 
     _updateNavigationControls: function() {
@@ -54,10 +58,10 @@
       if (!this.ajaxCache[url]) {
 
         $.ajax(
-          $.extend(this._ajaxDefaultOptions(), {
+          $.extend(this._ajaxDefaults(), {
             url: url,
             success: function(data) {
-              self._onSuccessFor(url, data);
+              self._onSuccess(url, data);
               contentLoadedCallback.apply(self);
             }
           })
@@ -68,33 +72,26 @@
       }
     },
 
-    _onSuccessFor: function(url, data) {
+    _onSuccess: function(url, data) {
       this.ajaxCache[url] = true;
-      if (this.options.process) {
-        var items = this.options.process(this.track, this.track.options.perPage, data);
-        this._updateItemsPosition(items);
-      }
+      var items = this.options.process(this.track, this.track.options.perPage, data);
+      this.options.beforeAppend(this.track);
+      this._updateItemsPosition(items);
 
-      if (this.options.updateTotalPages) {
-        this.options.updateTotalPages(this.track, data);
-      }
-
+      this.options.updateTotalPages(this.track, data);
       this.track.reloadItems();
     },
 
     _onBeforeSend: function(jqXHR, settings) {
-      if (this.options.beforeSend) {
-        this.options.beforeSend(jqXHR, settings, this.track);
-      }
+      this.options.beforeSend(jqXHR, settings, this.track);
     },
 
     _onError: function(jqXHR, textStatus, errorThrown) {
       if (window.console) {
         console.debug('SilverTrack.Plugins.RemoteContent - Error:', textStatus);
       }
-      if (this.options.onError) {
-        this.options.onError(jqXHR, textStatus, errorThrown, this.track);
-      }
+
+      this.options.onError(this.track, jqXHR, textStatus, errorThrown);
     },
 
     _updateItemsPosition: function(items) {
@@ -124,7 +121,7 @@
       return url.replace(/{page}/, page).replace(/{perPage}/, perPage);
     },
 
-    _ajaxDefaultOptions: function() {
+    _ajaxDefaults: function() {
       var self = this;
       return {
         context: this.track.container,
