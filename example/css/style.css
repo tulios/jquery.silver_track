@@ -270,6 +270,28 @@ h2 {
   height: 132px;
 }
 
+#example-4 .loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  text-align: center;
+  line-height: 140px;
+  padding: 4px 0;
+  z-index: 1;
+}
+
+#example-4 .loading:before {
+  content: "loading...";
+}
+
+.example-4 .bullet {
+  cursor: default;
+}
+
 .example-1 a.prev,
 .example-1 a.next {
   margin-top: -61px;
