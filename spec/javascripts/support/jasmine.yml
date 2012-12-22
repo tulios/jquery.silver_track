@@ -13,8 +13,9 @@
 src_files:
   - lib/*.js
   - src/jquery.silver_track.js
-  - src/jquery.silver_track.navigator.js
-  - src/jquery.silver_track.bullet_navigator.js
+  - src/plugins/jquery.silver_track.navigator.js
+  - src/plugins/jquery.silver_track.bullet_navigator.js
+  - src/plugins/jquery.silver_track.remote_content.js
 
 # stylesheets
 #
