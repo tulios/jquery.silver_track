@@ -1,4 +1,4 @@
-describe("SilverTrack", function() {
+describe("$.silverTrack", function() {
   var track = null;
   var plugin = null;
 
@@ -12,7 +12,7 @@ describe("SilverTrack", function() {
     plugin = new SilverTrack.Plugins.Generic();
   });
 
-  describe("Plugin initialization", function() {
+  describe("Initialization", function() {
 
     it("should use default values", function() {
       track = helpers.basic();

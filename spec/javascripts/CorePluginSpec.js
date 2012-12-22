@@ -1,4 +1,4 @@
-describe("SilverTrackPlugin", function() {
+describe("$.silverTrackPlugin", function() {
   var plugin = null;
 
   beforeEach(function() {
