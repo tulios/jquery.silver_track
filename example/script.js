@@ -1,6 +1,7 @@
 jQuery(function() {
 
   window.SilverTrackExample = {
+    echoServerHost: "http://echo-server.herokuapp.com",
     urlAjax: function(opts) {
       var json = this.jsonCreator(opts.page, opts.perPage);
       return this.urlCreator(json, opts.page, opts.totalPages);
@@ -8,7 +9,7 @@ jQuery(function() {
 
     urlCreator: function(obj, page, totalPages) {
       var jsonText = encodeURIComponent(JSON.stringify(obj));
-      return "http://localhost:4567/echo/json/" + page + "?json=" + jsonText + "&total_pages=" + totalPages;
+      return this.echoServerHost + "/echo/json/" + page + "?json=" + jsonText + "&total_pages=" + totalPages;
     },
 
     jsonCreator: function(page, perPage) {
