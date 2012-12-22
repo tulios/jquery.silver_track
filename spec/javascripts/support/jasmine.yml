@@ -12,7 +12,9 @@
 #
 src_files:
   - lib/*.js
-  - src/*.js
+  - src/jquery.silver_track.js
+  - src/jquery.silver_track.navigator.js
+  - src/jquery.silver_track.bullet_navigator.js
 
 # stylesheets
 #

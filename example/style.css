@@ -264,3 +264,8 @@ h2 {
 .bullet:last-child {
   margin-right: 0;
 }
+
+#example-4 img {
+  width: 228px;
+  height: 132px;
+}
