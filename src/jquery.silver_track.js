@@ -238,7 +238,7 @@
     };
 
     SilverTrack.Plugins[name].prototype = $.extend({
-      defaultOptions: {},
+      defaults: {},
       constructor: function(options) {},
 
       onInstall: function(track) {},
