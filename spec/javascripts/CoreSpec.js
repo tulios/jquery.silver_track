@@ -35,11 +35,15 @@ describe("SilverTrack", function() {
 
     it("should retrieve the instance if initialized again", function() {
       track = helpers.basic();
-      expect(helpers.basic()).toBe(track);      
+      expect(helpers.basic()).toBe(track);
     });
 
     it("should set the 'currentPage' to 1", function() {
       expect(helpers.basic().currentPage).toBe(1);
+    });
+
+    it("should set the 'totalPages' to 1", function() {
+      expect(helpers.basic().totalPages).toBe(1);
     });
 
     it("should hold the reference of the container", function() {
@@ -86,6 +90,12 @@ describe("SilverTrack", function() {
     it("should calculate 'totalPages' based on DOM elements", function() {
       track.start();
       expect(track.totalPages).toBe(3);
+    });
+
+    it("should cache items", function() {
+      expect(track._items).toBe(null);
+      track.start();
+      expect(track._items).toBe(track._getItems());
     });
 
     describe("with cover", function() {
@@ -314,22 +324,108 @@ describe("SilverTrack", function() {
   });
 
   describe("#restart", function() {
-    describe("without cover", function() {
+    beforeEach(function() {
+      track = helpers.basic();
+      track.install(plugin);
+      track.start();
     });
 
-    describe("with cover", function() {
+    it("should reenable pagination", function() {
+      track.paginationEnabled = false;
+      expect(track.paginationEnabled).toBe(false);
+      track.restart();
+      expect(track.paginationEnabled).toBe(true);
+    });
+
+    it("should reset currentPage to 1", function() {
+      track.currentPage = 3;
+      expect(track.currentPage).toBe(3);
+      track.restart();
+      expect(track.currentPage).toBe(1);
+    });
+
+    it("should set container 'left' to '0px'", function() {
+      track.goToPage(2);
+      expect(track.container.css("left")).toBe("-960px");
+      track.restart();
+      expect(track.container.css("left")).toBe("0px");
+    });
+
+    it("should call 'afterRestart'", function() {
+      spyOn(plugin, 'afterRestart');
+      track.restart();
+      expect(plugin.afterRestart).toHaveBeenCalledWith(track);
+    });
+  });
+
+  describe("#reloadItems", function() {
+    beforeEach(function() {
+      track = helpers.basic();
+    });
+
+    it("should clear the items cache", function() {
+      track.start();
+      expect(track._items).not.toBe(null);
+      track.reloadItems();
+      expect(track._items).toBe(null);
+    });
+  });
+
+  describe("#updateTotalPages", function() {
+    beforeEach(function() {
+      track = helpers.basic();
+      track.install(plugin);
+      track.start();
+    });
+
+    it("should disable the totalPages calculation", function() {
+      expect(track.calculateTotalPages).toBe(true);
+      track.updateTotalPages(1);
+      expect(track.calculateTotalPages).toBe(false);
+    });
+
+    it("should set the totalPages value", function() {
+      expect(track.totalPages).toBe(3);
+      track.updateTotalPages(10);
+      expect(track.totalPages).toBe(10);
+    });
+
+    it("should use the absolute value", function() {
+      track.updateTotalPages(-14);
+      expect(track.totalPages).toBe(14);
+    });
+
+    it("should convert to integer", function() {
+      track.updateTotalPages("2");
+      expect(track.totalPages).toBe(2);
+    });
+
+    it("should call 'onTotalPagesUpdate'", function() {
+      spyOn(plugin, 'onTotalPagesUpdate');
+      track.updateTotalPages(2);
+      expect(plugin.onTotalPagesUpdate).toHaveBeenCalledWith(track);
     });
   });
 
   describe("#install", function() {
-    describe("without cover", function() {
+    beforeEach(function() {
+      track = helpers.basic();
     });
 
-    describe("with cover", function() {
+    it("should register the new plugin", function() {
+      track.install(plugin);
+      expect(track.plugins[0]).toBe(plugin);
     });
-  });
 
-  describe("Plugins integration", function() {
+    it("should call 'onInstall'", function() {
+      spyOn(plugin, "onInstall");
+      track.install(plugin);
+      expect(plugin.onInstall).toHaveBeenCalledWith(track);
+    });
+
+    it("should return the silverTrack instance", function() {
+      expect(track.install(plugin)).toBe(track);
+    });
   });
 
 });

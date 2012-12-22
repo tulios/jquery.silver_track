@@ -31,9 +31,12 @@
     this.opts = opts;
     this.container = container;
     this.paginationEnabled = true;
+    this.calculateTotalPages = true;
     this.currentPage = 1;
-    this.totalPages = null;
+    this.totalPages = 1;
     this.plugins = [];
+
+    this._items = null;
   };
 
   SilverTrack.prototype = {
@@ -103,9 +106,21 @@
       return this;
     },
 
+    reloadItems: function() {
+      this._items = null;
+    },
+
+    updateTotalPages: function(totalPages) {
+      this.calculateTotalPages = false;
+      this.totalPages = this._abs(totalPages);
+      this._executeAll("onTotalPagesUpdate");
+    },
+
     _init: function() {
       this._positionElements();
-      this._calculateTotalPages();
+      if (this.calculateTotalPages) {
+        this._calculateTotalPages();
+      }
     },
 
     _paginate: function(newPage, event, calculateShift) {
@@ -240,7 +255,8 @@
        *    cover: false
        *  }
        */
-      beforePagination: function(track, event) {}
+      beforePagination: function(track, event) {},
+      onTotalPagesUpdate: function(track){}
     }, obj);
   }
 
