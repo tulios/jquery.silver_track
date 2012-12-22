@@ -18,8 +18,9 @@
       activeClass: "active"
     },
 
-    constructor: function() {
+    constructor: function(options) {
       this.track = null;
+      this.options = options;
       this.container = this.options.container;
     },
 

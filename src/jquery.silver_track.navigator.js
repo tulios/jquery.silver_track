@@ -18,8 +18,9 @@
       disabledClass: "disabled"
     },
 
-    constructor: function() {
+    constructor: function(options) {
       this.track = null;
+      this.options = options;
       this.prev = this.options.prev;
       this.next = this.options.next;
 
@@ -40,13 +41,7 @@
     },
 
     afterStart: function() {
-      if (this.track.hasPrev()) {
-        this._enable(this.prev);
-      }
-
-      if (this.track.hasNext()) {
-        this._enable(this.next);
-      }
+      this.afterAnimation();
     },
 
     afterAnimation: function() {
@@ -55,6 +50,10 @@
     },
 
     afterRestart: function() {
+      this.afterAnimation();
+    },
+
+    onTotalPagesUpdate: function() {
       this.afterAnimation();
     },
 

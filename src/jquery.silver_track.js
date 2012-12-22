@@ -8,12 +8,12 @@
 
   var instanceName = "silverTrackInstance";
 
-  $.fn.silverTrack = function(opts) {
+  $.fn.silverTrack = function(options) {
     var container = $(this);
 
     if (!container.data(instanceName)) {
-      var opts = $.extend({}, $.fn.silverTrack.options, opts);
-      var instance = new SilverTrack(container, opts);
+      var options = $.extend({}, $.fn.silverTrack.options, options);
+      var instance = new SilverTrack(container, options);
       container.data(instanceName, instance);
       return instance;
     }
@@ -27,8 +27,8 @@
     cover: false
   };
 
-  var SilverTrack = function (container, opts) {
-    this.opts = opts;
+  var SilverTrack = function (container, options) {
+    this.options = options;
     this.container = container;
     this.paginationEnabled = true;
     this.calculateTotalPages = true;
@@ -55,14 +55,14 @@
         return;
       }
 
-      var useCover = this.opts.cover && (page === 1);
+      var useCover = this.options.cover && (page === 1);
       var direction = page > this.currentPage ? "next" : "prev";
       var items = useCover ? this._getCover() : this._calculateItemsForPagination(page);
 
       if (items.length > 0) {
         var shift = this._calculateItemLeft(items.get(0));
-        if (items.length < this.opts.perPage && !useCover) {
-          shift -= this.itemWidth * (this.opts.perPage - items.length);
+        if (items.length < this.options.perPage && !useCover) {
+          shift -= this.itemWidth * (this.options.perPage - items.length);
         }
 
         this.currentPage = page;
@@ -139,14 +139,14 @@
 
     _getItems: function(ignoreCoverFilter) {
       if (!this._items) {
-        this._items = $("." + this.opts.itemClass, this.container);
+        this._items = $("." + this.options.itemClass, this.container);
       }
 
-      return !ignoreCoverFilter && this.opts.cover ? this._items.not(":first") : this._items;
+      return !ignoreCoverFilter && this.options.cover ? this._items.not(":first") : this._items;
     },
 
     _getCover: function() {
-      return $("." + this.opts.itemClass + ":first", this.container);
+      return $("." + this.options.itemClass + ":first", this.container);
     },
 
     _animate: function(shift) {
@@ -173,9 +173,9 @@
     },
 
     _calculateTotalPages: function() {
-      this.totalPages = Math.ceil(this._getItems().length/this.opts.perPage);
+      this.totalPages = Math.ceil(this._getItems().length/this.options.perPage);
 
-      if (this.opts.cover) {
+      if (this.options.cover) {
         this.totalPages += 1;
       }
     },
@@ -189,12 +189,12 @@
     },
 
     _calculateItemsForPagination: function(page) {
-      var delta = this.opts.cover ? (page - 1) * this.opts.perPage : page * this.opts.perPage;
-      return this._getItems().slice(delta - this.opts.perPage, delta);
+      var delta = this.options.cover ? (page - 1) * this.options.perPage : page * this.options.perPage;
+      return this._getItems().slice(delta - this.options.perPage, delta);
     },
 
     _calculateWidth: function(items, isCover) {
-      if (this.opts.cover && isCover) {
+      if (this.options.cover && isCover) {
         return this.coverWidth;
       }
 
@@ -202,13 +202,13 @@
     },
 
     _calculateItemWidth: function() {
-      var complement = this.opts.cover ? ":eq(1)" : ":first";
-      var item = $("." + this.opts.itemClass + complement, this.container);
+      var complement = this.options.cover ? ":eq(1)" : ":first";
+      var item = $("." + this.options.itemClass + complement, this.container);
       return item.outerWidth(true);
     },
 
     _calculateCoverWidth: function() {
-      return this.opts.cover ? this._getCover().outerWidth(true) : 0;
+      return this.options.cover ? this._getCover().outerWidth(true) : 0;
     },
 
     _executeAll: function(name, args) {
@@ -233,13 +233,13 @@
 
   $.silverTrackPlugin = function(name, obj) {
     SilverTrack.Plugins[name] = function(settings){
-      this.options = $.extend({}, this.defaults, settings);
-      this.constructor();
+      var options = $.extend({}, this.defaults, settings);
+      this.constructor(options);
     };
 
     SilverTrack.Plugins[name].prototype = $.extend({
       defaultOptions: {},
-      constructor: function() {},
+      constructor: function(options) {},
 
       onInstall: function(track) {},
       beforeStart: function(track) {},

@@ -16,16 +16,16 @@ describe("SilverTrack", function() {
 
     it("should use default values", function() {
       track = helpers.basic();
-      expect(track.opts.perPage).toBe(4);
-      expect(track.opts.itemClass).toBe("item");
-      expect(track.opts.cover).toBe(false);
+      expect(track.options.perPage).toBe(4);
+      expect(track.options.itemClass).toBe("item");
+      expect(track.options.cover).toBe(false);
     });
 
     it("should allow the user to override the default values", function() {
       track = helpers.basic({perPage: 1, itemClass: "new-class", cover: true});
-      expect(track.opts.perPage).toBe(1);
-      expect(track.opts.itemClass).toBe("new-class");
-      expect(track.opts.cover).toBe(true);
+      expect(track.options.perPage).toBe(1);
+      expect(track.options.itemClass).toBe("new-class");
+      expect(track.options.cover).toBe(true);
     });
 
     it("should keep the instance in a data attribute", function() {
@@ -171,7 +171,7 @@ describe("SilverTrack", function() {
         expect(track.currentPage).toBe(1);
         expect(track._calculateContainerLeft()).toBe(0);
         expect(track.itemWidth).toBe(240);
-        expect(track.opts.perPage).toBe(4);
+        expect(track.options.perPage).toBe(4);
       });
 
       it("should animate to first item of the informed page", function() {
@@ -219,11 +219,11 @@ describe("SilverTrack", function() {
         track.install(plugin);
         track.start();
 
-        expect(track.opts.cover).toBe(true);
+        expect(track.options.cover).toBe(true);
         expect(track.currentPage).toBe(1);
         expect(track._calculateContainerLeft()).toBe(0);
         expect(track.itemWidth).toBe(240);
-        expect(track.opts.perPage).toBe(4);
+        expect(track.options.perPage).toBe(4);
       });
 
       it("should animate to first item of the informed page", function() {
