@@ -270,18 +270,22 @@ h2 {
   height: 132px;
 }
 
-#example-1 a.prev, #example-1 a.next {
-  top: -61px;
+.example-1 a.prev,
+.example-1 a.next {
+  margin-top: -61px;
 }
 
-#example-2 a.prev, #example-2 a.next {
-  top: -58px;
+.example-2 a.prev,
+.example-2 a.next {
+  margin-top: -58px;
 }
 
-#example-3 a.prev, #example-3 a.next {
-  top: -53px;
+.example-3 a.prev, 
+.example-3 a.next {
+  margin-top: -53px;
 }
 
-#example-4 a.prev, #example-4 a.next {
-  top: -43px;
+.example-4 a.prev, 
+.example-4 a.next {
+  margin-top: -43px;
 }
