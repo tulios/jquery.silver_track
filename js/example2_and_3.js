@@ -1,10 +1,14 @@
+//=================================================
+// Example 2 and 3 - cover
+//=================================================
+
 jQuery(function() {
 
-  $(".slider-container").each(function() {
-    var example = $(this);
-    var hasCover = example.hasClass("big") || example.hasClass("huge");
+  $("#example-2, #example-3").each(function() {
 
-    var track = example.silverTrack({cover: hasCover});
+    var example = $(this);
+    var track = example.silverTrack({cover: true});
+
     track.install(new SilverTrack.Plugins.Navigator({
       prev: $("a.prev", example.parent().parent()),
       next: $("a.next", example.parent().parent())
@@ -16,10 +20,6 @@ jQuery(function() {
 
     track.start();
 
-    $("a.reload", example.parent()).click(function(e) {
-      e.preventDefault();
-      track.restart();
-    });
   });
 
 });

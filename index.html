@@ -5,15 +5,19 @@
   <title>Example - jQuery SilverTrack</title>
   <meta name="description" content="">
 
-  <link rel="stylesheet" href="gh-buttons.css" type="text/css" media="screen" charset="utf-8">
-  <link rel="stylesheet" href="style.css" type="text/css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="css/gh-buttons.css" type="text/css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script type="text/javascript" src="https://raw.github.com/tulios/jquery.silver_track/master/src/jquery.silver_track.js" charset="utf-8"></script>
-  <script type="text/javascript" src="https://raw.github.com/tulios/jquery.silver_track/master/src/jquery.silver_track.navigator.js" charset="utf-8"></script>
-  <script type="text/javascript" src="https://raw.github.com/tulios/jquery.silver_track/master/src/jquery.silver_track.bullet_navigator.js" charset="utf-8"></script>
+  <script type="text/javascript" src="https://raw.github.com/tulios/jquery.silver_track/master/src/plugins/jquery.silver_track.navigator.js" charset="utf-8"></script>
+  <script type="text/javascript" src="https://raw.github.com/tulios/jquery.silver_track/master/src/plugins/jquery.silver_track.bullet_navigator.js" charset="utf-8"></script>
+  <script type="text/javascript" src="https://raw.github.com/tulios/jquery.silver_track/master/src/plugins/jquery.silver_track.remote_content.js" charset="utf-8"></script>
 
-  <script type="text/javascript" src="script.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/script.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/example1.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/example2_and_3.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/example4.js" charset="utf-8"></script>
 </head>
 <body>
 
@@ -21,6 +25,11 @@
 
   <div class="head">
     <h1>jQuery SilverTrack</h1>
+
+    <p>
+      This is a example page, for full documentation and details, see
+      <a href="https://github.com/tulios/jquery.silver_track/blob/master/README.md">The Github README file</a>
+    </p>
   </div>
 
   <div class="track">
@@ -243,6 +252,21 @@
         </div>
       </div>
       <div class="bullet-pagination"></div>
+      <div class="actions button-group">
+        <a href="#" class="button primary icon reload">Restart</a>
+      </div>
+    </div>
+    <div class="pagination">
+      <a href="#" class="prev"></a>
+      <a href="#" class="next"></a>
+    </div>
+  </div>
+
+  <div class="track">
+    <div class="view-port">
+      <h2>Remote</h2>
+      <div id="example-4" class="slider-container remote">
+      </div>
       <div class="actions button-group">
         <a href="#" class="button primary icon reload">Restart</a>
       </div>

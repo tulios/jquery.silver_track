@@ -16,7 +16,7 @@ h2 {
   z-index: 10;
   padding: 10px 50px 10px 10px;
   color: white;
-  background: url("img/blacktocat.png") #6A3 no-repeat 95% 50%;
+  background: url("../img/blacktocat.png") #6A3 no-repeat 95% 50%;
   font-weight: 700;
   box-shadow: 0 0 10px rgba(0, 0, 0, .5);
   border-bottom-left-radius: 2px;
@@ -77,7 +77,7 @@ h2 {
   margin-top: -32px;
   width: 64px;
   height: 64px;
-  background: url("img/arrows.png");
+  background: url("../img/arrows.png");
   background-repeat: no-repeat;
 }
 
@@ -263,4 +263,25 @@ h2 {
 
 .bullet:last-child {
   margin-right: 0;
+}
+
+#example-4 img {
+  width: 228px;
+  height: 132px;
+}
+
+#example-1 a.prev, #example-1 a.next {
+  top: -61px;
+}
+
+#example-2 a.prev, #example-2 a.next {
+  top: -58px;
+}
+
+#example-3 a.prev, #example-3 a.next {
+  top: -53px;
+}
+
+#example-4 a.prev, #example-4 a.next {
+  top: -43px;
 }
