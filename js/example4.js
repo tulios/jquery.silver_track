@@ -20,6 +20,15 @@ jQuery(function() {
     url: function(page, perPage) {
       return SilverTrackExample.urlAjax({page: page, perPage: perPage, totalPages: 5})
     },
+    beforeStart: function(track) {
+      track.container.append($("<div></div>", {"class": "loading"}));
+    },
+    beforeSend: function(track) {
+      $(".loading", track.container).fadeIn();
+    },
+    beforeAppend: function(track) {
+      $(".loading", track.container).fadeOut();
+    },
     process: function(track, perPage, json) {
       var data = json.data;
       var array = [];
@@ -43,4 +52,3 @@ jQuery(function() {
   track.start();
 
 });
-
