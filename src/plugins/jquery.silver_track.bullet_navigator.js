@@ -30,10 +30,7 @@
 
     afterStart: function() {
       var self = this;
-      for (var i = 0; i < this.track.totalPages; i++) {
-        this.container.append(this._createBullet(i + 1));
-      }
-
+      this._createBullets();
       this._getBulletByPage(1).addClass(this.options.activeClass);
       this._getBullets().click(function(e) {
         e.preventDefault();
@@ -51,6 +48,24 @@
     afterRestart: function() {
       var bullet = this._getBulletByPage(1);
       this._updateBullets(bullet);
+    },
+
+    onTotalPagesUpdate: function() {
+      this._clearBullets();
+      this._createBullets();
+      this._getBullets().click(function(e) {
+        e.preventDefault();
+      });
+    },
+
+    _clearBullets: function() {
+      $("." + this.options.bulletClass, this.container).remove();
+    },
+
+    _createBullets: function() {
+      for (var i = 0; i < this.track.totalPages; i++) {
+        this.container.append(this._createBullet(i + 1));
+      }
     },
 
     _updateBullets: function(bullet) {
