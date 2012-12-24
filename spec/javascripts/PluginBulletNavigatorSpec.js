@@ -1,6 +1,9 @@
 describe("SilverTrack.Plugins.BulletNavigator", function() {
   var track = null;
   var plugin = null;
+  var getBullets = function(plugin, track) {
+    return $(".bullet-pagination ." + plugin.options.bulletClass, track.container.parent());
+  }
 
   beforeEach(function() {
     jasmine.Clock.useMock();
@@ -36,7 +39,7 @@ describe("SilverTrack.Plugins.BulletNavigator", function() {
       track.install(plugin);
       track.start();
 
-      bullets = $(".bullet-pagination ." + plugin.options.bulletClass, track.container.parent());
+      bullets = getBullets(plugin, track);
     });
 
     it("should create the bullets based on totalPages", function() {
@@ -58,6 +61,52 @@ describe("SilverTrack.Plugins.BulletNavigator", function() {
       var bullet = $(bullets[1]); // 2º
       bullet.click();
       expect(track.goToPage).toHaveBeenCalledWith(bullet.data("page"));
+    });
+
+    it("should add the active class to the clicked bullet", function() {
+      var bullet = $(bullets[1]); // 2º
+      bullet.click();
+      expect(bullet.hasClass(plugin.options.activeClass)).toBe(true);
+    });
+  });
+
+  describe("when totalPages is updated", function() {
+    var bullets = null;
+
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.BulletNavigator({
+        container: $(".bullet-pagination", track.container.parent())
+      });
+
+      track.install(plugin);
+      track.start();
+
+      bullets = getBullets(plugin, track);
+    });
+
+    it("should clear previous bullets", function() {
+      expect(bullets.length).toBe(3);
+      track.updateTotalPages(0);
+
+      bullets = getBullets(plugin, track);
+      expect(bullets.length).toBe(0);
+    });
+
+    it("should recreate the bullets based on the new totalPages", function() {
+      expect(bullets.length).toBe(3);
+      track.updateTotalPages(1);
+
+      bullets = getBullets(plugin, track);
+      expect(bullets.length).toBe(1);
+    });
+
+    it("should remove the goToPage from the click event", function() {
+      spyOn(track, "goToPage");
+      track.updateTotalPages(1);
+
+      var bullet = $(getBullets(plugin, track)[0]);
+      bullet.click();
+      expect(track.goToPage).not.toHaveBeenCalled();
     });
   });
 
