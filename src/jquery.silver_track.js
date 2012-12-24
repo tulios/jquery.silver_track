@@ -90,7 +90,7 @@
     },
 
     hasNext: function() {
-      return !(this.currentPage === this.totalPages);
+      return !(this.currentPage === this.totalPages || this.totalPages <= 1);
     },
 
     restart: function() {

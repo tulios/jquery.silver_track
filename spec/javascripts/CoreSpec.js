@@ -297,6 +297,14 @@ describe("$.silverTrack", function() {
       expect(track.currentPage).toBe(2);
       expect(track.hasNext()).toBe(false);
     });
+
+    it("should be false when totalPages is less or equal to 1", function() {
+      track.totalPages = 1
+      expect(track.hasNext()).toBe(false);
+
+      track.totalPages = 0;
+      expect(track.hasNext()).toBe(false);
+    });
   });
 
   describe("#prev", function() {
