@@ -6,6 +6,46 @@
 
 (function ($, window, document) {
 
+  /*
+   * track.install(new SilverTrack.Plugins.RemoteContent({
+   *
+   *   // A string or a function to generate the URL
+   *   url: function(page, perPage) {
+   *     return "/my/url/page/" + page;
+   *   },
+   *
+   *   beforeStart: function(track) {
+   *   },
+   *
+   *   beforeSend: function(track) {
+   *   },
+   *
+   *   beforeAppend: function(track) {
+   *   },
+   *
+   *   // It should return an array with the elements to be appended to
+   *   // the container
+   *   process: function(track, perPage, json) {
+   *     var data = json.data;
+   *     var array = [];
+   *
+   *     for (var i = 0; i < perPage; i++) {
+   *       array.push(
+   *         $("<div></div>", {"class": "item"}).
+   *         append($("<img>", {"src": data[i].img_url})).
+   *         append($("<p></p>", {"text": data[i].title}))
+   *       );
+   *     }
+   *
+   *     return array;
+   *   },
+   *
+   *   updateTotalPages: function(track, json) {
+   *     track.updateTotalPages(json.total_pages);
+   *   }
+   * }));
+   *
+   */
   $.silverTrackPlugin("RemoteContent", {
     defaults: {
       lazy: true,
@@ -74,7 +114,7 @@
 
     _onSuccess: function(url, data) {
       this.ajaxCache[url] = true;
-      var items = this.options.process(this.track, this.track.options.perPage, data);
+      var items = this.options.process(this.track, this.track.options.perPage, data) || [];
       this.options.beforeAppend(this.track);
       this._updateItemsPosition(items);
 

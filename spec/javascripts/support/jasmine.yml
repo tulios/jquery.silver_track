@@ -42,7 +42,10 @@ stylesheets:
 #   - helpers/**/*.js
 #
 helpers:
-  - 'helpers/**/*.js'
+  - helpers/jasmine-query.js
+  - helpers/jasmine-ajax.js
+  - helpers/SpecHelper.js
+
 # spec_files
 #
 #  Return an array of filepaths relative to spec_dir to include.
