@@ -27,7 +27,7 @@ jQuery(function() {
       $(".loading", track.container).fadeIn();
     },
     beforeAppend: function(track) {
-      $(".loading", track.container).fadeOut();
+      $(".loading", track.container).hide();
     },
     process: function(track, perPage, json) {
       var data = json.data;
