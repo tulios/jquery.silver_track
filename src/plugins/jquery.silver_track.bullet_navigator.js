@@ -46,7 +46,7 @@
     },
 
     afterRestart: function() {
-      var bullet = this._getBulletByPage(1);
+      var bullet = this._getBulletByPage(this.track.currentPage);
       this._updateBullets(bullet);
     },
 

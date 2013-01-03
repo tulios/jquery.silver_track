@@ -110,4 +110,27 @@ describe("SilverTrack.Plugins.BulletNavigator", function() {
     });
   });
 
+  describe("after restart", function() {
+    var bullets = null;
+
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.BulletNavigator({
+        container: $(".bullet-pagination", track.container.parent())
+      });
+
+      track.install(plugin);
+      track.start();
+
+      bullets = getBullets(plugin, track);
+    });
+
+    it("should add the active class to the 'currentPage' bullet", function() {
+      track.currentPage = 3;
+      track.restart({keepCurrentPage: true});
+
+      var bullet = $(bullets[2]); // 3º
+      expect(bullet.hasClass(plugin.options.activeClass)).toBe(true);
+    });
+  });
+
 });
