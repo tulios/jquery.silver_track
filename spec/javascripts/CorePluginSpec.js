@@ -65,5 +65,13 @@ describe("$.silverTrackPlugin", function() {
     it("should define 'onTotalPagesUpdate'", function() {
       expect(plugin.onTotalPagesUpdate).toBeDefined();
     });
+
+    it("should define 'beforeAdjustHeight'", function() {
+      expect(plugin.beforeAdjustHeight).toBeDefined();
+    });
+
+    it("should define 'afterAdjustHeight'", function() {
+      expect(plugin.afterAdjustHeight).toBeDefined();
+    });
   });
 });
