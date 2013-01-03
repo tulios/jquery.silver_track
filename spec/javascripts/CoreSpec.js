@@ -19,13 +19,24 @@ describe("$.silverTrack", function() {
       expect(track.options.perPage).toBe(4);
       expect(track.options.itemClass).toBe("item");
       expect(track.options.cover).toBe(false);
+      expect(track.options.mode).toBe("horizontal");
+      expect(track.options.autoHeight).toBe(false);
     });
 
     it("should allow the user to override the default values", function() {
-      track = helpers.basic({perPage: 1, itemClass: "new-class", cover: true});
+      track = helpers.basic({
+        perPage: 1,
+        itemClass: "new-class",
+        cover: true,
+        mode: "vertical",
+        autoHeight: true
+      });
+
       expect(track.options.perPage).toBe(1);
       expect(track.options.itemClass).toBe("new-class");
       expect(track.options.cover).toBe(true);
+      expect(track.options.mode).toBe("vertical");
+      expect(track.options.autoHeight).toBe(true);
     });
 
     it("should keep the instance in a data attribute", function() {
@@ -58,44 +69,101 @@ describe("$.silverTrack", function() {
   });
 
   describe("#start", function() {
-    beforeEach(function() {
-      track = helpers.basic();
-      track.install(plugin);
+    describe("common behavior", function() {
+      beforeEach(function() {
+        track = helpers.basic();
+        track.install(plugin);
+      });
+
+      it("should call 'beforeStart'", function() {
+        spyOn(plugin, 'beforeStart');
+        track.start();
+        expect(plugin.beforeStart).toHaveBeenCalledWith(track);
+      });
+
+      it("should calculate 'itemWidth'", function() {
+        track.start();
+        expect(track.itemWidth).toBe(240);
+      });
+
+      it("should set container 'left' to '0px'", function() {
+        track.start();
+        expect(track.container.css("left")).toBe("0px");
+      });
+
+      it("should calculate 'totalPages' based on DOM elements", function() {
+        track.start();
+        expect(track.totalPages).toBe(3);
+      });
+
+      it("should cache items", function() {
+        expect(track._items).toBe(null);
+        track.start();
+        expect(track._items).toBe(track._getItems());
+      });
     });
 
-    it("should call 'beforeStart'", function() {
-      spyOn(plugin, 'beforeStart');
-      track.start();
-      expect(plugin.beforeStart).toHaveBeenCalledWith(track);
+    describe("with mode 'horizontal'", function() {
+      beforeEach(function() {
+        track = helpers.basic({mode: "horizontal"});
+        track.install(plugin);
+      });
+
+      it("should position the elements", function() {
+        track.start();
+        var items = $("#basic").find(".item");
+        expect($(items[0]).css("left")).toBe("0px");
+        expect($(items[1]).css("left")).toBe("240px");
+        expect($(items[2]).css("left")).toBe("480px");
+      });
+
+      it("should add the width of the container", function() {
+        track.start();
+        expect(track.container.attr("style")).toMatch("width: 2160px;");
+      });
     });
 
-    it("should calculate 'itemWidth'", function() {
-      track.start();
-      expect(track.itemWidth).toBe(240);
-    });
+    describe("with mode 'vertical'", function() {
+      beforeEach(function() {
+        track = helpers.basic({mode: "vertical"});
+        track.install(plugin);
+      });
 
-    it("should set container 'left' to '0px'", function() {
-      track.start();
-      expect(track.container.css("left")).toBe("0px");
-    });
+      it("should position the elements", function() {
+        track.start();
+        var items = $("#basic").find(".item");
 
-    it("should position the elements", function() {
-      track.start();
-      var items = $("#basic").find(".item");
-      expect($(items[0]).css("left")).toBe("0px");
-      expect($(items[1]).css("left")).toBe("240px");
-      expect($(items[2]).css("left")).toBe("480px");
-    });
+        // page 1
+        expect($(items[0]).css("left")).toBe("0px");
+        expect($(items[0]).css("top")).toBe("0px");
 
-    it("should calculate 'totalPages' based on DOM elements", function() {
-      track.start();
-      expect(track.totalPages).toBe(3);
-    });
+        expect($(items[1]).css("left")).toBe("0px");
+        expect($(items[1]).css("top")).toBe("166px");
 
-    it("should cache items", function() {
-      expect(track._items).toBe(null);
-      track.start();
-      expect(track._items).toBe(track._getItems());
+        expect($(items[2]).css("left")).toBe("0px");
+        expect($(items[2]).css("top")).toBe("332px");
+
+        expect($(items[3]).css("left")).toBe("0px");
+        expect($(items[3]).css("top")).toBe("498px");
+
+        // page 2
+        expect($(items[4]).css("left")).toBe("240px");
+        expect($(items[4]).css("top")).toBe("0px");
+
+        expect($(items[5]).css("left")).toBe("240px");
+        expect($(items[5]).css("top")).toBe("166px");
+
+        expect($(items[6]).css("left")).toBe("240px");
+        expect($(items[6]).css("top")).toBe("332px");
+
+        expect($(items[7]).css("left")).toBe("240px");
+        expect($(items[7]).css("top")).toBe("498px");
+      });
+
+      it("should add the width of the container", function() {
+        track.start();
+        expect(track.container.attr("style")).toMatch("width: 720px");
+      });
     });
 
     describe("with cover", function() {
@@ -118,56 +186,82 @@ describe("$.silverTrack", function() {
     });
   });
 
-
   describe("#goToPage", function() {
-    beforeEach(function() {
-      track = helpers.basic();
-      track.start();
-    });
+    describe("common behavior", function() {
+      beforeEach(function() {
+        track = helpers.basic();
+        track.start();
+      });
 
-    it("should do nothing if pagination is disabled", function() {
-      spyOn(track, "_animate");
-      track.paginationEnabled = false;
-      expect(track.currentPage).toBe(1);
+      it("should do nothing if pagination is disabled", function() {
+        spyOn(track, "_animate");
+        track.paginationEnabled = false;
+        expect(track.currentPage).toBe(1);
 
-      track.goToPage(2);
-      expect(track._animate).not.toHaveBeenCalled();
-      expect(track.currentPage).toBe(1);
-    });
+        track.goToPage(2);
+        expect(track._animate).not.toHaveBeenCalled();
+        expect(track.currentPage).toBe(1);
+      });
 
-    it("should do nothing if newPage is less than currentPage and currentPage is the first page", function() {
-      spyOn(track, "_animate");
-      expect(track.currentPage).toBe(1);
+      it("should do nothing if newPage is less than currentPage and currentPage is the first page", function() {
+        spyOn(track, "_animate");
+        expect(track.currentPage).toBe(1);
 
-      track.goToPage(-1);
-      expect(track._animate).not.toHaveBeenCalled();
-      expect(track.currentPage).toBe(1);
-    });
+        track.goToPage(-1);
+        expect(track._animate).not.toHaveBeenCalled();
+        expect(track.currentPage).toBe(1);
+      });
 
-    it("should do nothing if newPage is greater than totalPages", function() {
-      spyOn(track, "_animate");
-      track.totalPages = 2;
-      expect(track.currentPage).toBe(1);
-      expect(track.totalPages).toBe(2);
+      it("should do nothing if newPage is greater than totalPages", function() {
+        spyOn(track, "_animate");
+        track.totalPages = 2;
+        expect(track.currentPage).toBe(1);
+        expect(track.totalPages).toBe(2);
 
-      track.goToPage(3);
-      expect(track._animate).not.toHaveBeenCalled();
-      expect(track.currentPage).toBe(1);
-    });
+        track.goToPage(3);
+        expect(track._animate).not.toHaveBeenCalled();
+        expect(track.currentPage).toBe(1);
+      });
 
-    it("should do nothing if newPage is equal to currentPage", function() {
-      spyOn(track, "_animate");
-      track.currentPage = 2;
-      expect(track.currentPage).toBe(2);
+      it("should do nothing if newPage is equal to currentPage", function() {
+        spyOn(track, "_animate");
+        track.currentPage = 2;
+        expect(track.currentPage).toBe(2);
 
-      track.goToPage(2);
-      expect(track._animate).not.toHaveBeenCalled();
-      expect(track.currentPage).toBe(2);
+        track.goToPage(2);
+        expect(track._animate).not.toHaveBeenCalled();
+        expect(track.currentPage).toBe(2);
+      });
+
+      describe("'animate' option", function() {
+        beforeEach(function() {
+          spyOn(track, "_animate");
+          track.currentPage = 1;
+          expect(track.currentPage).toBe(1);
+        });
+
+        it("should be true by default", function() {
+          track.goToPage(2);
+          expect(track._animate).toHaveBeenCalledWith(
+            jasmine.any(Number), jasmine.any(Object), true
+          );
+        });
+
+        it("should be allowed to change", function() {
+          track.goToPage(2, {animate: false});
+          expect(track._animate).toHaveBeenCalledWith(
+            jasmine.any(Number), jasmine.any(Object), false
+          );
+        });
+      });
     });
 
     describe("without cover", function() {
       beforeEach(function() {
+        track = helpers.basic();
+        track.start();
         track.install(plugin);
+
         expect(track.currentPage).toBe(1);
         expect(track._calculateContainerLeft()).toBe(0);
         expect(track.itemWidth).toBe(240);
@@ -193,7 +287,8 @@ describe("$.silverTrack", function() {
           expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
             name: "next",
             page: 2,
-            cover: false
+            cover: false,
+            items: jasmine.any(Object)
           });
         });
       });
@@ -206,7 +301,8 @@ describe("$.silverTrack", function() {
           expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
             name: "prev",
             page: 1,
-            cover: false
+            cover: false,
+            items: jasmine.any(Object)
           });
         });
       });
@@ -256,7 +352,8 @@ describe("$.silverTrack", function() {
           expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
             name: "next",
             page: 2,
-            cover: false
+            cover: false,
+            items: jasmine.any(Object)
           });
         });
       });
@@ -269,14 +366,93 @@ describe("$.silverTrack", function() {
           expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
             name: "prev",
             page: 1,
-            cover: true
+            cover: true,
+            items: jasmine.any(Object)
           });
+        });
+      });
+    });
+
+    describe("with mode 'vertical'", function() {
+       beforeEach(function() {
+        track = helpers.basic({mode: "vertical"});
+        track.start();
+       });
+
+      it("should animate the whole page as in vertical does not exist enough items", function() {
+        expect(track.totalPages).toBe(3);
+        track.goToPage(3);
+        expect(track.currentPage).toBe(3);
+        expect(track._calculateContainerLeft()).toBe(480); // third page (0, 240, 480)
+      });
+    });
+
+    describe("with autoHeight true", function() {
+      describe("common behavior", function() {
+        beforeEach(function() {
+          track = helpers.basic({autoHeight: true});
+          track.install(plugin);
+          track.start();
+        });
+
+        it("should call 'beforeAdjustHeight'", function() {
+          spyOn(plugin, 'beforeAdjustHeight');
+          track.goToPage(3);
+          expect(plugin.beforeAdjustHeight).toHaveBeenCalledWith(track, {
+            items: jasmine.any(Object),
+            newHeight: 166
+          });
+        });
+
+        it("should call 'afterAdjustHeight'", function() {
+          spyOn(plugin, 'afterAdjustHeight');
+          track.goToPage(3);
+          expect(plugin.afterAdjustHeight).toHaveBeenCalledWith(track, {
+            items: jasmine.any(Object),
+            newHeight: 166
+          });
+        });
+      });
+
+      describe("using mode 'horizontal'", function() {
+        beforeEach(function() {
+          track = helpers.basic({autoHeight: true, mode: "horizontal"});
+          track.start();
+        });
+
+        it("should set the container height to the height of the first item of the page", function() {
+          track.goToPage(3);
+          var firstPageItem = $("." + track.options.itemClass + ":eq(8)").outerHeight(true);
+          expect(track.container.css("height")).toBe(firstPageItem + "px");
+        });
+      });
+
+      describe("using mode 'vertical'", function() {
+        beforeEach(function() {
+          track = helpers.basic({autoHeight: true, mode: "vertical"});
+          track.start();
+        });
+
+        it("should set the container height to the sum of items", function() {
+          track.goToPage(2);
+          expect(track.container.css("height")).toBe((166 * 4) + "px");
+
+          track.goToPage(3);
+          expect(track.container.css("height")).toBe((166 * 1) + "px");
+
+          track.goToPage(1);
+          expect(track.container.css("height")).toBe((166 * 4) + "px");
         });
       });
     });
   });
 
   describe("#next", function() {
+    beforeEach(function() {
+      track = helpers.basic();
+      track.start();
+    });
+
     it("should call 'goToPage' incrementing currentPage", function() {
       expect(track.currentPage).toBe(1);
       spyOn(track, "goToPage");
@@ -286,6 +462,11 @@ describe("$.silverTrack", function() {
   });
 
   describe("#hasNext", function() {
+    beforeEach(function() {
+      track = helpers.basic();
+      track.start();
+    });
+
     it("should be true when currentPage is lower than totalPages", function() {
       track.totalPages = 2;
       expect(track.currentPage).toBe(1);
@@ -293,7 +474,9 @@ describe("$.silverTrack", function() {
     });
 
     it("should be false when currentPage is equal to totalPages", function() {
+      track.totalPages = 2;
       track.currentPage = 2;
+      expect(track.totalPages).toBe(2);
       expect(track.currentPage).toBe(2);
       expect(track.hasNext()).toBe(false);
     });
@@ -345,7 +528,7 @@ describe("$.silverTrack", function() {
       expect(track.paginationEnabled).toBe(true);
     });
 
-    it("should reset currentPage to 1", function() {
+    it("should reset currentPage to 1 by default", function() {
       track.currentPage = 3;
       expect(track.currentPage).toBe(3);
       track.restart();
@@ -363,6 +546,75 @@ describe("$.silverTrack", function() {
       spyOn(plugin, 'afterRestart');
       track.restart();
       expect(plugin.afterRestart).toHaveBeenCalledWith(track);
+    });
+
+    it("should reset the height of the container", function() {
+      track.container.css("height", "150px");
+      expect(track.container.attr("style")).toMatch("height: 150px;");
+      track.restart();
+      expect(track.container.attr("style")).not.toMatch("height: 150px;");
+    });
+
+    it("should reset the top of the items", function() {
+      track._getItems().each(function(index, value) {
+        var item = $(value);
+        item.css("top", "10px");
+        expect(item.attr("style")).toMatch("top: 10px;");
+      });
+
+      track.restart();
+
+      track._getItems().each(function(index, value) {
+        expect($(value).attr("style")).not.toMatch("top: 10px;");
+      });
+    });
+
+    describe("options", function() {
+      beforeEach(function() {
+        spyOn(track, "goToPage");
+      });
+
+      describe("'animate'", function() {
+        it("should be false by default", function() {
+          track.restart();
+          expect(track.goToPage).toHaveBeenCalledWith(jasmine.any(Number), {animate: false});
+        });
+
+        it("should be changed", function() {
+          track.restart({animate: true});
+          expect(track.goToPage).toHaveBeenCalledWith(jasmine.any(Number), {animate: true});
+        });
+      });
+
+      describe("'page'", function() {
+        it("should be 1 by default", function() {
+          track.restart();
+          expect(track.goToPage).toHaveBeenCalledWith(1, jasmine.any(Object));
+        });
+
+        it("should be able to go to any page after restart", function() {
+          track.restart({page: 3});
+          expect(track.goToPage).toHaveBeenCalledWith(3, jasmine.any(Object));
+        });
+      });
+
+      describe("'keepCurrentPage' true", function() {
+        var currentPage = 2;
+        beforeEach(function() {
+          track.currentPage = currentPage;
+        });
+
+        it("should use the 'currentPage'", function() {
+          track.restart({keepCurrentPage: true});
+          expect(track.goToPage).toHaveBeenCalledWith(currentPage, jasmine.any(Object));
+        });
+
+        it("should overrides the 'page' option", function() {
+          track.restart({page: 3, keepCurrentPage: true});
+          expect(track.goToPage).toHaveBeenCalledWith(currentPage, jasmine.any(Object));
+        });
+      });
+
     });
   });
 

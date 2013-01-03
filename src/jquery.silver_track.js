@@ -24,6 +24,8 @@
   $.fn.silverTrack.options = {
     perPage: 4,
     itemClass: "item",
+    mode: "horizontal",
+    autoHeight: false,
     cover: false
   };
 
@@ -47,7 +49,11 @@
       this._executeAll("afterStart");
     },
 
-    goToPage: function(page) {
+    /*
+     * page: Number
+     * opts: {animate: true|false}
+     */
+    goToPage: function(page, opts) {
       if (!this.paginationEnabled ||
           (page <= this.currentPage && this.currentPage === 1) ||
           page > this.totalPages ||
@@ -56,24 +62,24 @@
       }
 
       var useCover = this.options.cover && (page === 1);
+      var isHorizontal = this.options.mode === "horizontal";
       var direction = page > this.currentPage ? "next" : "prev";
       var items = useCover ? this._getCover() : this._calculateItemsForPagination(page);
 
       if (items.length > 0) {
         var shift = this._calculateItemLeft(items.get(0));
-        if (items.length < this.options.perPage && !useCover) {
+        var event = {name: direction, page: page, cover: useCover, items: items};
+        var opts = $.extend({animate: true}, opts);
+
+        if (items.length < this.options.perPage && !useCover && isHorizontal) {
           shift -= this.itemWidth * (this.options.perPage - items.length);
         }
 
         this.currentPage = page;
-        this._executeAll("beforePagination", [{
-          name: direction,
-          page: page,
-          cover: useCover
-        }]);
-
+        this._executeAll("beforePagination", [event]);
         this.paginationEnabled = false;
-        this._animate(shift);
+
+        this._animate(shift, event, opts.animate);
       }
     },
 
@@ -93,10 +99,32 @@
       return !(this.currentPage === this.totalPages || this.totalPages <= 1);
     },
 
-    restart: function() {
+    /*
+     * {
+     *  page: Number,                // default: 1
+     *  keepCurrentPage: true|false, // default: false
+     *  animate: true|false          // default: false
+     * }
+     */ 
+    restart: function(opts) {
+      var opts = $.extend({
+        page: 1,
+        keepCurrentPage: false,
+        animate: false
+      }, opts);
+
+      if (opts.keepCurrentPage) {
+        opts.page = this.currentPage;
+      }
+
+      this.container.css("height", "");
+      this._getItems(true).css("top", "");
+
       this.paginationEnabled = true;
       this.currentPage = 1;
+
       this._init();
+      this.goToPage(opts.page, {animate: opts.animate});
       this._executeAll("afterRestart");
     },
 
@@ -123,20 +151,6 @@
       }
     },
 
-    _paginate: function(newPage, event, calculateShift) {
-      if (!this.paginationEnabled || (newPage <= this.currentPage && this.currentPage === 1)) {
-        return;
-      }
-
-      this._executeAll("beforePagination", [event]);
-      var items = event.cover ? this._getCover() : this._calculateItemsForPagination(newPage);
-      if (items.length > 0) {
-        this.paginationEnabled = false;
-        var shift = calculateShift.call(this, items);
-        this._animate(shift);
-      }
-    },
-
     _getItems: function(ignoreCoverFilter) {
       if (!this._items) {
         this._items = $("." + this.options.itemClass, this.container);
@@ -149,27 +163,86 @@
       return $("." + this.options.itemClass + ":first", this.container);
     },
 
-    _animate: function(shift) {
+    _animate: function(shift, event, isAnimated) {
       var self = this;
-      this._executeAll("beforeAnimation");
-      this.container.animate({"left": "-" + shift + "px"}, "slow", function() {
+      var duration = isAnimated ? "slow" : 0;
+
+      this._executeAll("beforeAnimation", [event]);
+      this.container.stop().animate({"left": "-" + shift + "px"}, duration, function() {
         self.paginationEnabled = true;
-        self._executeAll("afterAnimation");
+        self._executeAll("afterAnimation", [event]);
+        self._adjustHeight(event.items);
       });
     },
 
+    _adjustHeight: function(items) {
+      if (this.options.autoHeight == true) {
+        var newHeight = 0;
+
+        if (this.options.mode === "horizontal") {
+          newHeight = $(items[0]).outerHeight(true);
+
+        } else if (this.options.mode === "vertical") {
+          items.each(function(index, value) {
+            newHeight += $(value).outerHeight(true);
+          });
+        }
+
+        var event = {items: items, newHeight: newHeight};
+        this._executeAll("beforeAdjustHeight", [event]);
+        this.container.stop().animate({"height": newHeight + "px"});
+        this._executeAll("afterAdjustHeight", [event]);
+      }
+    },
+
     _positionElements: function() {
-      var self = this;
       this.container.css({"left": "0px"});
       this.itemWidth = this._calculateItemWidth();
       this.coverWidth = this._calculateCoverWidth();
 
+      if (this.options.mode === "horizontal") {
+        this._positionHorizontal();
+
+      } else if (this.options.mode === "vertical") {
+        this._positionVertical();
+      }
+    },
+
+    _positionHorizontal: function() {
       var width = 0;
       this._getItems(true).each(function(index, value) {
         var item = $(value);
         item.css({"left": width + "px"});
         width += item.outerWidth(true);
       });
+
+      this.container.css("width", width + "px");
+    },
+
+    _positionVertical: function() {
+      var width = 0;
+      var height = 0;
+
+      var perPage = this.options.perPage;
+      var useCover = this.options.cover;
+      var pageItem = 0;
+
+      this._getItems(true).each(function(index, value) {
+        var item = $(value);
+        item.css({"top": height + "px", "left": width + "px"});
+        pageItem++;
+
+        if (pageItem === perPage || (useCover && index === 0)) {
+          pageItem = 0;
+          height = 0;
+          width += item.outerWidth(true);
+
+        } else {
+          height += item.outerHeight(true);
+        }
+      });
+
+      this.container.css("width", width + this.itemWidth + "px");
     },
 
     _calculateTotalPages: function() {
@@ -245,18 +318,28 @@
       beforeStart: function(track) {},
       afterStart: function(track) {},
       afterRestart: function(track) {},
-      beforeAnimation: function(track) {},
-      afterAnimation: function(track) {},
+      onTotalPagesUpdate: function(track){},
 
       /* Event format
        *  {
        *    name: "prev", // or "next"
        *    page: 1,
-       *    cover: false
+       *    cover: false,
+       *    items: []
        *  }
        */
+      beforeAnimation: function(track, event) {},
+      afterAnimation: function(track, event) {},
       beforePagination: function(track, event) {},
-      onTotalPagesUpdate: function(track){}
+
+      /* Event format
+       *  {
+       *    items: [],
+       *    newHeight: 150
+       *  }
+       */
+      beforeAdjustHeight: function(track, event) {},
+      afterAdjustHeight: function(track, event) {}
     }, obj);
   }
 
