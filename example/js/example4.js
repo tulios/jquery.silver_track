@@ -5,15 +5,16 @@
 jQuery(function() {
 
   var example = $("#example-4");
+  var parent = example.parents(".track");
   var track = example.silverTrack();
 
   track.install(new SilverTrack.Plugins.Navigator({
-    prev: $("a.prev", example.parent().parent()),
-    next: $("a.next", example.parent().parent())
+    prev: $("a.prev", parent),
+    next: $("a.next", parent)
   }));
 
   track.install(new SilverTrack.Plugins.BulletNavigator({
-    container: $(".bullet-pagination", example.parent().parent())
+    container: $(".bullet-pagination", parent)
   }));
 
   track.install(new SilverTrack.Plugins.RemoteContent({
@@ -21,13 +22,13 @@ jQuery(function() {
       return SilverTrackExample.urlAjax({page: page, perPage: perPage, totalPages: 5})
     },
     beforeStart: function(track) {
-      track.container.append($("<div></div>", {"class": "loading"}));
+      track.container.parent().append($("<div></div>", {"class": "loading"}));
     },
     beforeSend: function(track) {
-      $(".loading", track.container).fadeIn();
+      $(".loading", track.container.parent()).fadeIn();
     },
     beforeAppend: function(track) {
-      $(".loading", track.container).hide();
+      $(".loading", track.container.parent()).hide();
     },
     process: function(track, perPage, json) {
       var data = json.data;
@@ -46,6 +47,26 @@ jQuery(function() {
 
     updateTotalPages: function(track, json) {
       track.updateTotalPages(json.total_pages);
+    }
+  }));
+
+  track.install(new SilverTrack.Plugins.ResponsiveHubConnector({
+    layouts: ["phone", "small-tablet", "tablet", "web"],
+    onReady: function(track, options, event) {
+      options.onChange(track, options, event);
+    },
+
+    onChange: function(track, options, event) {
+      track.options.mode = "horizontal";
+      track.options.autoHeight = false;
+      track.options.perPage = 4;
+
+      if (event.layout === "small-tablet" || event.layout === "phone") {
+        track.options.mode = "vertical";
+        track.options.autoHeight = true;
+      }
+
+      track.restart({keepCurrentPage: true});
     }
   }));
 

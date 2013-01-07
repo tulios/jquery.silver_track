@@ -47,18 +47,27 @@ h2 {
   position: relative;
 }
 
-.view-port {
+.view-port, .track .inner {
   width: 946px;
+}
+
+.view-port {
   overflow: hidden;
+  position: relative;
+}
+
+.track .inner {
+  position: relative;
+
   margin: auto;
   margin-bottom: 30px;
+  padding: 10px;
 
   background: #F1F1F1;
-  padding: 10px;
   border-radius: 4px;
 }
 
-.view-port h2 {
+.track .inner h2 {
   font-weight: 200;
   font-family: Helvetica,Arial,Verdana,sans-serif;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -66,11 +75,12 @@ h2 {
   color: #999;
 }
 
-.view-port h2:hover {
+.track .inner h2:hover {
   color: #6A3;
 }
 
-.track a.prev, .track a.next {
+.track a.prev,
+.track a.next {
   display: block;
   position: absolute;
   top: 50%;
@@ -81,7 +91,8 @@ h2 {
   background-repeat: no-repeat;
 }
 
-.track a.prev.disabled, .track a.next.disabled {
+.track a.prev.disabled,
+.track a.next.disabled {
   display: none;
 }
 
@@ -116,7 +127,7 @@ h2 {
   margin: 0;
   padding: 0;
 
-  height: 150px;
+  height: 166px;
 }
 
 .slider-container.big {
@@ -270,7 +281,7 @@ h2 {
   height: 132px;
 }
 
-#example-4 .loading {
+.example-4 .loading {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -284,7 +295,7 @@ h2 {
   z-index: 1;
 }
 
-#example-4 .loading:before {
+.example-4 .loading:before {
   content: "loading...";
 }
 
@@ -294,7 +305,7 @@ h2 {
 
 .example-1 a.prev,
 .example-1 a.next {
-  margin-top: -61px;
+  margin-top: -69px;
 }
 
 .example-2 a.prev,
@@ -309,5 +320,5 @@ h2 {
 
 .example-4 a.prev, 
 .example-4 a.next {
-  margin-top: -43px;
+  margin-top: -68px;
 }

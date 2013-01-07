@@ -28,7 +28,7 @@ jQuery(function() {
 
   $(".slider-container").each(function() {
     var example = $(this);
-    $("a.reload", example.parent()).click(function(e) {
+    $("a.reload", example.parents(".track")).click(function(e) {
       e.preventDefault();
       example.silverTrack().restart();
     });
