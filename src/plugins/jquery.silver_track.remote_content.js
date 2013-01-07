@@ -54,7 +54,7 @@
       params: {},
 
       beforeStart: function(track) {},
-      beforeSend: function(track) {},
+      beforeSend: function(track, jqXHR, settings) {},
       beforeAppend: function(track) {},
       process: function(track, perPage, data) {},
       updateTotalPages: function(track, data) {},
@@ -65,6 +65,8 @@
       this.track = null;
       this.options = options;
       this.ajaxCache = {};
+      this.filled = false;
+      this.loadContentEnabled = true;
     },
 
     onInstall: function(track) {
@@ -75,19 +77,33 @@
     afterStart: function() {
       this.options.beforeStart(this.track);
       if (this.options.lazy) {
+
         this._loadContent(this.track.currentPage, function() {
+          this.filled = true;
           this.track.restart();
         });
+
+      } else {
+        this.filled = true;
       }
+    },
+
+    afterAnimation: function(track, event) {
+      this.loadContentEnabled = true;
     },
 
     _updateNavigationControls: function() {
       var self = this;
       this.track.next = function() {
-        var page = self.track.currentPage + 1;
-        self._loadContent(page, function() {
-          self.track.goToPage(page);
-        });
+        if (self.loadContentEnabled) {
+
+          var page = self.track.currentPage + 1;
+          self.loadContentEnabled = false;
+          self._loadContent(page, function() {
+            self.track.goToPage(page);
+          });
+
+        }
       }
     },
 
@@ -123,7 +139,7 @@
     },
 
     _onBeforeSend: function(jqXHR, settings) {
-      this.options.beforeSend(jqXHR, settings, this.track);
+      this.options.beforeSend(this.track, jqXHR, settings);
     },
 
     _onError: function(jqXHR, textStatus, errorThrown) {
@@ -135,9 +151,18 @@
     },
 
     _updateItemsPosition: function(items) {
+      if (this.track.options.mode === "horizontal") {
+        this._positionHorizontal(items);
+
+      } else if (this.track.options.mode === "vertical") {
+        this._positionVertical(items);
+      }
+    },
+
+    _positionHorizontal: function(items) {
       var lastItem = $("." + this.track.options.itemClass + ":last", this.track.container);
 
-      var width = parseInt(lastItem.css("left"), 10);
+      var width = parseInt(lastItem.css("left"), 10) || 0;
       if (width !== 0) {
         width += this.track.itemWidth;
       }
@@ -147,6 +172,24 @@
         item.css({"left": width + "px"});
         this.track.container.append(item);
         width += item.outerWidth(true);
+      }
+    },
+
+    _positionVertical: function(items) {
+      var itemWidth = this.track.itemWidth;
+      var width = Math.abs(parseInt(this.track.container.css("left"), 10)) || 0;
+
+      if (this.filled) {
+        width += itemWidth;
+        this.track.container.css("width", (this.track.currentPage + 1) * itemWidth);
+      }
+
+      var height = 0;
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        item.css({"left": width + "px", "top": height + "px"});
+        this.track.container.append(item);
+        height += item.outerHeight(true);
       }
     },
 

@@ -34,6 +34,16 @@ var helpers = (function() {
           {img_url: "http://lorempixel.com/224/128/nature", title: "Item 3"},
           {img_url: "http://lorempixel.com/224/128/sports", title: "Item 4"}
         ]
+      },
+
+      multiplePages: {
+        total_pages: 5,
+        data: [
+          {img_url: "http://lorempixel.com/224/128/food",   title: "Item 1"},
+          {img_url: "http://lorempixel.com/224/128/people", title: "Item 2"},
+          {img_url: "http://lorempixel.com/224/128/nature", title: "Item 3"},
+          {img_url: "http://lorempixel.com/224/128/sports", title: "Item 4"}
+        ]
       }
     }
   };
