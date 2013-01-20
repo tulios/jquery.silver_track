@@ -309,9 +309,44 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
         });
 
         it("should call 'process'", function() {
+          mockAjaxMultiplePages();
+          spyOn(plugin.options, "process")
+          track.start();
+
+          var perPage = track.options.perPage;
+          var data = helpers.ajaxResponses.multiplePages;
+          expect(plugin.options.process).toHaveBeenCalledWith(track, perPage, data);
         });
 
         it("should call 'beforeAppend'", function() {
+          mockAjaxMultiplePages();
+          spyOn(plugin.options, "beforeAppend");
+          track.start();
+          expect(plugin.options.beforeAppend).toHaveBeenCalledWith(track, jasmine.any(Object));
+        });
+
+        it("should call 'updateTotalPages'", function() {
+          mockAjaxMultiplePages();
+          spyOn(plugin.options, "updateTotalPages");
+          track.start();
+
+          var data = helpers.ajaxResponses.multiplePages;
+          expect(plugin.options.updateTotalPages).toHaveBeenCalledWith(track, data);
+        });
+
+        it("should reload the items", function() {
+          mockAjaxMultiplePages();
+          spyOn(track, "reloadItems");
+          track.start();
+          expect(track.reloadItems).toHaveBeenCalled();
+        });
+
+        it("should call 'goToPage' with the proper page after the request", function() {
+          mockAjaxMultiplePages();
+          spyOn(track, "goToPage");
+          track.start();
+          track.next();
+          expect(track.goToPage).toHaveBeenCalledWith(track.currentPage + 1);
         });
       });
     });

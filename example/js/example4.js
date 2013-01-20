@@ -27,9 +27,6 @@ jQuery(function() {
     beforeSend: function(track) {
       $(".loading", track.container.parent()).fadeIn();
     },
-    beforeAppend: function(track) {
-      $(".loading", track.container.parent()).hide();
-    },
     process: function(track, perPage, json) {
       var data = json.data;
       var array = [];
@@ -43,6 +40,10 @@ jQuery(function() {
       }
 
       return array;
+    },
+
+    beforeAppend: function(track, items) {
+      $(".loading", track.container.parent()).hide();
     },
 
     updateTotalPages: function(track, json) {

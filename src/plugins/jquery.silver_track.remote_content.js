@@ -20,9 +20,6 @@
    *   beforeSend: function(track) {
    *   },
    *
-   *   beforeAppend: function(track) {
-   *   },
-   *
    *   // It should return an array with the elements to be appended to
    *   // the container
    *   process: function(track, perPage, json) {
@@ -38,6 +35,9 @@
    *     }
    *
    *     return array;
+   *   },
+   *
+   *   beforeAppend: function(track, items) {
    *   },
    *
    *   updateTotalPages: function(track, json) {
@@ -131,7 +131,7 @@
     _onSuccess: function(url, data) {
       this.ajaxCache[url] = true;
       var items = this.options.process(this.track, this.track.options.perPage, data) || [];
-      this.options.beforeAppend(this.track);
+      this.options.beforeAppend(this.track, items);
       this._updateItemsPosition(items);
 
       this.options.updateTotalPages(this.track, data);
