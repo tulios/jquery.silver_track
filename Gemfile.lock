@@ -20,6 +20,7 @@ GEM
     rack (1.4.4)
     rack-protection (1.3.2)
       rack
+    rake (10.0.3)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -47,4 +48,5 @@ PLATFORMS
 DEPENDENCIES
   jasmine (= 1.3.0)
   json
+  rake (= 10.0.3)
   sinatra
