@@ -34,13 +34,6 @@
           self.options.onChange(self.track, self.options, event);
         });
       }
-    },
-
-    afterStart: function(track) {
-      if (false) { //this.enabled) {
-        var event = $.responsiveHub("self")._newEvent();
-        track.container.trigger("silverTrack:responsiveHub:ready", [track, event]);
-      }
     }
   });
 

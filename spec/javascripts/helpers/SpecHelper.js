@@ -45,6 +45,17 @@ var helpers = (function() {
           {img_url: "http://lorempixel.com/224/128/sports", title: "Item 4"}
         ]
       }
+    },
+
+    initResponsiveHub: function() {
+      $.responsiveHub({
+        layouts: {
+          320: "phone",
+          960: "web",
+          768: "tablet"
+        },
+        defaultLayout: "web"
+      });
     }
   };
 })();
