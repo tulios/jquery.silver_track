@@ -1,8 +1,14 @@
 # SilverTrack
+### A smart and very extensible sliding carousel
 
+SilverTrack is a jQuery plugin designed to be extensible through other plugins. It has a small and solid core and comes with very useful plugins.
 Refer to the [jQuery SilverTrack website](http://tulios.github.com/jquery.silver_track/) for examples.
 
-TODO
+#### Built-in plugins
+  * [BulletNavigator](https://github.com/tulios/jquery.silver_track/blob/master/src/plugins/jquery.silver_track.bullet_navigator.js)
+  * [Navigator](https://github.com/tulios/jquery.silver_track/blob/master/src/plugins/jquery.silver_track.navigator.js)
+  * [RemoteContent](https://github.com/tulios/jquery.silver_track/blob/master/src/plugins/jquery.silver_track.remote_content.js)
+  * [ResponsiveHubConnector](https://github.com/tulios/jquery.silver_track/blob/master/src/plugins/jquery.silver_track.responsive_hub_connector.js)
 
 ## Browser Compatibility
 
@@ -10,13 +16,17 @@ TODO
 
 ## Dependencies
 
-* [jQuery](http://jquery.com) 1.4.4 + (..., 1.7.2, 1.8.2)
+* [jQuery](http://jquery.com) 1.7.2+
+
+PS: The ResponsiveHubConnector plugin requires the dependencies of [ResponsiveHub](https://github.com/globocom/responsive-hub)
 
 ## Usage
 
 TODO
 
 ### Configuration Options
+
+TODO: update!
 
 <table>
   <tr>
