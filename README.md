@@ -132,7 +132,7 @@ TODO: update!
   </tr>
 </table>
 
-## Plugin creating
+## Plugin creation
 
 TODO:
 
