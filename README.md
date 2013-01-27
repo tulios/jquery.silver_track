@@ -1,7 +1,7 @@
 # SilverTrack
 ### A smart and very extensible sliding carousel
 
-SilverTrack is a jQuery plugin designed to be extensible through other plugins. It has a small and solid core and comes with very useful plugins.
+SilverTrack is a jQuery plugin designed to be extensible through other plugins. It has a small core and comes with very useful plugins.
 Refer to the [jQuery SilverTrack website](http://tulios.github.com/jquery.silver_track/) for examples.
 
 #### Built-in plugins
@@ -12,7 +12,7 @@ Refer to the [jQuery SilverTrack website](http://tulios.github.com/jquery.silver
 
 ## Browser Compatibility
 
-TODO
+TODO:
 
 ## Dependencies
 
@@ -23,7 +23,7 @@ PS: The ResponsiveHubConnector plugin requires the dependencies of [ResponsiveHu
 
 ## Usage
 
-TODO
+TODO:
 
 ### Configuration Options
 
@@ -49,6 +49,26 @@ TODO: update!
     <td>cover</td>
     <td>false</td>
     <td>When set to true, the plugin will consider the first page as a cover and will consider it as one item</td>
+  </tr>
+  <tr>
+    <td>mode</td>
+    <td>'horizontal'</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>autoHeight</td>
+    <td>false</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>duration</td>
+    <td>'slow'</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>easing</td>
+    <td>'swing'</td>
+    <td></td>
   </tr>
 </table>
 
@@ -100,4 +120,99 @@ TODO: update!
     <td>Installs a plugin. Check out the plugins section to see which callbacks are available</td>
     <td>plugin</td>
   </tr>
+  <tr>
+    <td>reloadItems</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>updateTotalPages</td>
+    <td></td>
+    <td>totalPages</td>
+  </tr>
 </table>
+
+## Plugin creating
+
+TODO:
+
+### Definition
+
+```js
+(function ($, window, document) {
+
+  $.silverTrackPlugin("PluginName", {
+    defaults: {
+      attribute: "default value"
+    },
+
+    /*
+     * With merged options
+     */
+    constructor: function(options) {},
+
+    onInstall: function(track) {},
+    beforeStart: function(track) {},
+    afterStart: function(track) {},
+    afterRestart: function(track) {},
+    onTotalPagesUpdate: function(track){},
+
+    /* Event format
+     *  {
+     *    name: "prev", // or "next"
+     *    page: 1,
+     *    cover: false,
+     *    items: []
+     *  }
+     */
+    beforeAnimation: function(track, event) {},
+    afterAnimation: function(track, event) {},
+    beforePagination: function(track, event) {},
+
+    /* Event format
+     *  {
+     *    items: [],
+     *    newHeight: 150
+     *  }
+     */
+    beforeAdjustHeight: function(track, event) {},
+    afterAdjustHeight: function(track, event) {}
+  });
+
+})(jQuery, window, document);
+```
+
+### Install
+
+```js
+track.install(new SilverTrack.Plugins.PluginName({
+  attribute: "different value from default"
+}));
+
+```
+
+## Tests
+
+#### Setup
+
+```ruby
+bundle install
+```
+
+#### Running
+
+```ruby
+rake jasmine:ci
+```
+
+Or to run through the browser
+
+```ruby
+rake jasmine
+```
+
+and acess localhost:8888
+
+## License
+
+See [COPYING](https://github.com/tulios/jquery.silver_track/blob/master/COPYING) for more details.
