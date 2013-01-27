@@ -6,7 +6,7 @@ jQuery(function() {
 
   var example = $("#example-4");
   var parent = example.parents(".track");
-  var track = example.silverTrack();
+  var track = example.silverTrack(SilverTrackExample.defaults);
 
   track.install(new SilverTrack.Plugins.Navigator({
     prev: $("a.prev", parent),
@@ -74,3 +74,4 @@ jQuery(function() {
   track.start();
 
 });
+

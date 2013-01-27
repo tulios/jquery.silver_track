@@ -1,6 +1,7 @@
 jQuery(function() {
 
   window.SilverTrackExample = {
+    defaults: {easing: "easeInOutQuad", duration: 600},
     echoServerHost: "http://echo-server.herokuapp.com",
     urlAjax: function(opts) {
       var json = this.jsonCreator(opts.page, opts.perPage);

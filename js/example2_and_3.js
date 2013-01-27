@@ -8,7 +8,7 @@ jQuery(function() {
 
     var example = $(this);
     var parent = example.parents(".track");
-    var track = example.silverTrack({cover: true});
+    var track = example.silverTrack($.extend({}, SilverTrackExample.defaults, {cover: true}));
 
     track.install(new SilverTrack.Plugins.Navigator({
       prev: $("a.prev", parent),
