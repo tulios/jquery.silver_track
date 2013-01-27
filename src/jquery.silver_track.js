@@ -26,7 +26,9 @@
     itemClass: "item",
     mode: "horizontal",
     autoHeight: false,
-    cover: false
+    cover: false,
+    duration: "slow",
+    easing: "swing"
   };
 
   var SilverTrack = function (container, options) {
@@ -44,6 +46,7 @@
   SilverTrack.prototype = {
 
     start: function() {
+      this._validateAnimationEasing();
       this._executeAll("beforeStart");
       this._init();
       this._executeAll("afterStart");
@@ -165,10 +168,10 @@
 
     _animate: function(shift, event, isAnimated) {
       var self = this;
-      var duration = isAnimated ? "slow" : 0;
+      var duration = isAnimated ? this.options.duration : 0;
 
       this._executeAll("beforeAnimation", [event]);
-      this.container.stop().animate({"left": "-" + shift + "px"}, duration, function() {
+      this.container.stop().animate({"left": "-" + shift + "px"}, duration, this.options.easing, function() {
         self.paginationEnabled = true;
         self._executeAll("afterAnimation", [event]);
         self._adjustHeight(event.items);
@@ -282,6 +285,14 @@
 
     _calculateCoverWidth: function() {
       return this.options.cover ? this._getCover().outerWidth(true) : 0;
+    },
+
+    _validateAnimationEasing: function() {
+      var easingFuctionExists = !!($.easing && $.easing[this.options.easing]);
+
+      if (!easingFuctionExists) {
+        this.options.easing = $.fn.silverTrack.options.easing;
+      }
     },
 
     _executeAll: function(name, args) {

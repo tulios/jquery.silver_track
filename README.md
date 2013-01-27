@@ -17,6 +17,7 @@ TODO
 ## Dependencies
 
 * [jQuery](http://jquery.com) 1.7.2+
+* [jQuery Easing 1.3](http://gsgd.co.uk/sandbox/jquery/easing/) for custom easing
 
 PS: The ResponsiveHubConnector plugin requires the dependencies of [ResponsiveHub](https://github.com/globocom/responsive-hub)
 

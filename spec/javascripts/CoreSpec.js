@@ -21,6 +21,8 @@ describe("$.silverTrack", function() {
       expect(track.options.cover).toBe(false);
       expect(track.options.mode).toBe("horizontal");
       expect(track.options.autoHeight).toBe(false);
+      expect(track.options.duration).toBe("slow");
+      expect(track.options.easing).toBe("swing");
     });
 
     it("should allow the user to override the default values", function() {
@@ -187,6 +189,34 @@ describe("$.silverTrack", function() {
   });
 
   describe("#goToPage", function() {
+    describe("when animating", function() {
+      var easing = "easeInOutQuad";
+      var duration = 600;
+
+      beforeEach(function() {
+        track = helpers.basic({easing: easing, duration: duration});
+      });
+
+      it("should use the configured easing and duration", function() {
+        track.start();
+        spyOn($.fn, "animate");
+        track.goToPage(2);
+
+        var movement = {"left": "-960px"};
+        expect($.fn.animate).toHaveBeenCalledWith(movement, duration, easing, jasmine.any(Function));
+      });
+
+      it("should fallback to default if the easing function does not exist", function() {
+        var aux = $.easing[easing];
+        delete $.easing[easing];
+        expect($.easing[easing]).toBe(undefined);
+
+        track.start();
+        expect(track.options.easing).toBe($.fn.silverTrack.options.easing);
+        $.easing[easing] = aux;
+      });
+    });
+
     describe("common behavior", function() {
       beforeEach(function() {
         track = helpers.basic();
