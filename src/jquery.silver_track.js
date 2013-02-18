@@ -318,12 +318,12 @@
   $.silverTrackPlugin = function(name, obj) {
     SilverTrack.Plugins[name] = function(settings){
       var options = $.extend({}, this.defaults, settings);
-      this.constructor(options);
+      this.initialize(options);
     };
 
     SilverTrack.Plugins[name].prototype = $.extend({
       defaults: {},
-      constructor: function(options) {},
+      initialize: function(options) {},
 
       onInstall: function(track) {},
       beforeStart: function(track) {},

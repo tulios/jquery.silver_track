@@ -15,7 +15,7 @@
    *
    */
   $.silverTrackPlugin("ResponsiveHubConnector", {
-    constructor: function(options) {
+    initialize: function(options) {
       this.options = options;
       this.layouts = this.options.layouts;
       this.enabled = !!$.responsiveHub;

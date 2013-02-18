@@ -61,7 +61,7 @@
       onError: function(track, jqXHR, textStatus, errorThrown) {}
     },
 
-    constructor: function(options) {
+    initialize: function(options) {
       this.track = null;
       this.options = options;
       this.ajaxCache = {};

@@ -13,10 +13,10 @@ describe("$.silverTrackPlugin", function() {
     expect(SilverTrack.Plugins["NewPlugin"]).toBeDefined();
   });
 
-  it("should merge defaults and pass to constructor", function() {
+  it("should merge defaults and pass to initialize", function() {
     $.silverTrackPlugin("NewPlugin", {
       defaults: { attr: 1 },
-      constructor: function(options) {
+      initialize: function(options) {
         expect(options).toBeDefined();
         expect(options.attr).toBe(1);
       }
@@ -30,8 +30,8 @@ describe("$.silverTrackPlugin", function() {
       plugin = new SilverTrack.Plugins.NewPlugin();
     });
 
-    it("should define 'constructor'", function() {
-      expect(plugin.constructor).toBeDefined();
+    it("should define 'initialize'", function() {
+      expect(plugin.initialize).toBeDefined();
     });
 
     it("should define 'onInstall'", function() {

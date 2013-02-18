@@ -18,7 +18,7 @@
       disabledClass: "disabled"
     },
 
-    constructor: function(options) {
+    initialize: function(options) {
       this.track = null;
       this.options = options;
       this.prev = this.options.prev;
