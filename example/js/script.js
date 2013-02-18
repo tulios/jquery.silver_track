@@ -1,5 +1,7 @@
 jQuery(function() {
 
+  jQuery.support.cors = true;
+
   window.SilverTrackExample = {
     defaults: {easing: "easeInOutQuad", duration: 600},
     echoServerHost: "http://echo-server.herokuapp.com",
