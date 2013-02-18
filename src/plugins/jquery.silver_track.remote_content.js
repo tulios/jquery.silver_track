@@ -144,7 +144,7 @@
 
     _onError: function(jqXHR, textStatus, errorThrown) {
       if (window.console) {
-        console.debug('SilverTrack.Plugins.RemoteContent - Error:', textStatus);
+        console.info('SilverTrack.Plugins.RemoteContent - Error:', textStatus);
       }
 
       this.options.onError(this.track, jqXHR, textStatus, errorThrown);
