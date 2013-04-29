@@ -173,6 +173,8 @@
         this.track.container.append(item);
         width += item.outerWidth(true);
       }
+
+      this.track.container.width(width);
     },
 
     _positionVertical: function(items) {
