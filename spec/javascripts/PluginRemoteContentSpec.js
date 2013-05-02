@@ -85,6 +85,10 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
       expect(plugin.options.beforeAppend).toBeDefined();
     });
 
+    it("should have a default 'afterAppend'", function() {
+      expect(plugin.options.afterAppend).toBeDefined();
+    });
+
     it("should have a default 'process'", function() {
       expect(plugin.options.process).toBeDefined();
     });
@@ -236,7 +240,7 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
       describe("and the url is defined by a function", function() {
         beforeEach(function() {
           plugin = createPlugin({
-            url: function(page, perPage) {
+            url: function(track, page, perPage) {
               return "some/url/" + page + "/" + perPage;
             }
           });
@@ -323,6 +327,13 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
           spyOn(plugin.options, "beforeAppend");
           track.start();
           expect(plugin.options.beforeAppend).toHaveBeenCalledWith(track, jasmine.any(Object));
+        });
+
+        it("should call 'afterAppend'", function() {
+          mockAjaxMultiplePages();
+          spyOn(plugin.options, "afterAppend");
+          track.start();
+          expect(plugin.options.afterAppend).toHaveBeenCalledWith(track, jasmine.any(Object));
         });
 
         it("should call 'updateTotalPages'", function() {

@@ -10,7 +10,7 @@
    * track.install(new SilverTrack.Plugins.RemoteContent({
    *
    *   // A string or a function to generate the URL
-   *   url: function(page, perPage) {
+   *   url: function(track, page, perPage) {
    *     return "/my/url/page/" + page;
    *   },
    *
@@ -56,6 +56,7 @@
       beforeStart: function(track) {},
       beforeSend: function(track, jqXHR, settings) {},
       beforeAppend: function(track) {},
+      afterAppend: function(track) {},
       process: function(track, perPage, data) {},
       updateTotalPages: function(track, data) {},
       onError: function(track, jqXHR, textStatus, errorThrown) {}
@@ -131,8 +132,10 @@
     _onSuccess: function(url, data) {
       this.ajaxCache[url] = true;
       var items = this.options.process(this.track, this.track.options.perPage, data) || [];
+
       this.options.beforeAppend(this.track, items);
       this._updateItemsPosition(items);
+      this.options.afterAppend(this.track, items);
 
       this.options.updateTotalPages(this.track, data);
       this.track.reloadItems();
@@ -200,7 +203,7 @@
       var perPage = this.track.options.perPage;
 
       if (typeof url === 'function') {
-        return url(page, perPage);
+        return url(this.track, page, perPage);
       }
 
       return url.replace(/{page}/, page).replace(/{perPage}/, perPage);
