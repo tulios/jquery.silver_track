@@ -96,7 +96,7 @@
     _updateNavigationControls: function() {
       var self = this;
       this.track.next = function() {
-        if (self.loadContentEnabled) {
+        if (self.track.hasNext() && self.loadContentEnabled) {
 
           var page = self.track.currentPage + 1;
           self.loadContentEnabled = false;

@@ -217,6 +217,29 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
         track.next();
         expect(track.goToPage).toHaveBeenCalledWith(currentPage + 1);
       });
+
+      describe("when there is only one page", function() {
+        it("should get the first page", function() {
+          spyOn(track, "goToPage");
+
+          track.start();
+          expect(track.goToPage).toHaveBeenCalledWith(track.currentPage, {animate: false});
+        });
+
+        it("should not allow the user to go to the next page", function() {
+          var currentPage = track.currentPage;
+
+          spyOn(track, "hasNext").andReturn(false);
+          spyOn(track, "goToPage");
+
+          // First query
+          track.start();
+          track.next();
+
+          expect(track.goToPage).not.toHaveBeenCalledWith(currentPage + 1);
+          expect(track.currentPage).toEqual(1);
+        });
+      });
     });
 
     describe("when loading content", function() {
