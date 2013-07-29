@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.1.0
+ * version: 0.2.0
  */
 
 (function ($, window, document) {
@@ -12,7 +12,7 @@
     var container = $(this);
 
     if (!container.data(instanceName)) {
-      var options = $.extend({}, $.fn.silverTrack.options, options);
+      options = $.extend({}, $.fn.silverTrack.options, options);
       var instance = new SilverTrack(container, options);
       container.data(instanceName, instance);
       return instance;
@@ -57,6 +57,15 @@
      * opts: {animate: true|false}
      */
     goToPage: function(page, opts) {
+      opts = $.extend({animate: true}, opts);
+
+      var useCover = this.options.cover && (page === 1);
+      var direction = page > this.currentPage ? "next" : "prev";
+      var items = useCover ? this._getCover() : this._calculateItemsForPagination(page);
+      var isHorizontal = this.options.mode === "horizontal";
+
+      this._adjustHeight(items, opts.animate);
+
       if (!this.paginationEnabled ||
           (page <= this.currentPage && this.currentPage === 1) ||
           page > this.totalPages ||
@@ -64,15 +73,9 @@
         return;
       }
 
-      var useCover = this.options.cover && (page === 1);
-      var isHorizontal = this.options.mode === "horizontal";
-      var direction = page > this.currentPage ? "next" : "prev";
-      var items = useCover ? this._getCover() : this._calculateItemsForPagination(page);
-
       if (items.length > 0) {
         var shift = this._calculateItemLeft(items.get(0));
         var event = {name: direction, page: page, cover: useCover, items: items};
-        var opts = $.extend({animate: true}, opts);
 
         if (items.length < this.options.perPage && !useCover && isHorizontal) {
           shift -= this.itemWidth * (this.options.perPage - items.length);
@@ -108,9 +111,9 @@
      *  keepCurrentPage: true|false, // default: false
      *  animate: true|false          // default: false
      * }
-     */ 
+     */
     restart: function(opts) {
-      var opts = $.extend({
+      opts = $.extend({
         page: 1,
         keepCurrentPage: false,
         animate: false
@@ -174,12 +177,12 @@
       this.container.stop().animate({"left": "-" + shift + "px"}, duration, this.options.easing, function() {
         self.paginationEnabled = true;
         self._executeAll("afterAnimation", [event]);
-        self._adjustHeight(event.items);
       });
     },
 
-    _adjustHeight: function(items) {
-      if (this.options.autoHeight == true) {
+    _adjustHeight: function(items, isAnimated) {
+      if (this.options.autoHeight === true) {
+        var duration = isAnimated ? this.options.duration : 0;
         var newHeight = 0;
 
         if (this.options.mode === "horizontal") {
@@ -193,7 +196,7 @@
 
         var event = {items: items, newHeight: newHeight};
         this._executeAll("beforeAdjustHeight", [event]);
-        this.container.stop().animate({"height": newHeight + "px"});
+        this.container.stop().animate({"height": newHeight + "px"}, duration);
         this._executeAll("afterAdjustHeight", [event]);
       }
     },
