@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack - Remote Content Plugin
  * https://github.com/tulios/jquery.silver_track
- * version: 0.1.0
+ * version: 0.2.0
  */
 
 (function ($, window, document) {
