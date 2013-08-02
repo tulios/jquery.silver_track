@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack - Navigator Plugin
  * https://github.com/tulios/jquery.silver_track
- * version: 0.2.0
+ * version: 0.2.1
  */
 
 (function ($, window, document) {
