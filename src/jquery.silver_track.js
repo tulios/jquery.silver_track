@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.2.0
+ * version: 0.2.1
  */
 
 (function ($, window, document) {
@@ -59,17 +59,18 @@
     goToPage: function(page, opts) {
       opts = $.extend({animate: true}, opts);
 
+      var duration = opts.animate ? this.options.duration : 0;
       var useCover = this.options.cover && (page === 1);
       var direction = page > this.currentPage ? "next" : "prev";
       var items = useCover ? this._getCover() : this._calculateItemsForPagination(page);
       var isHorizontal = this.options.mode === "horizontal";
 
-      this._adjustHeight(items, opts.animate);
-
       if (!this.paginationEnabled ||
           (page <= this.currentPage && this.currentPage === 1) ||
           page > this.totalPages ||
           page === this.currentPage) {
+
+        this._adjustHeight(items, duration);
         return;
       }
 
@@ -85,7 +86,8 @@
         this._executeAll("beforePagination", [event]);
         this.paginationEnabled = false;
 
-        this._animate(shift, event, opts.animate);
+        this._animate(shift, event, duration);
+        this._adjustHeight(items, duration);
       }
     },
 
@@ -169,20 +171,18 @@
       return $("." + this.options.itemClass + ":first", this.container);
     },
 
-    _animate: function(shift, event, isAnimated) {
+    _animate: function(shift, event, duration) {
       var self = this;
-      var duration = isAnimated ? this.options.duration : 0;
 
       this._executeAll("beforeAnimation", [event]);
-      this.container.stop().animate({"left": "-" + shift + "px"}, duration, this.options.easing, function() {
+      this.container.animate({"left": "-" + shift + "px"}, duration, this.options.easing, function() {
         self.paginationEnabled = true;
         self._executeAll("afterAnimation", [event]);
       });
     },
 
-    _adjustHeight: function(items, isAnimated) {
+    _adjustHeight: function(items, duration) {
       if (this.options.autoHeight === true) {
-        var duration = isAnimated ? this.options.duration : 0;
         var newHeight = 0;
 
         if (this.options.mode === "horizontal") {
@@ -196,7 +196,7 @@
 
         var event = {items: items, newHeight: newHeight};
         this._executeAll("beforeAdjustHeight", [event]);
-        this.container.stop().animate({"height": newHeight + "px"}, duration);
+        this.container.animate({"height": newHeight + "px"}, duration);
         this._executeAll("afterAdjustHeight", [event]);
       }
     },

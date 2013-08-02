@@ -273,14 +273,14 @@ describe("$.silverTrack", function() {
         it("should be true by default", function() {
           track.goToPage(2);
           expect(track._animate).toHaveBeenCalledWith(
-            jasmine.any(Number), jasmine.any(Object), true
+            jasmine.any(Number), jasmine.any(Object), track.options.duration
           );
         });
 
         it("should be allowed to change", function() {
           track.goToPage(2, {animate: false});
           expect(track._animate).toHaveBeenCalledWith(
-            jasmine.any(Number), jasmine.any(Object), false
+            jasmine.any(Number), jasmine.any(Object), 0
           );
         });
       });
