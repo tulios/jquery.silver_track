@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.2.1
+ * version: 0.2.2
  */
 
 (function ($, window, document) {
@@ -65,12 +65,7 @@
       var items = useCover ? this._getCover() : this._calculateItemsForPagination(page);
       var isHorizontal = this.options.mode === "horizontal";
 
-      if (!this.paginationEnabled ||
-          (page <= this.currentPage && this.currentPage === 1) ||
-          page > this.totalPages ||
-          page === this.currentPage) {
-
-        this._adjustHeight(items, duration);
+      if (!this._canPaginate(page)) {
         return;
       }
 
@@ -169,6 +164,14 @@
 
     _getCover: function() {
       return $("." + this.options.itemClass + ":first", this.container);
+    },
+
+    _canPaginate: function(page) {
+      if (!this.paginationEnabled || page > this.totalPages || page < 1) {
+        return false;
+      }
+
+      return true;
     },
 
     _animate: function(shift, event, duration) {

@@ -253,16 +253,6 @@ describe("$.silverTrack", function() {
         expect(track.currentPage).toBe(1);
       });
 
-      it("should do nothing if newPage is equal to currentPage", function() {
-        spyOn(track, "_animate");
-        track.currentPage = 2;
-        expect(track.currentPage).toBe(2);
-
-        track.goToPage(2);
-        expect(track._animate).not.toHaveBeenCalled();
-        expect(track.currentPage).toBe(2);
-      });
-
       describe("'animate' option", function() {
         beforeEach(function() {
           spyOn(track, "_animate");
