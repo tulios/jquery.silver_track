@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack - Responsive Hub Connector Plugin
  * https://github.com/tulios/jquery.silver_track
- * version: 0.2.1
+ * version: 0.2.2
  */
 
 (function ($, window, document) {
