@@ -10,8 +10,12 @@ jQuery(function() {
       return this.urlCreator(json, opts.page, opts.totalPages);
     },
 
+    getPage: function(currentPage) {
+      return currentPage ? currentPage + 1 : 1;
+    },
+
     urlCreator: function(obj, page, totalPages) {
-      var jsonText = encodeURIComponent(JSON.stringify(obj));
+      var jsonText = escape(JSON.stringify(obj));
       return this.echoServerHost + "/echo/json/" + page + "?json=" + jsonText + "&total_pages=" + totalPages;
     },
 

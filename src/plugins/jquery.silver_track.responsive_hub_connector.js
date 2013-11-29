@@ -4,7 +4,7 @@
  * version: 0.2.2
  */
 
-(function ($, window, document) {
+(function($, window, document) {
 
   /*
    * track.install(new SilverTrack.Plugins.ResponsiveHubConnector({
