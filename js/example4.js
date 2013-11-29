@@ -18,7 +18,7 @@ jQuery(function() {
   }));
 
   track.install(new SilverTrack.Plugins.RemoteContent({
-    url: function(page, perPage) {
+    url: function(track, page, perPage) {
       return SilverTrackExample.urlAjax({page: page, perPage: perPage, totalPages: 5})
     },
     beforeStart: function(track) {
@@ -32,6 +32,10 @@ jQuery(function() {
       var array = [];
 
       for (var i = 0; i < perPage; i++) {
+        if (data[i] === undefined) {
+          break;
+        }
+
         array.push(
           $("<div></div>", {"class": "item"}).
           append($("<img>", {"src": data[i].img_url})).
@@ -74,4 +78,3 @@ jQuery(function() {
   track.start();
 
 });
-

@@ -1,5 +1,7 @@
 jQuery(function() {
 
+  jQuery.support.cors = true;
+
   window.SilverTrackExample = {
     defaults: {easing: "easeInOutQuad", duration: 600},
     echoServerHost: "http://echo-server.herokuapp.com",
@@ -9,7 +11,7 @@ jQuery(function() {
     },
 
     urlCreator: function(obj, page, totalPages) {
-      var jsonText = encodeURIComponent(JSON.stringify(obj));
+      var jsonText = escape(JSON.stringify(obj));
       return this.echoServerHost + "/echo/json/" + page + "?json=" + jsonText + "&total_pages=" + totalPages;
     },
 
