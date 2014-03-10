@@ -24,6 +24,11 @@ describe("$.silverTrackPlugin", function() {
     new SilverTrack.Plugins.NewPlugin();
   });
 
+  it("should store the plugin name into PluginName", function() {
+    $.silverTrackPlugin("NewPlugin", {});
+    expect(new SilverTrack.Plugins.NewPlugin().PluginName).toBe("NewPlugin");
+  });
+
   describe("about callbacks", function() {
     beforeEach(function() {
       $.silverTrackPlugin("NewPlugin", {});

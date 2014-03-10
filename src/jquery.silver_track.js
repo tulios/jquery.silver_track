@@ -324,6 +324,7 @@
   $.silverTrackPlugin = function(name, obj) {
     SilverTrack.Plugins[name] = function(settings){
       var options = $.extend({}, this.defaults, settings);
+      this.PluginName = name;
       this.initialize(options);
     };
 

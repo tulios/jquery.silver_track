@@ -1,4 +1,6 @@
 body {
+  font-family: Helvetica Neue, serif;
+  font-size: 16px;
   margin: 0;
   padding: 0;
 }
@@ -36,6 +38,11 @@ h2 {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
   text-transform: uppercase;
   color: #999;
+}
+
+.container {
+  width: 960px;
+  margin: auto;
 }
 
 .actions {

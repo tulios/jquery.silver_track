@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Basic - jQuery SilverTrack</title>
+
+  <meta name="description" content="A smart and very extensible jquery sliding carousel">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+  <link rel="stylesheet" href="css/prism.css" type="text/css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="css/gh-buttons.css" type="text/css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="css/responsive.css" type="text/css" media="screen" charset="utf-8">
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script type="text/javascript" src="../lib/jquery-easing-1.3.0.js"></script>
+  <script type="text/javascript" src="../lib/modernizr_mediaqueries.js"></script>
+  <script type="text/javascript" src="../lib/responsive-hub.js"></script>
+  <script type="text/javascript" src="../src/jquery.silver_track.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../src/jquery.silver_track_recipes.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../src/plugins/jquery.silver_track.navigator.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../src/plugins/jquery.silver_track.bullet_navigator.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../src/plugins/jquery.silver_track.responsive_hub_connector.js" charset="utf-8"></script>
+
+  <script type="text/javascript" src="js/recipe_example1.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/recipe_example1_usage.js" charset="utf-8"></script>
+
+  <script>
+    $(function() {
+      $.responsiveHub({
+        layouts: {
+          480:  "phone",
+          481:  "small-tablet",
+          731:  "tablet",
+          981:  "web"
+        },
+        defaultLayout: "web"
+      });
+    });
+  </script>
+</head>
+<body>
+
+  <a id="forkme_banner" href="https://github.com/tulios/jquery.silver_track">View on GitHub</a>
+
+  <div class="head">
+    <h1>jQuery SilverTrack</h1>
+  </div>
+
+  <div class="container">
+    <p>
+      SilverTrack was designed to be extensible through other plugins.
+    </p>
+    <p>
+      To create a new track is simple as:
+    </p>
+
+    <pre>
+      <code class="language-markup">
+&lt;div class=&quot;view-port&quot;&gt;
+  &lt;div class=&quot;slider-container&quot;&gt;
+    &lt;div class=&quot;item&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;item&quot;&gt;&lt;/div&gt;
+    &lt;!-- ... --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+    </pre>
+    <pre>
+      <code class="language-css">
+.view-port {
+  overflow: hidden;
+  position: relative;
+}
+.slider-container {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+.item {
+  position: absolute;
+}</code>
+    </pre>
+
+    <pre>
+      <code class="language-javascript">
+var track = $(".slider-container").silverTrack();
+
+// install the plugins you want
+track.install(new SilverTrack.Plugins.Navigator({
+  prev: $("a.prev", parent),
+  next: $("a.next", parent)
+}));
+
+track.start();</code>
+    </pre>
+  </div>
+
+  <div class="track example-1">
+    <div class="inner">
+      <h2>Basic 1</h2>
+
+      <div class="view-port">
+        <div class="slider-container">
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/1/">
+            <p>Trailer 1</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/2/">
+            <p>Trailer 2</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/3/">
+            <p>Trailer 3</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/4/">
+            <p>Trailer 4</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/5/">
+            <p>Trailer 5</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/6/">
+            <p>Trailer 6</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/7/">
+            <p>Trailer 7</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/8/">
+            <p>Trailer 8</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/nature/9/">
+            <p>Trailer 9</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bullet-pagination"></div>
+    </div>
+
+    <div class="pagination">
+      <a href="#" class="prev disabled"></a>
+      <a href="#" class="next disabled"></a>
+    </div>
+  </div>
+
+  <div class="track example-1">
+    <div class="inner">
+      <h2>Basic 2</h2>
+
+      <div class="view-port">
+        <div class="slider-container">
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/1/">
+            <p>Trailer 1</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/2/">
+            <p>Trailer 2</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/3/">
+            <p>Trailer 3</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/4/">
+            <p>Trailer 4</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/5/">
+            <p>Trailer 5</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/6/">
+            <p>Trailer 6</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/7/">
+            <p>Trailer 7</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/8/">
+            <p>Trailer 8</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/business/9/">
+            <p>Trailer 9</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bullet-pagination"></div>
+    </div>
+
+    <div class="pagination">
+      <a href="#" class="prev disabled"></a>
+      <a href="#" class="next disabled"></a>
+    </div>
+  </div>
+
+  <div class="track example-1">
+    <div class="inner">
+      <h2>Basic 3</h2>
+
+      <div class="view-port">
+        <div class="slider-container">
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/1/">
+            <p>Trailer 1</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/2/">
+            <p>Trailer 2</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/3/">
+            <p>Trailer 3</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/4/">
+            <p>Trailer 4</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/5/">
+            <p>Trailer 5</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/6/">
+            <p>Trailer 6</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/7/">
+            <p>Trailer 7</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/8/">
+            <p>Trailer 8</p>
+          </div>
+          <div class="item">
+            <img src="http://lorempixel.com/220/124/animals/9/">
+            <p>Trailer 9</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bullet-pagination"></div>
+    </div>
+
+    <div class="pagination">
+      <a href="#" class="prev disabled"></a>
+      <a href="#" class="next disabled"></a>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="js/lib/prism.js" charset="utf-8"></script>
+</body>
+</html>
