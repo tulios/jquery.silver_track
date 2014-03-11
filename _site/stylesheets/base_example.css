@@ -1,0 +1,73 @@
+.view-port {
+  overflow: hidden;
+  position: relative;
+}
+
+.view-port, .track .inner {
+  width: 960px;
+}
+
+.slider-container {
+  position: relative;
+  height: 138px;
+  margin: 0;
+  padding: 0;
+}
+.item {
+  position: absolute;
+
+  width: 234px;
+  height: 138px;
+  margin-right: 8px
+}
+
+.track {
+  position: relative;
+  background-color: white;
+  padding: 10px 2px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.track a.prev,
+.track a.next {
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -32px;
+  width: 64px;
+  height: 64px;
+  background: url("../images/arrows.png");
+  background-repeat: no-repeat;
+}
+
+.track a.prev.disabled,
+.track a.next.disabled {
+  display: none;
+}
+
+.track a.prev {
+  left: 0;
+  background-position: 0 0;
+}
+
+.track a.prev:hover {
+  background-position: 0 -66px;
+}
+
+.track a.prev:active {
+  background-position: 0 -132px;
+}
+
+.track a.next {
+  right: 0;
+  background-position: -64px 0;
+}
+
+.track a.next:hover {
+  background-position: -64px -132px;
+}
+
+.track a.next:active {
+  background-position: -64px -198px;
+}
