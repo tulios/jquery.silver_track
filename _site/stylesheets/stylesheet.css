@@ -337,6 +337,10 @@ footer a:hover {
 * html .clearfix {height: 1%;}
 .clearfix {display: block;}
 
+.menu {
+  margin-top: 50px;
+}
+
 /* #Media Queries
 ================================================== */
 

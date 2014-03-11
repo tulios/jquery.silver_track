@@ -1,0 +1,20 @@
+<nav class="menu">
+  <h3>How To's:</h3>
+  <ul>
+    {% for post in site.categories.how_tos reversed %}
+      <li{% if post.title == page.title %} class="current"{% endif %}><a href="..{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+  <h3>Plugins:</h3>
+  <ul>
+    {% for post in site.categories.plugins reversed %}
+      <li{% if post.title == page.title %} class="current"{% endif %}><a href="..{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+  <h3>Advanced:</h3>
+  <ul>
+    {% for post in site.categories.advanced reversed %}
+      <li{% if post.title == page.title %} class="current"{% endif %}><a href="..{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
