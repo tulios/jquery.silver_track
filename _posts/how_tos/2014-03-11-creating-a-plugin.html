@@ -4,7 +4,7 @@ title: Creating a plugin
 category: how_tos
 ---
 
-<script type="text/javascript" src="/javascripts/creating_plugin_example.js"></script>
+<script type="text/javascript" src="../javascripts/creating_plugin_example.js"></script>
 
 <p>
 SilverTrack was designed to be extensible through plugins, so it provides a clean way to define one. To explain the internals of the missing art of plugin crafters we will create an <strong>example plugin</strong> that presents an alert to the user when an item is clicked. To create our plugin we will use the method <em>$.silverTrackPlugin</em>, this method receives the plugin name and an object that will handle all the callbacks during the life cycle of our track.
@@ -52,7 +52,7 @@ $.silverTrackPlugin("ConfirmWhenItemClicked", {
 {% endhighlight %}
 
 <p>
-We will use the same markup of the <a href="/">getting started track</a>, just surrounding the images with a link. The code to create the track and install our plugin is:
+We will use the same markup of the <a href="http://tulios.github.io/jquery.silver_track/">getting started track</a>, just surrounding the images with a link. The code to create the track and install our plugin is:
 </p>
 
 {% highlight js %}

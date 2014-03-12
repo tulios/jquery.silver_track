@@ -4,7 +4,7 @@ title: Defining a recipe
 category: how_tos
 ---
 
-<script type="text/javascript" src="/javascripts/defining_recipe_example.js"></script>
+<script type="text/javascript" src="../javascripts/defining_recipe_example.js"></script>
 
 <p>
 With great plugins comes great responsabilities. In some cases we have a lot of tracks in a page and some of them may have different plugins (or lots of them) and configurations, to enhance the creation in these cases we created SilverTrackRecipes. It is a way to define a track recipe, with all its particularities, and refer to that recipe later, using a much simplified interface. To allow these creations we will use the method <em>$.silverTrackRecipes</em> to define the recipes and <em>$.silverTrackRecipes.create</em> to refer to one recipe and create the track.
@@ -15,7 +15,7 @@ With great plugins comes great responsabilities. In some cases we have a lot of 
 </p>
 
 <p>
-We will create a recipe with the basic track we learn at <a href="/">getting started</a>, let's call it, humm..., basic.
+We will create a recipe with the basic track we learn at <a href="http://tulios.github.io/jquery.silver_track/">getting started</a>, let's call it, humm..., basic.
 
 {% highlight js %}
 $.silverTrackRecipes("basic", function(factory) {
