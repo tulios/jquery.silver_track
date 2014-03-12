@@ -219,17 +219,25 @@ em {
 
 table {
   width: 100%;
-  border: 1px solid #ebebeb;
-}
-
-th {
-  font-weight: 500;
+  border: 1px solid #333;
+  margin-bottom: 20px;
 }
 
 td {
-  border: 1px solid #ebebeb;
-  text-align: center;
+  text-align: left;
+  padding: 10px;
+}
+
+td, th {
+  border: 1px solid #333;
   font-weight: 300;
+}
+
+th {
+  color: white;
+  background-color: #666;
+  text-shadow: none;
+  text-align: center  ;
 }
 
 form {

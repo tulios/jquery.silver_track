@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/site_style.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_monokai.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print" />
     <link rel="stylesheet" type="text/css" href="../stylesheets/base_example.css" media="screen" />
@@ -42,15 +43,179 @@
           <a href="https://github.com/tulios/jquery.silver_track" id="view-on-github" class="button"><span>View on GitHub</span></a>
         </section>
 
-        <hr>
-
 
 <h2>
   Creating a plugin
 </h2>
 
 <section id="main_content">
-  TODO:
+  <script type="text/javascript" src="/javascripts/creating_plugin_example.js"></script>
+
+<p>
+SilverTrack was designed to be extensible through plugins, so it provides a clean way to define one. To explain the internals of the missing art of plugin crafters we will create an <strong>example plugin</strong> that presents an alert to the user when an item is clicked. To create our plugin we will use the method <em>$.silverTrackPlugin</em>, this method receives the plugin name and an object that will handle all the callbacks during the life cycle of our track.
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackPlugin</span><span class="p">(</span><span class="s2">&quot;PluginName&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">defaults</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">attribute</span><span class="o">:</span> <span class="s2">&quot;default value&quot;</span>
+  <span class="p">},</span>
+
+  <span class="cm">/*</span>
+<span class="cm">   * Constructor</span>
+<span class="cm">   * options already merged with defaults</span>
+<span class="cm">   */</span>
+  <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="c1">// more callbacks</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>
+For our plugin, let's assume the following code:
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackPlugin</span><span class="p">(</span><span class="s2">&quot;ConfirmWhenItemClicked&quot;</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">defaults</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">message</span><span class="o">:</span> <span class="s2">&quot;Really?&quot;</span>
+  <span class="p">},</span>
+
+  <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span><span class="p">;</span>
+  <span class="p">},</span>
+
+  <span class="nx">beforeStart</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">track</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">itemSelector</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nx">track</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">itemClass</span><span class="p">;</span>
+    <span class="nx">track</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">itemSelector</span><span class="p">).</span><span class="nx">off</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">confirm</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">message</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>
+We will use the same markup of the <a href="/">getting started track</a>, just surrounding the images with a link. The code to create the track and install our plugin is:
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">container</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.my-track&quot;</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">track</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">&quot;.slider-container&quot;</span><span class="p">).</span><span class="nx">silverTrack</span><span class="p">();</span>
+
+  <span class="c1">// Look at this guy, it will rule the world!</span>
+  <span class="nx">track</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="k">new</span> <span class="nx">SilverTrack</span><span class="p">.</span><span class="nx">Plugins</span><span class="p">.</span><span class="nx">ConfirmWhenItemClicked</span><span class="p">());</span>
+
+  <span class="nx">track</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>
+and presto!
+</p>
+
+<div class="track my-track">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="item"><a href="http://lorempixel.com/230/134/nature/1/"><img src="http://lorempixel.com/230/134/nature/1/"></a></div>
+      <div class="item"><a href="http://lorempixel.com/230/134/nature/2/"><img src="http://lorempixel.com/230/134/nature/2/"></a></div>
+      <div class="item"><a href="http://lorempixel.com/230/134/nature/3/"><img src="http://lorempixel.com/230/134/nature/3/"></a></div>
+      <div class="item"><a href="http://lorempixel.com/230/134/nature/4/"><img src="http://lorempixel.com/230/134/nature/4/"></a></div>
+    </div>
+  </div>
+</div>
+
+<p>
+For a complete list of callbacks and their usage check the table below.
+</p>
+
+<h4>
+  Available callbacks
+</h4>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>arguments</td>
+  </tr>
+  <tr>
+    <td>initialize</td>
+    <td>It is the plugin constructor, it will receive the arguments passed to the plugin during the instantiation</td>
+    <td>options - already merged with it's defaults</td>
+  </tr>
+  <tr>
+    <td>onInstall</td>
+    <td>Diferent from initialize, this callback is called when your plugin is installed into a track, so this is the perfect moment to configure the track before it even starts</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>beforeStart</td>
+    <td>It is called when the track receives the method <em>start</em></td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>afterStart</td>
+    <td>It is called after the track is fully started</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>afterRestart</td>
+    <td>Is is called after the track restarts</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>onTotalPagesUpdate</td>
+    <td>Called when the totalPages is manual updated through the track method <em>updateTotalPages</em></td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>beforeAnimation</td>
+    <td>It is called before any animations. The event object has which event was trigged (prev/next) along with page, cover and the items</td>
+    <td>track, event1</td>
+  </tr>
+  <tr>
+    <td>afterAnimation</td>
+    <td>Is is called after any animations</td>
+    <td>track, event1</td>
+  </tr>
+  <tr>
+    <td>beforePagination</td>
+    <td>It is called before any pagination, it happens before any animation</td>
+    <td>track, event1</td>
+  </tr>
+  <tr>
+    <td>beforeAdjustHeight</td>
+    <td>It is called only if the track parameter <em>autoHeight</em> is true, the default is false. Is is called before the height adjustment. The event object has the new height</td>
+    <td>track, event2</td>
+  </tr>
+  <tr>
+    <td>afterAdjustHeight</td>
+    <td>It is called only if the track parameter <em>autoHeight</em> is true, the default is false. Is is called after the height adjustment. The event object has the new height</td>
+    <td>track, event2</td>
+  </tr>
+</table>
+
+<p>
+<strong>Event 1</strong>: beforeAnimation, afterAnimation and beforePagination
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;prev&quot;</span><span class="p">,</span> <span class="c1">// or &quot;next&quot;</span>
+  <span class="nx">page</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">cover</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">items</span><span class="o">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>
+<strong>Event 2</strong>: beforeAdjustHeight and afterAdjustHeight
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="p">{</span>
+  <span class="nx">items</span><span class="o">:</span> <span class="p">[],</span>
+  <span class="nx">newHeight</span><span class="o">:</span> <span class="mi">150</span>
+<span class="p">}</span>
+</code></pre></div>
 
 </section>
 
@@ -63,7 +228,7 @@
       <li><a href="../how_tos/defining-a-recipe.html">Defining a recipe</a></li>
     
   </ul>
-  <h3>Plugins:</h3>
+  <h3>Built-in Plugins:</h3>
   <ul>
     
       <li><a href="../plugins/bullet-navigator.html">Bullet Navigator</a></li>
@@ -81,6 +246,8 @@
       <li><a href="../advanced/callbacks.html">Callbacks</a></li>
     
       <li><a href="../advanced/initialization.html">Initialization params</a></li>
+    
+      <li><a href="../advanced/methods.html">Methods</a></li>
     
   </ul>
 </nav>

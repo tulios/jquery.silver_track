@@ -4,4 +4,175 @@ title: Creating a plugin
 category: how_tos
 ---
 
-TODO:
+<script type="text/javascript" src="/javascripts/creating_plugin_example.js"></script>
+
+<p>
+SilverTrack was designed to be extensible through plugins, so it provides a clean way to define one. To explain the internals of the missing art of plugin crafters we will create an <strong>example plugin</strong> that presents an alert to the user when an item is clicked. To create our plugin we will use the method <em>$.silverTrackPlugin</em>, this method receives the plugin name and an object that will handle all the callbacks during the life cycle of our track.
+</p>
+
+{% highlight js %}
+$.silverTrackPlugin("PluginName", {
+  defaults: {
+    attribute: "default value"
+  },
+
+  /*
+   * Constructor
+   * options already merged with defaults
+   */
+  initialize: function(options) {}
+  // more callbacks
+});
+{% endhighlight %}
+
+<p>
+For our plugin, let's assume the following code:
+</p>
+
+{% highlight js %}
+$.silverTrackPlugin("ConfirmWhenItemClicked", {
+  defaults: {
+    message: "Really?"
+  },
+
+  initialize: function(options) {
+    this.options = options;
+  },
+
+  beforeStart: function(track) {
+    var self = this;
+    var itemSelector = "." + track.options.itemClass;
+    track.container.find(itemSelector).off("click").click(function(e) {
+      if (!confirm(self.options.message)) {
+        e.preventDefault();
+      }
+    });
+  }
+});
+{% endhighlight %}
+
+<p>
+We will use the same markup of the <a href="/">getting started track</a>, just surrounding the images with a link. The code to create the track and install our plugin is:
+</p>
+
+{% highlight js %}
+$(function() {
+  var container = $(".my-track");
+  var track = container.find(".slider-container").silverTrack();
+
+  // Look at this guy, it will rule the world!
+  track.install(new SilverTrack.Plugins.ConfirmWhenItemClicked());
+
+  track.start();
+});
+{% endhighlight %}
+
+<p>
+and presto!
+</p>
+
+<div class="track my-track">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="item"><a href="http://lorempixel.com/230/134/nature/1/"><img src="http://lorempixel.com/230/134/nature/1/"></a></div>
+      <div class="item"><a href="http://lorempixel.com/230/134/nature/2/"><img src="http://lorempixel.com/230/134/nature/2/"></a></div>
+      <div class="item"><a href="http://lorempixel.com/230/134/nature/3/"><img src="http://lorempixel.com/230/134/nature/3/"></a></div>
+      <div class="item"><a href="http://lorempixel.com/230/134/nature/4/"><img src="http://lorempixel.com/230/134/nature/4/"></a></div>
+    </div>
+  </div>
+</div>
+
+<p>
+For a complete list of callbacks and their usage check the table below.
+</p>
+
+<h4>
+  Available callbacks
+</h4>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>arguments</td>
+  </tr>
+  <tr>
+    <td>initialize</td>
+    <td>It is the plugin constructor, it will receive the arguments passed to the plugin during the instantiation</td>
+    <td>options - already merged with it's defaults</td>
+  </tr>
+  <tr>
+    <td>onInstall</td>
+    <td>Diferent from initialize, this callback is called when your plugin is installed into a track, so this is the perfect moment to configure the track before it even starts</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>beforeStart</td>
+    <td>It is called when the track receives the method <em>start</em></td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>afterStart</td>
+    <td>It is called after the track is fully started</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>afterRestart</td>
+    <td>Is is called after the track restarts</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>onTotalPagesUpdate</td>
+    <td>Called when the totalPages is manual updated through the track method <em>updateTotalPages</em></td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>beforeAnimation</td>
+    <td>It is called before any animations. The event object has which event was trigged (prev/next) along with page, cover and the items</td>
+    <td>track, event1</td>
+  </tr>
+  <tr>
+    <td>afterAnimation</td>
+    <td>Is is called after any animations</td>
+    <td>track, event1</td>
+  </tr>
+  <tr>
+    <td>beforePagination</td>
+    <td>It is called before any pagination, it happens before any animation</td>
+    <td>track, event1</td>
+  </tr>
+  <tr>
+    <td>beforeAdjustHeight</td>
+    <td>It is called only if the track parameter <em>autoHeight</em> is true, the default is false. Is is called before the height adjustment. The event object has the new height</td>
+    <td>track, event2</td>
+  </tr>
+  <tr>
+    <td>afterAdjustHeight</td>
+    <td>It is called only if the track parameter <em>autoHeight</em> is true, the default is false. Is is called after the height adjustment. The event object has the new height</td>
+    <td>track, event2</td>
+  </tr>
+</table>
+
+<p>
+<strong>Event 1</strong>: beforeAnimation, afterAnimation and beforePagination
+</p>
+
+{% highlight js %}
+{
+  name: "prev", // or "next"
+  page: 1,
+  cover: false,
+  items: []
+}
+{% endhighlight %}
+
+<p>
+<strong>Event 2</strong>: beforeAdjustHeight and afterAdjustHeight
+</p>
+
+{% highlight js %}
+{
+  items: [],
+  newHeight: 150
+}
+{% endhighlight %}

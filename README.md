@@ -3,7 +3,7 @@
 ## Setup
 
 ```sh
-gem install jekyll
+gem install jekyll --no-ri --no-rdoc
 ```
 
 ## Generating pages
@@ -14,4 +14,4 @@ jekyll serve --watch
 
 URL
 
-  http://localhost:4000/jquery.chaos/
+  http://localhost:4000/

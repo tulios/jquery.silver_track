@@ -1,0 +1,19 @@
+a.button {
+  display: inline-block;
+  float: none;
+  text-align: left;
+}
+
+#downloads {
+  text-align: center;
+  margin: 40px 0;
+}
+
+header {
+  text-align: center;
+}
+
+.plugin-description {
+  font-size: 26px;
+  margin: 80px 0;
+}
