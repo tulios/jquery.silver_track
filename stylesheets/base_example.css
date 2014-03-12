@@ -71,3 +71,27 @@
 .track a.next:active {
   background-position: -64px -198px;
 }
+.bullet-pagination {
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.bullet {
+  display: inline-block;
+  background: #999;
+  padding: 4px;
+  border-radius: 6px;
+  margin-right: 5px;
+  opacity: 0.4;
+
+  -webkit-transition: opacity 0.5s linear;
+  -moz-transition: opacity 0.5s linear;
+  -ms-transition: opacity 0.5s linear;
+  -o-transition: opacity 0.5s linear;
+  transition: opacity 0.5s linear;
+}
+
+.bullet.active {
+  opacity: 1;
+}

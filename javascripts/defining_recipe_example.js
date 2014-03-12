@@ -1,27 +1,4 @@
 $(function() {
-  // =========================================================================
-  // Plugin definition
-  // =========================================================================
-  $.silverTrackPlugin("ConfirmWhenItemClicked", {
-    defaults: {
-      message: "Really?"
-    },
-
-    initialize: function(options) {
-      this.options = options;
-    },
-
-    beforeStart: function(track) {
-      var self = this;
-      var itemSelector = "." + track.options.itemClass;
-      track.container.find(itemSelector).off("click").click(function(e) {
-        if (!confirm(self.options.message)) {
-          e.preventDefault();
-        }
-      });
-    }
-  });
-
   // ==========================================================================
   // Defining recipes
   // ==========================================================================
@@ -43,13 +20,25 @@ $(function() {
     });
   });
 
+  $.silverTrackRecipes("complex", function(factory) {
+    factory.createTrack(function(element, options) {
+      return $.silverTrackRecipes.create("basic", element, options);
+    });
+
+    factory.installPlugins(function(track, options) {
+      track.install(new SilverTrack.Plugins.BulletNavigator({
+        container: $(".bullet-pagination", track.container.parents(".track"))
+      }));
+    });
+  });
+
   // ==========================================================================
   // Track initialization
   // ==========================================================================
   $(".track").each(function() {
     var container = $(this).find(".slider-container");
-    var e = container.data("easing");
-    var d = container.data("duration");
-    $.silverTrackRecipes.create("basic", container, {easing: e, duration: d}).start();
+    var recipe = container.data("recipe");
+    var opts = container.data("opts");
+    $.silverTrackRecipes.create(recipe, container, opts).start();
   });
 });
