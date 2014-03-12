@@ -49,7 +49,119 @@
 </h2>
 
 <section id="main_content">
-  TODO:
+  <script type="text/javascript" src="/javascripts/defining_recipe_example.js"></script>
+
+<p>
+With great plugins comes great responsabilities. In some cases we have a lot of tracks in a page and some of them may have different plugins (or lots of them) and configurations, to enhance the creation in these cases we created SilverTrackRecipes. It is a way to define a track recipe, with all its particularities, and refer to that recipe later, using a much simplified interface. To allow these creations we will use the method <em>$.silverTrackRecipes</em> to define the recipes and <em>$.silverTrackRecipes.create</em> to refer to one recipe and create the track.
+</p>
+
+<p>
+<em>$.silverTrackRecipes</em> will receive a string (the name of your recipe) and a function. This function will receive a factory object that will be responsible to assemble your track in a moment of need. The factory object has two methods, <em>createTrack</em> and <em>installPlugins</em>, you could use just one or both of them. The method <em>createTrack</em> should only be used when you want to customize the track initialization, the method will receive the element (track container) and an options object with your own options. It must return the new track. <em>installPlugins</em> will receive the already initialized track and the same options of createTrack, you should install the plugins you want here.
+</p>
+
+<p>
+We will create a recipe with the basic track we learn at <a href="/">getting started</a>, let's call it, humm..., basic.
+
+<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackRecipes</span><span class="p">(</span><span class="s2">&quot;basic&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">factory</span><span class="p">.</span><span class="nx">createTrack</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Let&#39;s tweak a little bit this track</span>
+    <span class="k">return</span> <span class="nx">element</span><span class="p">.</span><span class="nx">silverTrack</span><span class="p">({</span>
+      <span class="nx">easing</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">easing</span> <span class="o">||</span> <span class="s2">&quot;easeInOutQuad&quot;</span><span class="p">,</span>
+      <span class="nx">duration</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">duration</span> <span class="o">||</span> <span class="mi">600</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+
+  <span class="nx">factory</span><span class="p">.</span><span class="nx">installPlugins</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">track</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">parent</span> <span class="o">=</span> <span class="nx">track</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">parents</span><span class="p">(</span><span class="s2">&quot;.track&quot;</span><span class="p">);</span>
+    <span class="nx">track</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="k">new</span> <span class="nx">SilverTrack</span><span class="p">.</span><span class="nx">Plugins</span><span class="p">.</span><span class="nx">Navigator</span><span class="p">({</span>
+      <span class="nx">prev</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;a.prev&quot;</span><span class="p">,</span> <span class="nx">parent</span><span class="p">),</span>
+      <span class="nx">next</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;a.next&quot;</span><span class="p">,</span> <span class="nx">parent</span><span class="p">)</span>
+    <span class="p">}));</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>
+With all recipes defined, in our case just "basic", we can create a new instance of SilverTrack using one of these recipes. Look that in our recipe we have a default easing function and duration but is possible to set another values, let's create three tracks, each one with a different pair of values.
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.track&quot;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">container</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s2">&quot;.slider-container&quot;</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;easing&quot;</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;duration&quot;</span><span class="p">);</span>
+  <span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackRecipes</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s2">&quot;basic&quot;</span><span class="p">,</span> <span class="nx">container</span><span class="p">,</span> <span class="p">{</span><span class="nx">easing</span><span class="o">:</span> <span class="nx">e</span><span class="p">,</span> <span class="nx">duration</span><span class="o">:</span> <span class="nx">d</span><span class="p">}).</span><span class="nx">start</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<p>
+and the magic happens!
+</p>
+
+<div class="track">
+  <div class="view-port">
+    <div class="slider-container" data-easing="easeInOutSine" data-duration="800">
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/1/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/2/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/3/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/4/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/5/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/6/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/7/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/8/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/9/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/10/"></div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+
+<div class="track">
+  <div class="view-port">
+    <div class="slider-container" data-easing="easeInOutCubic" data-duration="700">
+      <div class="item"><img src="http://lorempixel.com/230/134/city/1/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/2/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/3/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/4/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/5/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/6/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/7/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/8/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/9/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/10/"></div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+
+<div class="track">
+  <div class="view-port">
+    <div class="slider-container" data-easing="easeInOutQuart" data-duration="400">
+      <div class="item"><img src="http://lorempixel.com/230/134/people/1/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/2/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/3/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/4/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/5/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/6/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/7/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/8/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/9/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/people/10/"></div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
 
 </section>
 
