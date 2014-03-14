@@ -50,12 +50,56 @@
 
 <section id="main_content">
   <p>
-TODO: write!
+This plugin provides a simple way to attach the next and previous actions.
 </p>
+
+<h4>
+  Options
+</h4>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>parameters</td>
+  </tr>
+  <tr>
+    <td>disabledClass</td>
+    <td>Class applied to disable the navigation element</td>
+    <td>disabled</td>
+  </tr>
+  <tr>
+    <td>prev</td>
+    <td>Element that will receive the "previous" function</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>next</td>
+    <td>Element that will receive the "next" function</td>
+    <td></td>
+  </tr>
+</table>
+
+<h4>
+  Installation
+</h4>
+
+<div class="highlight"><pre><code class="js"><span class="nx">track</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="k">new</span> <span class="nx">SilverTrack</span><span class="p">.</span><span class="nx">Plugins</span><span class="p">.</span><span class="nx">Navigator</span><span class="p">({</span>
+  <span class="nx">prev</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.my-track a.prev&quot;</span><span class="p">),</span>
+  <span class="nx">next</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.my-track a.next&quot;</span><span class="p">)</span>
+<span class="p">}));</span>
+</code></pre></div>
 
 </section>
 
   <nav class="menu">
+  <ul>
+    
+      <li><a href="../root/options.html">Options</a></li>
+    
+      <li><a href="../root/methods.html">Methods</a></li>
+    
+  </ul>
   <h3>How To's:</h3>
   <ul>
     
@@ -74,16 +118,6 @@ TODO: write!
       <li><a href="../plugins/remote-content.html">Remote Content</a></li>
     
       <li><a href="../plugins/responsive-hub-connector.html">ResponsiveHub Connector</a></li>
-    
-  </ul>
-  <h3>Advanced:</h3>
-  <ul>
-    
-      <li><a href="../advanced/callbacks.html">Callbacks</a></li>
-    
-      <li><a href="../advanced/initialization.html">Initialization params</a></li>
-    
-      <li><a href="../advanced/methods.html">Methods</a></li>
     
   </ul>
 </nav>

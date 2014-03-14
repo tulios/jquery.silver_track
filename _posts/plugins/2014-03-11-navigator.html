@@ -5,5 +5,43 @@ category: plugins
 ---
 
 <p>
-TODO: write!
+This plugin provides a simple way to attach the next and previous actions.
 </p>
+
+<h4>
+  Options
+</h4>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>parameters</td>
+  </tr>
+  <tr>
+    <td>disabledClass</td>
+    <td>Class applied to disable the navigation element</td>
+    <td>disabled</td>
+  </tr>
+  <tr>
+    <td>prev</td>
+    <td>Element that will receive the "previous" function</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>next</td>
+    <td>Element that will receive the "next" function</td>
+    <td></td>
+  </tr>
+</table>
+
+<h4>
+  Installation
+</h4>
+
+{% highlight js %}
+track.install(new SilverTrack.Plugins.Navigator({
+  prev: $(".my-track a.prev"),
+  next: $(".my-track a.next")
+}));
+{% endhighlight %}

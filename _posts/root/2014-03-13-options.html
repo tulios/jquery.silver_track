@@ -1,0 +1,138 @@
+---
+layout: main
+title: Options
+category: root
+---
+
+<script type="text/javascript" src="../javascripts/options_and_callbacks_example.js"></script>
+
+<p>
+All the options need to be passed in the initialization and will be available at <em>track.options</em>
+</p>
+
+{% highlight js %}
+$(".slider-container").silverTrack({
+  perPage: 4,
+  itemClass: "item",
+  mode: "horizontal",
+  autoHeight: false,
+  cover: false,
+  duration: "slow",
+  easing: "swing"
+});
+{% endhighlight %}
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>default</td>
+  </tr>
+  <tr>
+    <td>perPage</td>
+    <td>The amount of itens to display</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>itemClass</td>
+    <td>The class name that will be used to find the item</td>
+    <td>item</td>
+  </tr>
+  <tr>
+    <td>mode</td>
+    <td>The direction of pagination (horizontal or vertical)</td>
+    <td>horizontal</td>
+  </tr>
+  <tr>
+    <td>autoHeight</td>
+    <td>If it will adjust the track height after each pagination</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>cover</td>
+    <td>When set to true, the plugin will consider the first page as a cover and will consider it as one item</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>easing</td>
+    <td>Animation function used by SilverTrack. This function will be used by $.animate, so you could use any plugin that adds easing functions. Ex: <a href="http://gsgd.co.uk/sandbox/jquery/easing/">jQuery Easing</a></td>
+    <td>swing</td>
+  </tr>
+  <tr>
+    <td>duration</td>
+    <td>The duration used by the animation function</td>
+    <td>slow</td>
+  </tr>
+</table>
+
+<p>
+Using:
+</p>
+
+{% highlight js %}
+{itemClass: "my-item", cover: true, easing: "easeInOutQuad", duration: 600}
+{% endhighlight %}
+
+<div class="track first-example">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="my-item cover">
+        <div class="message">
+          <h2>Pick the best cover</h2>
+          <span>because it will occupy the whole first page, but it adds a nice touch of refinement</span>
+        </div>
+        <img src="../images/example/cover1.png">
+      </div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/1/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/2/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/3/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/4/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/5/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/6/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/7/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/8/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/9/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/10/"></div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+
+<p>
+Using:
+</p>
+
+{% highlight js %}
+{itemClas: "small-item", perPage: 5, mode: "vertical"}
+{% endhighlight %}
+
+<div class="track vertical second-example">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/1/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/2/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/3/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/4/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/5/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/6/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/7/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/8/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/9/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/10/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/1/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/2/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/3/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/4/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/5/"></div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>

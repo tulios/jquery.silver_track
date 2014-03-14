@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/site_style.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_monokai.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/base_example.css" media="screen" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="../javascripts/libs/jquery-easing-1.3.0.js"></script>
+    <script type="text/javascript" src="../javascripts/libs/modernizr_mediaqueries.js"></script>
+    <script type="text/javascript" src="../javascripts/libs/responsive-hub.js"></script>
+    <script type="text/javascript" src="../javascripts/plugin/jquery.silver_track.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../javascripts/plugin/jquery.silver_track_recipes.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../javascripts/plugin/plugins/jquery.silver_track.navigator.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../javascripts/plugin/plugins/jquery.silver_track.bullet_navigator.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../javascripts/plugin/plugins/jquery.silver_track.remote_content.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../javascripts/plugin/plugins/jquery.silver_track.responsive_hub_connector.js" charset="utf-8"></script>
+
+    <title>Options - jQuery.silver_track </title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1><a href="http://tulios.github.io/jquery.silver_track/">jQuery.silver_track</a></h1>
+          <h2>A smart and very extensible jquery sliding carousel</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/tulios/jquery.silver_track/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/tulios/jquery.silver_track/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/tulios/jquery.silver_track" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+
+<h2>
+  Options
+</h2>
+
+<section id="main_content">
+  <script type="text/javascript" src="../javascripts/options_and_callbacks_example.js"></script>
+
+<p>
+All the options need to be passed in the initialization and will be available at <em>track.options</em>
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.slider-container&quot;</span><span class="p">).</span><span class="nx">silverTrack</span><span class="p">({</span>
+  <span class="nx">perPage</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+  <span class="nx">itemClass</span><span class="o">:</span> <span class="s2">&quot;item&quot;</span><span class="p">,</span>
+  <span class="nx">mode</span><span class="o">:</span> <span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+  <span class="nx">autoHeight</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">cover</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">duration</span><span class="o">:</span> <span class="s2">&quot;slow&quot;</span><span class="p">,</span>
+  <span class="nx">easing</span><span class="o">:</span> <span class="s2">&quot;swing&quot;</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>default</td>
+  </tr>
+  <tr>
+    <td>perPage</td>
+    <td>The amount of itens to display</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>itemClass</td>
+    <td>The class name that will be used to find the item</td>
+    <td>item</td>
+  </tr>
+  <tr>
+    <td>mode</td>
+    <td>The direction of pagination (horizontal or vertical)</td>
+    <td>horizontal</td>
+  </tr>
+  <tr>
+    <td>autoHeight</td>
+    <td>If it will adjust the track height after each pagination</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>cover</td>
+    <td>When set to true, the plugin will consider the first page as a cover and will consider it as one item</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>easing</td>
+    <td>Animation function used by SilverTrack. This function will be used by $.animate, so you could use any plugin that adds easing functions. Ex: <a href="http://gsgd.co.uk/sandbox/jquery/easing/">jQuery Easing</a></td>
+    <td>swing</td>
+  </tr>
+  <tr>
+    <td>duration</td>
+    <td>The duration used by the animation function</td>
+    <td>slow</td>
+  </tr>
+</table>
+
+<p>
+Using:
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="p">{</span><span class="nx">itemClass</span><span class="o">:</span> <span class="s2">&quot;my-item&quot;</span><span class="p">,</span> <span class="nx">cover</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">easing</span><span class="o">:</span> <span class="s2">&quot;easeInOutQuad&quot;</span><span class="p">,</span> <span class="nx">duration</span><span class="o">:</span> <span class="mi">600</span><span class="p">}</span>
+</code></pre></div>
+
+<div class="track first-example">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="my-item cover">
+        <div class="message">
+          <h2>Pick the best cover</h2>
+          <span>because it will occupy the whole first page, but it adds a nice touch of refinement</span>
+        </div>
+        <img src="../images/example/cover1.png">
+      </div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/1/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/2/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/3/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/4/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/5/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/6/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/7/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/8/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/9/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/city/10/"></div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+
+<p>
+Using:
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="p">{</span><span class="nx">itemClas</span><span class="o">:</span> <span class="s2">&quot;small-item&quot;</span><span class="p">,</span> <span class="nx">perPage</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">mode</span><span class="o">:</span> <span class="s2">&quot;vertical&quot;</span><span class="p">}</span>
+</code></pre></div>
+
+<div class="track vertical second-example">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/1/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/2/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/3/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/4/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/5/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/6/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/7/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/8/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/9/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/fashion/10/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/1/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/2/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/3/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/4/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/people/5/"></div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+
+</section>
+
+  <nav class="menu">
+  <ul>
+    
+      <li class="current"><a href="../root/options.html">Options</a></li>
+    
+      <li><a href="../root/methods.html">Methods</a></li>
+    
+  </ul>
+  <h3>How To's:</h3>
+  <ul>
+    
+      <li><a href="../how_tos/creating-a-plugin.html">Creating a plugin</a></li>
+    
+      <li><a href="../how_tos/defining-a-recipe.html">Defining a recipe</a></li>
+    
+  </ul>
+  <h3>Built-in Plugins:</h3>
+  <ul>
+    
+      <li><a href="../plugins/bullet-navigator.html">Bullet Navigator</a></li>
+    
+      <li><a href="../plugins/navigator.html">Navigator</a></li>
+    
+      <li><a href="../plugins/remote-content.html">Remote Content</a></li>
+    
+      <li><a href="../plugins/responsive-hub-connector.html">ResponsiveHub Connector</a></li>
+    
+  </ul>
+</nav>
+
+
+  <footer>
+    <hr>
+    jQuery.silver_track is maintained by <a href="https://github.com/tulios">tulios</a><br>
+    This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+  </footer>
+
+</div>
+</div>
+</body>
+</html>
+

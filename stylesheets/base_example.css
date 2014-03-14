@@ -3,8 +3,20 @@
   position: relative;
 }
 
-.view-port, .track .inner {
+.view-port {
   width: 960px;
+}
+
+.track.vertical {
+  padding: 10px 10px 8px 10px;
+}
+
+.track.vertical, .track.vertical .view-port {
+  width: 188px;
+}
+
+.track.vertical .view-port, .track.vertical .view-port .slider-container {
+  height: 690px;
 }
 
 .slider-container {
@@ -13,12 +25,38 @@
   margin: 0;
   padding: 0;
 }
-.item {
+
+.item, .my-item {
   position: absolute;
 
   width: 234px;
   height: 138px;
   margin-right: 8px
+}
+
+.small-item {
+  position: absolute;
+
+  width: 188px;
+  height: 138px;
+  margin-right: 8px
+}
+
+.my-item.cover {
+  width: 952px;
+}
+
+.my-item.cover .message {
+  box-sizing: border-box;
+  float: left;
+  width: 230px;
+  height: 134px;
+  padding: 5px 16px 5px 10px;
+}
+
+.my-item.cover .message span {
+  text-align: justify;
+  display: inline-block;
 }
 
 .track {
