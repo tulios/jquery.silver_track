@@ -17,3 +17,19 @@ header {
   font-size: 26px;
   margin: 80px 0;
 }
+
+.commands .button-group:last-child {
+  margin-left: 0;
+}
+
+.console .info {
+  width: 954px;
+  font-size: 16px;
+}
+
+.go-to-page-field {
+  border: 1px solid #F7F7F7;
+  font-size: 12px;
+  padding: 5px;
+  width: 35px;
+}

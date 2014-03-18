@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../stylesheets/site_style.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_monokai.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../stylesheets/gh-buttons.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../stylesheets/print.css" media="print" />
     <link rel="stylesheet" type="text/css" href="../stylesheets/base_example.css" media="screen" />
     <!--[if lt IE 9]>
@@ -49,9 +50,66 @@
 </h2>
 
 <section id="main_content">
-  <p>
-TODO: write!
+  <script type="text/javascript" src="../javascripts/plugin_bullet_navigator_example.js"></script>
+
+<p>
+This plugin provides a simple way to create random navigation links.
 </p>
+
+<h4>
+  Options
+</h4>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>default</td>
+  </tr>
+  <tr>
+    <td>bulletClass</td>
+    <td>Class applied to each "bullet"</td>
+    <td>bullet</td>
+  </tr>
+  <tr>
+    <td>activeClass</td>
+    <td>Class applied to the active "bullet"</td>
+    <td>active</td>
+  </tr>
+  <tr>
+    <td>container</td>
+    <td>Container to append the navigation links</td>
+    <td></td>
+  </tr>
+</table>
+
+<h4>
+  Installation
+</h4>
+
+<div class="highlight"><pre><code class="js"><span class="nx">track</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="k">new</span> <span class="nx">SilverTrack</span><span class="p">.</span><span class="nx">Plugins</span><span class="p">.</span><span class="nx">BulletNavigator</span><span class="p">({</span>
+  <span class="nx">container</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.bullet-pagination&quot;</span><span class="p">)</span>
+<span class="p">}));</span>
+</code></pre></div>
+
+<div class="track">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/1/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/2/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/3/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/4/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/5/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/6/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/7/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/8/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/9/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/10/"></div>
+    </div>
+  </div>
+
+  <div class="bullet-pagination"></div>
+</div>
 
 </section>
 
