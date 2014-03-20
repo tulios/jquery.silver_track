@@ -4,6 +4,196 @@ title: Remote Content
 category: plugins
 ---
 
+<script type="text/javascript" src="../javascripts/plugin_remote_content_example.js"></script>
+
 <p>
-TODO: write!
+This plugin provides a way to load content through ajax. Example in the end of the page.
 </p>
+
+<h4>
+  Options
+</h4>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>default</td>
+  </tr>
+  <tr>
+    <td>lazy</td>
+    <td>It determines if RemoteContent will fetch the first page after the track starts or just when the user navigate to a page without cache. You will usually set this to false  when you render your first page with the track and get the other items through ajax</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>type</td>
+    <td>The type of request to make ("POST" or "GET"). This parameter is sent direct to <a href="https://api.jquery.com/jQuery.ajax/">jQuery.ajax</a> function</td>
+    <td>GET</td>
+  </tr>
+  <tr>
+    <td>params</td>
+    <td>Data to be sent to the server. This parameter is sent to option <em>"data"</em> of <a href="https://api.jquery.com/jQuery.ajax/">jQuery.ajax</a> function</td>
+    <td>{}</td>
+  </tr>
+  <tr>
+    <td>url</td>
+    <td>A string containing the URL to which the request is sent or a function that returns an url. If this option is a function, it will receive a reference of track, the page number and the perPage value, if not RemoteContent will try to replace the substrings <em>{page}</em> and <em>{perPage}</em> with the current values</td>
+    <td></td>
+  </tr>
+</table>
+
+<h4>
+  Callbacks
+</h4>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>arguments</td>
+  </tr>
+  <tr>
+    <td>beforeStart</td>
+    <td>Called before the track starts</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>beforeSend</td>
+    <td>It is a pre-request callback, it could be used to include spinners/loaders and do whatever you want before the request</td>
+    <td>track, jqXHR, settings</td>
+  </tr>
+  <tr>
+    <td>beforeAppend</td>
+    <td>Container to append the navigation links</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>afterAppend</td>
+    <td>Called before items are attached to the DOM</td>
+    <td>track</td>
+  </tr>
+  <tr>
+    <td>process</td>
+    <td>It is a function that will process the data loaded by the server and return an array of DOM items that will be appended to the DOM</td>
+    <td>track, perPage, data</td>
+  </tr>
+  <tr>
+    <td>updateTotalPages</td>
+    <td>It will be called after the <em>afterAppend</em> callback to update the total pages of the track based on the data loaded by the server</td>
+    <td>track, data</td>
+  </tr>
+  <tr>
+    <td>onError</td>
+    <td>Called whenever an error happens with the request</td>
+    <td>track, jqXHR, textStatus, errorThrown</td>
+  </tr>
+</table>
+
+<p>
+For our example, we will use a server called <a href="https://github.com/tulios/jquery.silver_track/blob/master/spec/server.rb">"echo"</a> that responds with the same JSON that we set through the parameter json, it will also return the total pages number that we set with the parameter total_pages.
+</p>
+
+<p>
+Because we are lazy people we will use the lazy option true, that is already set by default, thus the markup will be like:
+</p>
+
+{% highlight html %}
+<div class="track">
+  <div class="view-port">
+    <div class="slider-container">
+      <!-- no items, lazy developers! -->
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+{% endhighlight %}
+
+<p>
+For this examples we will need some support functions. We need to generate a fake json to allow the echo server to return json and we will also need to generate the appropriate url with the json parameter set. <em>This is just necessary <strong>to the example</strong>, in your code you will point to your service url and won't need any fake json generator.</em>
+</p>
+
+{% highlight js %}
+// Let's create a function to create the urls for our "echo" test server
+var urlToEchoServer = function(track, page, perPage) {
+  var jsonText = escape(JSON.stringify(fakeJsonCreator(page, perPage)));
+  var echoServerHost = "http://echo-server.herokuapp.com";
+  return echoServerHost + "/echo/json/" + page + "?json=" + jsonText + "&total_pages=5";
+}
+
+// Support function for our test
+var fakeJsonCreator = function(page, perPage) {
+  var photoTypes = ["food", "people", "nature", "sports"];
+  var items = [];
+  for (var i = 0; i < perPage; i++) {
+    items.push({img_url: "http://lorempixel.com/224/128/" + photoTypes[i]});
+  }
+
+  return items;
+}
+{% endhighlight %}
+
+<p>
+Then we will create our processor, the function that will transform the data from the server into an array of DOM elements, and install our plugin
+</p>
+
+{% highlight js %}
+// Let's create our processor, the function that will transform the data
+// from the server into an array of DOM elements
+var processor = function(track, perPage, json) {
+  var array = [];
+
+  for (var i = 0; i < perPage; i++) {
+    if (json.data[i] === undefined) {
+      break;
+    }
+
+    array.push(
+      $("<div></div>", {"class": "item"}).append($("<img>", {"src": json.data[i].img_url}))
+    );
+  }
+
+  return array;
+}
+
+// Then we install the plugin
+track.install(new SilverTrack.Plugins.RemoteContent({
+  url: urlToEchoServer,
+  process: processor,
+
+  beforeStart: function(track) {
+    track.container.parent().append($("<div></div>", {"class": "loading"}));
+  },
+
+  beforeSend: function(track) {
+    $(".loading", track.container.parent()).fadeIn();
+  },
+
+  beforeAppend: function(track, items) {
+    $(".loading", track.container.parent()).hide();
+  },
+
+  updateTotalPages: function(track, json) {
+    track.updateTotalPages(json.total_pages);
+  }
+}));
+{% endhighlight %}
+
+<p>
+and it's done!
+</p>
+
+<div class="track">
+  <div class="view-port">
+    <div class="slider-container">
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>

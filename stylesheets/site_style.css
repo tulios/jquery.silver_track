@@ -33,3 +33,21 @@ header {
   padding: 5px;
   width: 35px;
 }
+
+.loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  text-align: center;
+  line-height: 140px;
+  padding: 4px 0;
+  z-index: 1;
+}
+
+.loading:before {
+  content: "loading... this could take some time, sorry it's just an example =]";
+}
