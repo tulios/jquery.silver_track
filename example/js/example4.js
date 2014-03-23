@@ -78,4 +78,3 @@ jQuery(function() {
   track.start();
 
 });
-

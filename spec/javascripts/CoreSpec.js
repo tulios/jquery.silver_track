@@ -23,6 +23,7 @@ describe("$.silverTrack", function() {
       expect(track.options.autoHeight).toBe(false);
       expect(track.options.duration).toBe("slow");
       expect(track.options.easing).toBe("swing");
+      expect(track.options.animateFunction).toBe(null);
     });
 
     it("should allow the user to override the default values", function() {
@@ -31,7 +32,8 @@ describe("$.silverTrack", function() {
         itemClass: "new-class",
         cover: true,
         mode: "vertical",
-        autoHeight: true
+        autoHeight: true,
+        animateFunction: $.noop
       });
 
       expect(track.options.perPage).toBe(1);
@@ -39,6 +41,7 @@ describe("$.silverTrack", function() {
       expect(track.options.cover).toBe(true);
       expect(track.options.mode).toBe("vertical");
       expect(track.options.autoHeight).toBe(true);
+      expect(track.options.animateFunction).toEqual(jasmine.any(Function));
     });
 
     it("should keep the instance in a data attribute", function() {
@@ -189,7 +192,7 @@ describe("$.silverTrack", function() {
   });
 
   describe("#goToPage", function() {
-    describe("when animating", function() {
+    describe("when animating with $.fn.animate", function() {
       var easing = "easeInOutQuad";
       var duration = 600;
 
@@ -214,6 +217,26 @@ describe("$.silverTrack", function() {
         track.start();
         expect(track.options.easing).toBe($.fn.silverTrack.options.easing);
         $.easing[easing] = aux;
+      });
+    });
+
+    describe("when animating with custom animate function", function() {
+      var easing = "easeInOutQuad";
+      var duration = 600;
+
+      beforeEach(function() {
+        track = helpers.basic({easing: easing, duration: duration, animateFunction: $.noop});
+        spyOn(track.options, "animateFunction");
+      });
+
+      it("should inform the movement value, the after callback, the configured easing and duration", function() {
+        track.start();
+        track.goToPage(2);
+
+        var movement = {"left": "-960px"};
+        expect(track.options.animateFunction).toHaveBeenCalledWith(
+          movement, duration, easing, jasmine.any(Function)
+        );
       });
     });
 
@@ -255,21 +278,21 @@ describe("$.silverTrack", function() {
 
       describe("'animate' option", function() {
         beforeEach(function() {
-          spyOn(track, "_animate");
+          spyOn(track, "_slide");
           track.currentPage = 1;
           expect(track.currentPage).toBe(1);
         });
 
         it("should be true by default", function() {
           track.goToPage(2);
-          expect(track._animate).toHaveBeenCalledWith(
+          expect(track._slide).toHaveBeenCalledWith(
             jasmine.any(Number), jasmine.any(Object), track.options.duration
           );
         });
 
         it("should be allowed to change", function() {
           track.goToPage(2, {animate: false});
-          expect(track._animate).toHaveBeenCalledWith(
+          expect(track._slide).toHaveBeenCalledWith(
             jasmine.any(Number), jasmine.any(Object), 0
           );
         });
