@@ -11,12 +11,24 @@
 
 (function($, window, document) {
 
+  var BrowserPrefixes = ["webkit", "moz", "o", "ms"];
+  var TransitionEndEvents = "webkitTransitionEnd mozTransitionEnd oTransitionEnd msTransitionEnd transitionend";
+
   $.silverTrackPlugin("Css3Animation", {
     defaults: {
+      durationUnit: "ms",
+      delayUnit: null,
+
       setupParent: true,
       setupTransitionProperty: true,
       setupTransitionDuration: true,
-      setupTransitionTimingFunction: true
+      setupTransitionTimingFunction: true,
+      setupTransitionDelay: true,
+
+      slideDelay: 0,
+      autoHeightDuration: null,
+      autoHeightEasing: null,
+      autoHeightDelay: null
     },
 
     initialize: function(options) {
@@ -38,21 +50,31 @@
       this._setupTransition();
     },
 
+    afterRestart: function() {
+      this._setupTransition();
+    },
+
     cssAnimate: function(movement, duration, easing, afterCallback) {
       var element = this.track.container;
-      var eventsList = "webkitTransitionEnd mozTransitionEnd oTransitionEnd msTransitionEnd transitionend";
-      element.on(eventsList, function(){
+      element.on(TransitionEndEvents, function(){
         if (afterCallback !== null && afterCallback !== undefined) {
           afterCallback();
         }
-        element.off(eventsList);
+        element.off(TransitionEndEvents);
       });
 
-      this._applyTransform3d(element, movement);
+      if (!!movement.left) {
+        this._applyTransform3d(element, movement);
+
+      } else {
+        element.css(movement);
+      }
     },
 
     _setupTransition: function() {
+      var autoHeight = this.track.options.autoHeight;
       var element = this.track.container;
+      var values;
 
       // enabling hardware acceleration into the parent
       if (this.options.setupParent) {
@@ -61,17 +83,31 @@
 
       // pre configuring container
       if (this.options.setupTransitionProperty) {
-        element.css(this._toCompatibleVersion("transition-property", "transform", true));
+        element.css(this._toCompatibleVersion("transition-property", "transform", function(prefix, value) {
+          var transform = "-" + prefix + "-" + value;
+          return autoHeight ? transform + ", height" : transform;
+        }));
       }
 
       if (this.options.setupTransitionDuration) {
-        var duration = this.track.options.duration;
-        element.css(this._toCompatibleVersion("transition-duration", duration + "ms"));
+        var duration = this._toDuration(this.track.options.duration);
+        var autoHeightDuration = this._toDuration(this.options.autoHeightDuration || duration);
+        values = autoHeight ? [duration, autoHeightDuration] : [duration];
+        element.css(this._toCompatibleVersion("transition-duration", values.join(", ")));
       }
 
       if (this.options.setupTransitionTimingFunction) {
         var easing = this._easingFunctionToCubicBezier(this.track.options.easing);
-        element.css(this._toCompatibleVersion("transition-timing-function", easing));
+        var autoHeightEasing = this.options.autoHeightEasing || easing;
+        values = autoHeight ? [easing, autoHeightEasing] : [easing];
+        element.css(this._toCompatibleVersion("transition-timing-function", values.join(", ")));
+      }
+
+      if (this.options.setupTransitionDelay) {
+        var delay = this._toDelay(this.options.slideDelay);
+        var autoHeightDelay = this._toDelay(this.options.autoHeightDelay || this.options.slideDelay);
+        values = autoHeight ? [delay, autoHeightDelay] : [delay];
+        element.css(this._toCompatibleVersion("transition-delay", values.join(", ")));
       }
     },
 
@@ -79,14 +115,18 @@
       element.css(this._toCompatibleVersion("transform", "translate3d(" + movement.left + ", 0px, 0px)"));
     },
 
-    _toCompatibleVersion: function(name, value, applyToValue) {
-      var output = {};
-      $.each(["webkit", "moz", "o", "ms"], function() {
-        var str = value;
-        if (applyToValue === true) {
-          str = "-" + this + "-" + str;
-        }
+    _toDuration: function(number) {
+      return number + this.options.durationUnit;
+    },
 
+    _toDelay: function(number) {
+      return number + (this.options.delayUnit || this.options.durationUnit);
+    },
+
+    _toCompatibleVersion: function(name, value, eachCallback) {
+      var output = {};
+      $.each(BrowserPrefixes, function() {
+        var str = !!eachCallback ? eachCallback(this, value) : value;
         output["-" + this + "-" + name] = str;
       });
 

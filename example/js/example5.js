@@ -12,7 +12,12 @@ jQuery(function() {
     next: $("a.next", parent)
   }));
 
-  track.install(new SilverTrack.Plugins.Css3Animation());
+  track.install(new SilverTrack.Plugins.Css3Animation({
+    delayUnit: "s",
+    autoHeightDuration: 300,
+    autoHeightEasing: "easeInOutCubic",
+    autoHeightDelay: 1
+  }));
 
   track.install(new SilverTrack.Plugins.ResponsiveHubConnector({
     layouts: ["phone", "small-tablet", "tablet", "web"],
