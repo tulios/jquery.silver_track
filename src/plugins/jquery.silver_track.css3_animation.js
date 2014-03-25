@@ -12,7 +12,6 @@
 (function($, window, document) {
 
   var BrowserPrefixes = ["webkit", "moz", "o", "ms"];
-  var TransitionEndEvents = "webkitTransitionEnd mozTransitionEnd oTransitionEnd msTransitionEnd transitionend";
 
   $.silverTrackPlugin("Css3Animation", {
     defaults: {
@@ -51,16 +50,29 @@
     },
 
     afterRestart: function() {
+      if (this.options.setupTransitionProperty ||
+          this.options.setupTransitionDuration ||
+          this.options.setupTransitionTimingFunction ||
+          this.options.setupTransitionDelay) {
+
+        this.track.container.css(this._toCompatibleVersion("transition", "none"));
+      }
       this._setupTransition();
     },
 
     cssAnimate: function(movement, duration, easing, afterCallback) {
+      var timeout = 0;
       var element = this.track.container;
-      element.on(TransitionEndEvents, function(){
+      var transitionEndEvent = this._getTransitionEndEvent();
+      var animationEnded = function() {
         if (afterCallback !== null && afterCallback !== undefined) {
           afterCallback();
         }
-        element.off(TransitionEndEvents);
+      }
+
+      element.one(transitionEndEvent, function(){
+        animationEnded();
+        clearTimeout(timeout);
       });
 
       if (!!movement.left) {
@@ -69,6 +81,8 @@
       } else {
         element.css(movement);
       }
+
+      timeout = setTimeout(function() { animationEnded() }, duration);
     },
 
     _setupTransition: function() {
@@ -136,6 +150,21 @@
 
     _easingFunctionToCubicBezier: function(easing) {
       return SilverTrack.Plugins.Css3Animation.CubicBezierMap[easing] || CubicBezierMap["ease"];
+    },
+
+    _getTransitionEndEvent: function(){
+      var transitions = {
+        'WebkitTransition' : 'webkitTransitionEnd',
+        'MozTransition'    : 'transitionend',
+        'OTransition'      : 'oTransitionEnd otransitionend',
+        'transition'       : 'transitionend'
+      };
+
+      for(var t in transitions){
+        if(this.track.container.get(0).style[t] !== undefined){
+            return transitions[t];
+        }
+      }
     }
 
   });

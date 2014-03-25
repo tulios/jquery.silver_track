@@ -29,10 +29,20 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
 
   it("should have defaults for each option", function() {
     plugin = new SilverTrack.Plugins.Css3Animation();
+
+    expect(plugin.options.durationUnit).toBe("ms");
+    expect(plugin.options.delayUnit).toBe(null);
+
+    expect(plugin.options.slideDelay).toBe(0);
+    expect(plugin.options.autoHeightDuration).toBe(null);
+    expect(plugin.options.autoHeightEasing).toBe(null);
+    expect(plugin.options.autoHeightDelay).toBe(null);
+
     expect(plugin.options.setupParent).toBe(true);
     expect(plugin.options.setupTransitionProperty).toBe(true);
     expect(plugin.options.setupTransitionDuration).toBe(true);
     expect(plugin.options.setupTransitionTimingFunction).toBe(true);
+    expect(plugin.options.setupTransitionDelay).toBe(true);
   });
 
   describe("initialization", function() {
@@ -50,11 +60,27 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
 
     it("should be able to change defaults", function() {
       plugin = new SilverTrack.Plugins.Css3Animation({
+        durationUnit: "s",
+        delayUnit: "ms",
+
+        slideDelay: 1,
+        autoHeightDuration: 100,
+        autoHeightEasing: "easeInOut",
+        autoHeightDelay: 2,
+
         setupParent: false,
         setupTransitionProperty: false,
         setupTransitionDuration: false,
         setupTransitionTimingFunction: false
       });
+
+      expect(plugin.options.durationUnit).toBe("s");
+      expect(plugin.options.delayUnit).toBe("ms");
+
+      expect(plugin.options.slideDelay).toBe(1);
+      expect(plugin.options.autoHeightDuration).toBe(100);
+      expect(plugin.options.autoHeightEasing).toBe("easeInOut");
+      expect(plugin.options.autoHeightDelay).toBe(2);
 
       expect(plugin.options.setupParent).toBe(false);
       expect(plugin.options.setupTransitionProperty).toBe(false);
