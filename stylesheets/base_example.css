@@ -7,7 +7,7 @@
   width: 960px;
 }
 
-.track.vertical {
+.track.vertical, .track.vertical2 {
   padding: 10px 10px 8px 10px;
 }
 
@@ -17,6 +17,14 @@
 
 .track.vertical .view-port, .track.vertical .view-port .slider-container {
   height: 690px;
+}
+
+.track.vertical2, .track.vertical2 .view-port {
+  width: 231px;
+}
+
+.track.vertical2 .view-port .slider-container {
+  height: 552px;
 }
 
 .slider-container {
