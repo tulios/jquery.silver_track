@@ -21,7 +21,7 @@ describe("$.silverTrack", function() {
       expect(track.options.cover).toBe(false);
       expect(track.options.mode).toBe("horizontal");
       expect(track.options.autoHeight).toBe(false);
-      expect(track.options.duration).toBe("slow");
+      expect(track.options.duration).toBe(600);
       expect(track.options.easing).toBe("swing");
       expect(track.options.animateFunction).toBe(null);
     });
