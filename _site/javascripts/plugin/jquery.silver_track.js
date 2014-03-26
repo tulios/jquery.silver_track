@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.2.2
+ * version: 0.3.0
  */
 
 (function ($, window, document) {
@@ -28,7 +28,13 @@
     autoHeight: false,
     cover: false,
     duration: "slow",
-    easing: "swing"
+    easing: "swing",
+    /*
+     * Args: movement, duration, easing, afterCallback
+     * - easing and afterCallback may be optional
+     * - movement will be {left: someValue} or {height: someValue}
+     */
+    animateFunction: null
   };
 
   var SilverTrack = function (container, options) {
@@ -46,7 +52,10 @@
   SilverTrack.prototype = {
 
     start: function() {
-      this._validateAnimationEasing();
+      if (this.options.animateFunction === null) {
+        this._validateAnimationEasing();
+      }
+
       this._executeAll("beforeStart");
       this._init();
       this._executeAll("afterStart");
@@ -81,7 +90,7 @@
         this._executeAll("beforePagination", [event]);
         this.paginationEnabled = false;
 
-        this._animate(shift, event, duration);
+        this._slide(shift, event, duration);
         this._adjustHeight(items, duration);
       }
     },
@@ -174,14 +183,16 @@
       return true;
     },
 
-    _animate: function(shift, event, duration) {
+    _slide: function(shift, event, duration) {
       var self = this;
-
-      this._executeAll("beforeAnimation", [event]);
-      this.container.animate({"left": "-" + shift + "px"}, duration, this.options.easing, function() {
+      var movement = {"left": "-" + shift + "px"};
+      var afterCallback = function() {
         self.paginationEnabled = true;
         self._executeAll("afterAnimation", [event]);
-      });
+      }
+
+      this._executeAll("beforeAnimation", [event]);
+      this._animate(movement, duration, afterCallback)
     },
 
     _adjustHeight: function(items, duration) {
@@ -199,8 +210,18 @@
 
         var event = {items: items, newHeight: newHeight};
         this._executeAll("beforeAdjustHeight", [event]);
-        this.container.animate({"height": newHeight + "px"}, duration);
+        this._animate({"height": newHeight + "px"}, duration);
         this._executeAll("afterAdjustHeight", [event]);
+      }
+    },
+
+    _animate: function(movement, duration, afterCallback) {
+      var easing = this.options.easing;
+      if (this.options.animateFunction !== null) {
+        this.options.animateFunction(movement, duration, easing, afterCallback);
+
+      } else {
+        this.container.animate(movement, duration, easing, afterCallback);
       }
     },
 

@@ -1,0 +1,90 @@
+---
+layout: main
+title: Css3 Animation
+category: plugins
+---
+
+<script type="text/javascript" src="../javascripts/plugin_css3_animation_example.js"></script>
+
+<p>
+This plugin replaces the animation function of SilverTrack to work with css3 transtions, it will provide an stunning amount of performance for mobile devices and even desktop browsers. Note that due the way css3 animations work the option <em>restart({animate: false})</em> of SilverTrack will not work. It will <em>automatically fallback to javascript animations</em> if transitions are not available in the browser.
+</p>
+
+<p>
+This plugin requires <em>Moderniz.transform3d</em>. You will find just this feature in the <a href="https://github.com/tulios/jquery.silver_track/blob/master/lib/modernizr.mediaqueries.transforms3d.js">lib directory of SilverTrack repository</a> but you could use your own Modernizr files.
+</p>
+
+<h4>
+  Options
+</h4>
+
+<table>
+  <tr>
+    <th>name</td>
+    <th>description</td>
+    <th>default</td>
+  </tr>
+  <tr>
+    <td>durationUnit</td>
+    <td>The unit used for the animations. The possible values are: ms and s</td>
+    <td>ms</td>
+  </tr>
+  <tr>
+    <td>delayUnit</td>
+    <td>The unit used for the delay property. It automatically fallback to <em>durationUnit</em> if not set</td>
+    <td>null</td>
+  </tr>
+  <tr>
+    <td>setupParent</td>
+    <td>Configure the css3 properties to allow hardware acceleration in the parent of the container. It might also be done directly through the css file, so this option could be disabled</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>setupTransitionProperty</td>
+    <td>Configure the css3 transition-property to the container. It might also be done directly through the css file, so this option could be disabled</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>setupTransitionDuration</td>
+    <td>Configure the css3 transition-duration to the container. It might also be done directly through the css file, so this option could be disabled</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>setupTransitionTimingFunction</td>
+    <td>Configure the css3 transition-timing-function to the container, it already converts the easing names (easeInOutQuart, easeInCubic, etc) to proper cubic-bezier functions. It might also be done directly through the css file, so this option could be disabled</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>setupTransitionDelay</td>
+    <td>Configure the css3 transition-delay to the container. It might also be done directly through the css file, so this option could be disabled</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>slideDelay</td>
+    <td>The delay used between the transitions, note that delay it is not the same as the duration, this is the time that the browser will wait before the animation starts. It might also be done directly through the css file, if it is the case the option <em>setupTransitionDuration</em> should be disabled</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>autoHeightDuration</td>
+    <td>This option configures the duration of the height adjustment animation if the property <em>autoHeight</em> of track is set to true. It might also be done directly through the css file but be aware that this option is correctly configured with the duration of the slide animation, make sure that both will work. It automatically fallback to the option <em>duration</em> of the track</td>
+    <td>null</td>
+  </tr>
+  <tr>
+    <td>autoHeightEasing</td>
+    <td>This option configures the easing function of the height adjustment animation if the property <em>autoHeight</em> of the track is set to true. It might also be done directly through the css file but be aware that this option convert the easing name (easeInOutQuart, easeInCubic, etc) to the proper cubic-bezier function and is configured with the easing function of the slide animation, make sure that both will work. It automatically fallback to the option <em>easing</em> of the track</td>
+    <td>null</td>
+  </tr>
+  <tr>
+    <td>autoHeightDelay</td>
+    <td>This option configures the delay of the height adjustment animation if the property <em>autoHeight</em> of the track is set to true. It might also be done directly through the css file but be aware that this option is correctly configured with the delay of the slide animation, make sure that both will work. It automatically fallback to the option <em>slideDelay</em></td>
+    <td>null</td>
+  </tr>
+</table>
+
+<h4>
+  Installation
+</h4>
+
+{% highlight js %}
+track.install(new SilverTrack.Plugins.Css3Animation());
+{% endhighlight %}
