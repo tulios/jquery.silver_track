@@ -152,6 +152,22 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
     });
   });
 
+  describe("after restart", function() {
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.Css3Animation();
+      plugin.fallback = false;
+      track.install(plugin);
+      track.start();
+
+      spyOn(plugin, "_setupTransition");
+    });
+
+    it("should setup the transition again", function() {
+      track.restart();
+      expect(plugin._setupTransition).toHaveBeenCalled();
+    });
+  });
+
   describe("cssAnimate", function() {
     var animated, timeout, args;
 
@@ -191,6 +207,194 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
       plugin.cssAnimate(args.movement, args.duration, args.easing, args.afterCallback);
       var style = track.container.attr("style");
       expect(style).toMatch(new RegExp("transform: translate3d\\(" + args.movement.left + ", 0px, 0px\\)"));
+    });
+  });
+
+  describe("_setupTransition", function() {
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.Css3Animation();
+      plugin.fallback = false;
+      track.install(plugin);
+    });
+
+    describe("setupParent", function() {
+      describe("enabled", function() {
+        it("should apply transform3d with left 0 in the container parent", function() {
+          spyOn(plugin, "_applyTransform3d");
+          plugin._setupTransition();
+          expect(plugin._applyTransform3d).toHaveBeenCalledWith(track.container.parent(), {left: 0});
+        });
+      });
+
+      describe("disabled", function() {
+        beforeEach(function() { plugin.options.setupParent = false });
+
+        it("should do nothing", function() {
+          spyOn(plugin, "_applyTransform3d");
+          plugin._setupTransition();
+          expect(plugin._applyTransform3d).not.toHaveBeenCalled();
+        })
+      });
+    });
+
+    describe("setupTransitionProperty", function() {
+      describe("enabled", function() {
+        describe("autoHeight false", function() {
+          it("should set the transition property to transform", function() {
+            plugin._setupTransition();
+            expect(track.container.css("transition-property")).toMatch(/transform/);
+          });
+        });
+
+        describe("autoHeight true", function() {
+          beforeEach(function() { track.options.autoHeight = true });
+
+          it("should set the transition property to transform, height", function() {
+            plugin._setupTransition();
+            expect(track.container.css("transition-property")).toMatch(/transform, height/);
+          });
+        });
+      });
+
+      describe("disabled", function() {
+        beforeEach(function() { plugin.options.setupTransitionProperty = false });
+
+        it("should do nothing", function() {
+          plugin._setupTransition();
+          expect(track.container.css("transition-property")).toBe("all");
+        });
+      });
+    });
+
+    describe("setupTransitionDuration", function() {
+      beforeEach(function() { plugin.options.durationUnit = "s" });
+
+      describe("enabled", function() {
+        describe("autoHeight false", function() {
+          it("should set the transition duration property to the configured value", function() {
+            plugin._setupTransition();
+            var duration = plugin._toDuration(track.options.duration);
+            expect(track.container.css("transition-duration")).toMatch(new RegExp(duration));
+          });
+        });
+
+        describe("autoHeight true", function() {
+          beforeEach(function() { track.options.autoHeight = true });
+
+          it("should set the transition duration property including the duration for autoHeight", function() {
+            plugin.options.autoHeightDuration = 2;
+            plugin._setupTransition();
+
+            var duration = plugin._toDuration(track.options.duration);
+            var autoHeightDuration = plugin._toDuration(plugin.options.autoHeightDuration);
+            expect(track.container.css("transition-duration")).toMatch(new RegExp(duration + ", " + autoHeightDuration));
+          });
+
+          it("should fallback to duration if autoHeightDuration is null", function() {
+            plugin.options.autoHeightDuration = null;
+            plugin._setupTransition();
+            var duration = plugin._toDuration(track.options.duration);
+            expect(track.container.css("transition-duration")).toMatch(new RegExp(duration + ", " + duration));
+          });
+        });
+      });
+
+      describe("disabled", function() {
+        beforeEach(function() { plugin.options.setupTransitionDuration = false });
+
+        it("should do nothing", function() {
+          plugin._setupTransition();
+          expect(track.container.css("transition-duration")).toBe("0s");
+        });
+      });
+    });
+
+    describe("setupTransitionTimingFunction", function() {
+      describe("enabled", function() {
+        describe("autoHeight false", function() {
+          it("should set the transition timing function property to the configured value", function() {
+            plugin._setupTransition();
+            var easing = plugin._easingFunctionToCubicBezier(track.options.easing);
+            expect(track.container.css("transition-timing-function")).toEqual(easing);
+          });
+        });
+
+        describe("autoHeight true", function() {
+          beforeEach(function() { track.options.autoHeight = true });
+
+          it("should set the transition timing function property including the configured for autoHeight", function() {
+            plugin.options.autoHeightEasing = "easeInQuad";
+            plugin._setupTransition();
+
+            var easing = plugin._easingFunctionToCubicBezier(track.options.easing);
+            var autoHeightEasing = plugin._easingFunctionToCubicBezier(plugin.options.autoHeightEasing);
+            expect(track.container.css("transition-timing-function")).toEqual(easing + ", " + autoHeightEasing);
+          });
+
+          it("should fallback to easing if autoHeightEasing is null", function() {
+            plugin.options.autoHeightEasing = null;
+            plugin._setupTransition();
+            var easing = plugin._easingFunctionToCubicBezier(track.options.easing);
+            expect(track.container.css("transition-timing-function")).toEqual(easing + ", " + easing);
+          });
+        });
+      });
+
+      describe("disabled", function() {
+        beforeEach(function() { plugin.options.setupTransitionTimingFunction = false });
+
+        it("should do nothing", function() {
+          plugin._setupTransition();
+          expect(track.container.css("transition-timing-function")).toBe("ease");
+        });
+      });
+    });
+
+    describe("setupTransitionDelay", function() {
+      beforeEach(function() {
+        plugin.options.durationUnit = "s";
+        plugin.options.slideDelay = 2;
+      });
+
+      describe("enabled", function() {
+        describe("autoHeight false", function() {
+          it("should set the transition timing function property to the configured value", function() {
+            plugin._setupTransition();
+            var delay = plugin._toDelay(plugin.options.slideDelay);
+            expect(track.container.css("transition-delay")).toMatch(new RegExp(delay));
+          });
+        });
+
+        describe("autoHeight true", function() {
+          beforeEach(function() { track.options.autoHeight = true });
+
+          it("should set the transition delay property including the configured for autoHeight", function() {
+            plugin.options.autoHeightDelay = 3;
+            plugin._setupTransition();
+
+            var delay = plugin._toDelay(plugin.options.slideDelay);
+            var autoHeightDelay = plugin._toDelay(plugin.options.autoHeightDelay);
+            expect(track.container.css("transition-delay")).toMatch(new RegExp(delay + ", " + autoHeightDelay));
+          });
+
+          it("should fallback to slideDelay if autoHeightEasing is null", function() {
+            plugin.options.autoHeightDelay = null;
+            plugin._setupTransition();
+
+            var delay = plugin._toDelay(plugin.options.slideDelay);
+            expect(track.container.css("transition-delay")).toMatch(new RegExp(delay + ", " + delay));
+          });
+        });
+      });
+
+      describe("disabled", function() {
+        beforeEach(function() { plugin.options.setupTransitionDelay = false });
+
+        it("should do nothing", function() {
+          plugin._setupTransition();
+          expect(track.container.css("transition-delay")).toBe("0s");
+        });
+      });
     });
   });
 

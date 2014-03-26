@@ -50,13 +50,6 @@
     },
 
     afterRestart: function() {
-      if (this.options.setupTransitionProperty ||
-          this.options.setupTransitionDuration ||
-          this.options.setupTransitionTimingFunction ||
-          this.options.setupTransitionDelay) {
-
-        this.track.container.css(this._toCompatibleVersion("transition", "none"));
-      }
       this._setupTransition();
     },
 
@@ -105,14 +98,14 @@
 
       if (this.options.setupTransitionDuration) {
         var duration = this._toDuration(this.track.options.duration);
-        var autoHeightDuration = this._toDuration(this.options.autoHeightDuration || duration);
+        var autoHeightDuration = this._toDuration(this.options.autoHeightDuration || this.track.options.duration);
         values = autoHeight ? [duration, autoHeightDuration] : [duration];
         element.css(this._toCompatibleVersion("transition-duration", values.join(", ")));
       }
 
       if (this.options.setupTransitionTimingFunction) {
         var easing = this._easingFunctionToCubicBezier(this.track.options.easing);
-        var autoHeightEasing = this.options.autoHeightEasing || easing;
+        var autoHeightEasing = this._easingFunctionToCubicBezier(this.options.autoHeightEasing || this.track.options.easing);
         values = autoHeight ? [easing, autoHeightEasing] : [easing];
         element.css(this._toCompatibleVersion("transition-timing-function", values.join(", ")));
       }
