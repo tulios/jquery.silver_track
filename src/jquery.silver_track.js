@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.2.2
+ * version: 0.3.0
  */
 
 (function ($, window, document) {
@@ -219,7 +219,7 @@
       var easing = this.options.easing;
       if (this.options.animateFunction !== null) {
         this.options.animateFunction(movement, duration, easing, afterCallback);
-        
+
       } else {
         this.container.animate(movement, duration, easing, afterCallback);
       }
