@@ -61,7 +61,12 @@ $(".slider-container").silverTrack({
   <tr>
     <td>duration</td>
     <td>The duration used by the animation function</td>
-    <td>slow</td>
+    <td>600</td>
+  </tr>
+  <tr>
+    <td>animateFunction</td>
+    <td>If set this function will be used instead of $.animate. The function will receive movement, duration, easing and afterCallback. The movement object will be {left: someNumber} or {height: someNumber}. For an example of how to replace the animation function take a look at <a href="../plugins/css3-animation.html">css3 animation plugin</a></td>
+    <td>null</td>
   </tr>
 </table>
 

@@ -40,9 +40,9 @@
         </header>
 
         <section id="downloads" class="clearfix">
-          <a href="https://github.com/tulios/jquery.silver_track/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/tulios/jquery.silver_track/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/tulios/jquery.silver_track" id="view-on-github" class="button"><span>View on GitHub</span></a>
+          <a href="https://github.com/tulios/jquery.silver_track/zipball/master" id="download-zip" class="button" target="_blank"><span>Download .zip</span></a>
+          <a href="https://github.com/tulios/jquery.silver_track/tarball/master" id="download-tar-gz" class="button" target="_blank"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/tulios/jquery.silver_track" id="view-on-github" class="button" target="_blank"><span>View on GitHub</span></a>
         </section>
 
 
@@ -107,7 +107,12 @@ All the options must be passed in the initialization and will be available at <e
   <tr>
     <td>duration</td>
     <td>The duration used by the animation function</td>
-    <td>slow</td>
+    <td>600</td>
+  </tr>
+  <tr>
+    <td>animateFunction</td>
+    <td>If set this function will be used instead of $.animate. The function will receive movement, duration, easing and afterCallback. The movement object will be {left: someNumber} or {height: someNumber}. For an example of how to replace the animation function take a look at <a href="../plugins/css3-animation.html">css3 animation plugin</a></td>
+    <td>null</td>
   </tr>
 </table>
 
@@ -183,7 +188,8 @@ Using:
 
 </section>
 
-  <nav class="menu">
+  <h2>Menu</h2>
+<nav class="menu">
   <ul>
     
       <li class="current"><a href="../root/options.html">Options</a></li>
@@ -197,6 +203,8 @@ Using:
       <li><a href="../how_tos/creating-a-plugin.html">Creating a plugin</a></li>
     
       <li><a href="../how_tos/defining-a-recipe.html">Defining a recipe</a></li>
+    
+      <li><a href="../how_tos/getting-started.html">Getting Started</a></li>
     
   </ul>
   <h3>Built-in Plugins:</h3>

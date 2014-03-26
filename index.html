@@ -5,124 +5,95 @@ layout: nil
 {% assign root_path = '' %}
 {% include head.html %}
 
-<script type="text/javascript" src="javascripts/basic_example.js"></script>
+<script type="text/javascript" src="javascripts/home_examples.js"></script>
 
 <section id="main_content">
-<p class="plugin-description">
-SilverTrack is a jQuery plugin designed to be extensible through other plugins. It has a small core and comes with very useful plugins
-</p>
+  <p class="plugin-description">
+    SilverTrack is a jQuery plugin designed to be extensible through other plugins. It has a small core and comes with very useful plugins
+  </p>
 
-<h2>
-  Dependencies
-</h2>
+  <p>
+    For more examples and detailed documentation takes a look at the menu in the bottom of each page.
+  </p>
 
-<ul>
-  <li><a href="http://jquery.com">jQuery</a> 1.7.2+</li>
-  <li><a href="http://gsgd.co.uk/sandbox/jquery/easing/">jQuery Easing 1.3</a> for custom easing</li>
-</ul>
+  <div class="track sample1">
+    <div class="view-port">
+      <div class="slider-container">
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/1/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/2/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/3/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/4/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/5/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/6/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/7/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/8/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/9/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/nature/10/"></div>
+      </div>
+    </div>
 
-<p>
-PS: The ResponsiveHubConnector plugin requires the dependencies of <a href="https://github.com/globocom/responsive-hub">ResponsiveHub</a>
-</p>
-
-<h2>
-  Getting Started
-</h2>
-
-<p>Let's setup a track with the navigator plugin. We will use a very simple markup, SilverTrack receives a container with your items, in our case, <strong>'.slider-container'</strong> and it leaves up to you to control the view port, so we will use <strong>'.view-port'</strong> to control de visibility. It also requires <strong>'position: absolute'</strong> of your items</p>
-
-{% highlight html %}
-<div class="track my-track">
-
-  <!-- SilverTrack requires only this part -->
-  <div class="view-port">
-    <div class="slider-container">
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/1/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/2/"></div>
-      <!-- ... -->
+    <div class="pagination">
+      <a href="#" class="prev disabled"></a>
+      <a href="#" class="next disabled"></a>
     </div>
   </div>
 
-  <!-- My custom navigator links -->
-  <div class="pagination">
-    <a href="#" class="prev disabled"></a>
-    <a href="#" class="next disabled"></a>
-  </div>
+  <div class="track sample2">
+    <div class="view-port">
+      <div class="slider-container">
+        <div class="my-item cover">
+          <div class="message">
+            <h2>Pick the best cover</h2>
+            <span>because it will occupy the whole first page, but it adds a nice touch of refinement</span>
+          </div>
+          <img src="../images/example/cover1.png">
+        </div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/1/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/2/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/3/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/4/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/5/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/6/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/7/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/8/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/9/"></div>
+        <div class="my-item"><img src="http://lorempixel.com/230/134/city/10/"></div>
+      </div>
+    </div>
 
-</div>
-{% endhighlight %}
+    <div class="bullet-pagination"></div>
 
-{% highlight css %}
-.view-port {
-  width: 960px;
-  overflow: hidden;
-  position: relative;
-}
-.slider-container {
-  position: relative;
-  height: 138px;
-  margin: 0;
-  padding: 0;
-}
-.item {
-  position: absolute;
-  width: 234px;
-  height: 138px;
-  margin-right: 8px
-}
-{% endhighlight %}
-
-<p>
-After the minimum markup and css we will create our track.
-</p>
-
-{% highlight js %}
-var container = $(".my-track");
-var track = container.find(".slider-container").silverTrack();
-
-// install the plugins you want, in our case Navigator
-track.install(new SilverTrack.Plugins.Navigator({
-  prev: $("a.prev", container),
-  next: $("a.next", container)
-}));
-
-track.start();
-{% endhighlight %}
-
-<p>
-and it's done!
-</p>
-
-<div class="track my-track">
-  <div class="view-port">
-    <div class="slider-container">
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/1/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/2/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/3/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/4/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/5/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/6/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/7/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/8/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/9/"></div>
-      <div class="item"><img src="http://lorempixel.com/230/134/nature/10/"></div>
+    <div class="pagination">
+      <a href="#" class="prev disabled"></a>
+      <a href="#" class="next disabled"></a>
     </div>
   </div>
 
-  <div class="pagination">
-    <a href="#" class="prev disabled"></a>
-    <a href="#" class="next disabled"></a>
+  <div class="track vertical2 sample3">
+    <div class="view-port">
+      <div class="slider-container">
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/1/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/2/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/3/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/4/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/5/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/6/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/7/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/8/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/9/"></div>
+        <div class="item"><img src="http://lorempixel.com/230/134/cats/10/"></div>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <a href="#" class="prev disabled"></a>
+      <a href="#" class="next disabled"></a>
+    </div>
   </div>
-</div>
 
-<p>
-actually we add some css for the pagination arrows...
-</p>
-
-<p>
-To learn how to use the other plugins, create your own plugin, use the SilverTrack Recipes to improve the creation of multiple tracks and for a more advanced use (options, methods, callbacks, etc) look at the links bellow.
-</p>
-
+  <p>
+    Sorry, this site is developed and also designed by a developer, so the menu stays at the bottom of the page for simplicity.
+  </p>
 </section>
 
 {% include footer.html %}
