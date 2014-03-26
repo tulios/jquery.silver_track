@@ -52,8 +52,48 @@
 
 <section id="main_content">
   <p>
-TODO: write!
+This plugin provides an integration with <a href="https://github.com/globocom/responsive-hub">ResponsiveHub</a>, a plugin that defines it self as "JavaScript goodies for Responsive Design".
 </p>
+
+<p>
+This plugin requires <a href="https://github.com/globocom/responsive-hub/blob/master/src/responsive_hub.js">ResponsiveHub js</a> and <em>Moderniz.mediaqueries</em>. You will find the Modernizr feature in the <a href="https://github.com/tulios/jquery.silver_track/blob/master/lib/modernizr.mediaqueries.transforms3d.js">lib directory of SilverTrack repository</a> but you could use your own Modernizr files.
+</p>
+
+<h4>
+  Options
+</h4>
+
+<table>
+  <tr>
+    <th>name</th>
+    <th>description</th>
+  </tr>
+  <tr>
+    <td>layouts</td>
+    <td>The resolution names configured in responsiveHub. You really should read the responsiveHub readme</td>
+  </tr>
+</table>
+
+<h4>
+  Callbacks
+</h4>
+<table>
+  <tr>
+    <th>name</th>
+    <th>description</th>
+    <th>arguments</th>
+  </tr>
+  <tr>
+    <td>onReady</td>
+    <td>The resolution names configured in responsiveHub. You really should read the responsiveHub readme</td>
+    <td>track, options, event</td>
+  </tr>
+  <tr>
+    <td>onChange</td>
+    <td>The resolution names configured in responsiveHub. You really should read the responsiveHub readme</td>
+    <td>track, options, event</td>
+  </tr>
+</table>
 
 </section>
 
