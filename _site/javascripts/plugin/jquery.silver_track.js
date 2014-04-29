@@ -34,7 +34,9 @@
      * - easing and afterCallback may be optional
      * - movement will be {left: someValue} or {height: someValue}
      */
-    animateFunction: null
+    animateFunction: null,
+    touchMode: false,
+    touchModeScrollDelay: 50
   };
 
   var SilverTrack = function (container, options) {
@@ -44,6 +46,7 @@
     this.calculateTotalPages = true;
     this.currentPage = 1;
     this.totalPages = 1;
+    this.touchModeActivated = true; //this.options.touchMode && this._isTouch();
     this.plugins = [];
 
     this._items = null;
@@ -161,6 +164,7 @@
       if (this.calculateTotalPages) {
         this._calculateTotalPages();
       }
+      this._setupTouchMode();
     },
 
     _getItems: function(ignoreCoverFilter) {
@@ -213,6 +217,45 @@
         this._animate({"height": newHeight + "px"}, duration);
         this._executeAll("afterAdjustHeight", [event]);
       }
+    },
+
+    _setupTouchMode: function() {
+      if (!this.touchModeActivated) {
+        return;
+      }
+
+      this._executeAll("beforeTouchModeActivation");
+
+      var lastLeft = 0;
+      var allow = true;
+      var self = this;
+      var viewPort = this.container.parent();
+
+      viewPort.css({"overflow": "auto"}).off("scroll").on("scroll", function() {
+        if (allow) {
+          allow = false;
+          var scroll = this;
+
+          setTimeout(function() {
+            var maxWidthPage = (self.itemWidth * self.options.perPage) * self.currentPage;
+            var used = scroll.scrollLeft + viewPort.width();
+
+            if (scroll.scrollLeft > lastLeft && used > maxWidthPage) {
+              var event = {lastPage: self.currentPage, currentPage: ++self.currentPage};
+              self._executeAll("onCurrentPageUpdateInTouchMode", [event]);
+
+            } else if (scroll.scrollLeft < lastLeft && used < maxWidthPage){
+              if (self.currentPage > 1) {
+                var event = {lastPage: self.currentPage, currentPage: --self.currentPage};
+                self._executeAll("onCurrentPageUpdateInTouchMode", [event]);
+              }
+            }
+
+            lastLeft = scroll.scrollLeft;
+            allow = true;
+          }, self.options.touchModeScrollDelay);
+        }
+      });
     },
 
     _animate: function(movement, duration, afterCallback) {
@@ -336,8 +379,11 @@
 
     _abs: function(string) {
       return Math.abs(parseInt(string, 10));
-    }
+    },
 
+    _isTouch: function() {
+      return !!(('ontouchstart' in window) || (window.DocumentTouch && window.document instanceof DocumentTouch));
+    }
   }
 
   SilverTrack.Plugins = {};
@@ -378,7 +424,16 @@
        *  }
        */
       beforeAdjustHeight: function(track, event) {},
-      afterAdjustHeight: function(track, event) {}
+      afterAdjustHeight: function(track, event) {},
+
+      beforeTouchModeActivation: function(track) {},
+      /* Event Format
+       *   {
+       *     lastPage: 1,
+       *     currentPage: 2
+       *   }
+       */
+      onCurrentPageUpdateInTouchMode: function(track, event) {}
     }, obj);
   }
 

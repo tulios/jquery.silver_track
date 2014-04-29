@@ -42,6 +42,10 @@
 
     afterStart: function() {
       this.afterAnimation();
+      if (this.track.touchModeActivated) {
+        this._disable(this.prev);
+        this._disable(this.next);
+      }
     },
 
     afterAnimation: function() {
@@ -63,6 +67,10 @@
 
     _disable: function(element) {
       element.addClass(this.options.disabledClass);
+    },
+
+    _isTouch: function() {
+      return !!(('ontouchstart' in window) || (window.DocumentTouch && window.document instanceof DocumentTouch));
     }
   });
 

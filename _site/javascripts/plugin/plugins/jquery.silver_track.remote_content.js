@@ -77,15 +77,25 @@
 
     afterStart: function() {
       this.options.beforeStart(this.track);
+
       if (this.options.lazy) {
 
         this._loadContent(this.track.currentPage, function() {
           this.filled = true;
           this.track.restart();
+          this._adjustSpaceToLoad();
         });
 
       } else {
         this.filled = true;
+        this._adjustSpaceToLoad();
+      }
+    },
+
+    _adjustSpaceToLoad: function() {
+      if (this.track.touchModeActivated) {
+        var widthWithLoadSpace = (this.track.container.outerWidth(true) + this.track.itemWidth) + "px";
+        this.track.container.css("width", widthWithLoadSpace);
       }
     },
 
@@ -93,6 +103,23 @@
       this.loadContentEnabled = true;
     },
 
+    onCurrentPageUpdateInTouchMode: function(track, event) {
+      this.loadContentEnabled = true;
+      var url = this._generateUrl(event.currentPage);
+      var cached = !!this.ajaxCache[url];
+
+      if (this.loadContentEnabled && !cached) {
+        this._loadContent(event.currentPage, function() {
+
+          if (this.track.hasNext()) {
+            this._adjustSpaceToLoad();
+          }
+
+        });
+      }
+    },
+
+    // Never called in touchMode
     _updateNavigationControls: function() {
       var self = this;
       this.track.next = function() {
@@ -111,8 +138,9 @@
     _loadContent: function(page, contentLoadedCallback) {
       var self = this;
       var url = this._generateUrl(page);
+      var cached = !!this.ajaxCache[url];
 
-      if (!this.ajaxCache[url]) {
+      if (!cached) {
 
         $.ajax(
           $.extend(this._ajaxDefaults(), {

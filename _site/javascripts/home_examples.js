@@ -4,7 +4,7 @@ $(function() {
   // Sample 1
   // =========================================================================
   var container = $(".track.sample1");
-  var track = container.find(".slider-container").silverTrack({duration: 800});
+  var track = container.find(".slider-container").silverTrack({duration: 800, touchMode: true});
 
   track.install(new SilverTrack.Plugins.Css3Animation());
 

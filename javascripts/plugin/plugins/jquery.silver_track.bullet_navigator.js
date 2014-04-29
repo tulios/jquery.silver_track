@@ -32,12 +32,7 @@
       var self = this;
       this._createBullets();
       this._getBulletByPage(1).addClass(this.options.activeClass);
-      this._getBullets().click(function(e) {
-        e.preventDefault();
-        var bullet = $(this);
-        self._updateBullets(bullet);
-        self.track.goToPage(bullet.data("page"));
-      });
+      this._applyBulletClick();
     },
 
     beforePagination: function(track, event) {
@@ -53,9 +48,11 @@
     onTotalPagesUpdate: function() {
       this._clearBullets();
       this._createBullets();
-      this._getBullets().click(function(e) {
-        e.preventDefault();
-      });
+      this._applyBulletClick();
+    },
+
+    onCurrentPageUpdateInTouchMode: function(track, event) {
+      this.afterRestart();
     },
 
     _clearBullets: function() {
@@ -71,6 +68,19 @@
     _updateBullets: function(bullet) {
       this._getBullets().removeClass(this.options.activeClass);
       bullet.addClass(this.options.activeClass);
+    },
+
+    _applyBulletClick: function() {
+      if (this.track.touchModeActivated) {
+        return;
+      }
+
+      this._getBullets().off("click").click(function(e) {
+        e.preventDefault();
+        var bullet = $(this);
+        self._updateBullets(bullet);
+        self.track.goToPage(bullet.data("page"));
+      });
     },
 
     _getBulletByPage: function(page) {

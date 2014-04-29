@@ -7,7 +7,7 @@ $(function() {
   var urlToEchoServer = function(track, page, perPage) {
     var jsonText = escape(JSON.stringify(fakeJsonCreator(page, perPage)));
     var echoServerHost = "http://echo-server.herokuapp.com";
-    return echoServerHost + "/echo/json/" + page + "?json=" + jsonText + "&total_pages=5";
+    return echoServerHost + "/echo/json/" + page + "?json=" + jsonText + "&total_pages=4";
   }
 
   // Support function for our test
@@ -28,9 +28,10 @@ $(function() {
   var container = $(".track:first");
   var track = container.find(".slider-container").silverTrack({
     easing: "easeInOutQuad",
-    duration: 600
+    duration: 600,
+    touchMode: true
   });
-
+window.track = track;
   track.install(new SilverTrack.Plugins.Navigator({
     prev: $("a.prev", container),
     next: $("a.next", container)

@@ -42,6 +42,10 @@
 
     afterStart: function() {
       this.afterAnimation();
+      if (this.track.touchModeActivated) {
+        this._disable(this.prev);
+        this._disable(this.next);
+      }
     },
 
     afterAnimation: function() {

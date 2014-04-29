@@ -77,20 +77,42 @@
 
     afterStart: function() {
       this.options.beforeStart(this.track);
+
       if (this.options.lazy) {
 
         this._loadContent(this.track.currentPage, function() {
           this.filled = true;
           this.track.restart();
+          this._adjustSpaceToLoad();
         });
 
       } else {
         this.filled = true;
+        this._adjustSpaceToLoad();
+      }
+    },
+
+    _adjustSpaceToLoad: function() {
+      if (this.track.touchModeActivated) {
+        var widthWithLoadSpace = (this.track.container.outerWidth(true) + this.track.itemWidth) + "px";
+        this.track.container.css("width", widthWithLoadSpace);
       }
     },
 
     afterAnimation: function(track, event) {
       this.loadContentEnabled = true;
+    },
+
+    onCurrentPageUpdateInTouchMode: function(track, event) {
+      this.loadContentEnabled = true;
+
+      if (this.track.hasNext() && this.loadContentEnabled) {
+        this._loadContent(event.currentPage, function() {
+          if (this.track.hasNext()) {
+            this._adjustSpaceToLoad();
+          }
+        });
+      }
     },
 
     _updateNavigationControls: function() {
