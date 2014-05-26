@@ -61,6 +61,10 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
       plugin = new SilverTrack.Plugins.RemoteContent();
     });
 
+    it("should have a default 'ajaxFunction'", function() {
+      expect(plugin.options.ajaxFunction).toBe(null);
+    });
+
     it("should have a default 'lazy'", function() {
       expect(plugin.options.lazy).toBe(true);
     });
@@ -178,6 +182,43 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
         expect(plugin.filled).toBe(false);
         track.start();
         expect(plugin.filled).toBe(true);
+      });
+    });
+
+    describe("when ajaxFunction is not defined", function() {
+      beforeEach(function() {
+        spyOn($, "ajax");
+        plugin = new SilverTrack.Plugins.RemoteContent();
+      });
+
+      it("should fallback to default jQuery ajax", function() {
+        var opts = {a: 1, b: 1};
+
+        plugin.ajaxFunction(opts);
+        expect($.ajax).toHaveBeenCalledWith(opts);
+      });
+    });
+
+    describe("when ajaxFunction is defined", function() {
+      var obj;
+
+      beforeEach(function() {
+        obj = {customFunction: $.noop};
+
+        spyOn($, "ajax");
+        spyOn(obj, "customFunction");
+
+        plugin = new SilverTrack.Plugins.RemoteContent({
+          ajaxFunction: obj.customFunction
+        });
+      });
+
+      it("should use the provided function", function() {
+        var opts = {a: 1, b: 1};
+
+        plugin.ajaxFunction(opts);
+        expect($.ajax).not.toHaveBeenCalled();
+        expect(obj.customFunction).toHaveBeenCalledWith(opts);
       });
     });
   });

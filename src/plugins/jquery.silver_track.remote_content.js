@@ -4,7 +4,7 @@
  * version: 0.3.0
  *
  * Remote Content
- * version: 0.1.0
+ * version: 0.2.0
  *
  */
 (function($, window, document) {
@@ -56,6 +56,7 @@
       type: "GET",
       params: {},
 
+      ajaxFunction: null,
       beforeStart: function(track) {},
       beforeSend: function(track, jqXHR, settings) {},
       beforeAppend: function(track) {},
@@ -69,6 +70,7 @@
       this.track = null;
       this.options = options;
       this.ajaxCache = {};
+      this.ajaxFunction = this.options.ajaxFunction || this._ajax;
       this.filled = false;
       this.loadContentEnabled = true;
     },
@@ -117,7 +119,7 @@
 
       if (!this.ajaxCache[url]) {
 
-        $.ajax(
+        this.ajaxFunction(
           $.extend(this._ajaxDefaults(), {
             url: url,
             success: function(data) {
@@ -210,6 +212,10 @@
       }
 
       return url.replace(/{page}/, page).replace(/{perPage}/, perPage);
+    },
+
+    _ajax: function(opts) {
+      $.ajax(opts);
     },
 
     _ajaxDefaults: function() {
