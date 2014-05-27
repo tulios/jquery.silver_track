@@ -22,6 +22,10 @@ describe("SilverTrack.Plugins.Navigator", function() {
     it("should have a default 'disabledClass'", function() {
       expect(plugin.options.disabledClass).toBe("disabled");
     });
+
+    it("should have a default 'beforePagination' callback", function() {
+      expect(plugin.options.beforePagination).toBe(null);
+    });
   });
 
   describe("when configuring the items", function() {
@@ -64,6 +68,46 @@ describe("SilverTrack.Plugins.Navigator", function() {
       expect(plugin.next.hasClass(disabled)).toBe(false);
       track.updateTotalPages(0);
       expect(plugin.next.hasClass(disabled)).toBe(true);
+    });
+  });
+
+  describe("when configuring beforePagination callback", function() {
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.Navigator({
+        prev: $("a.prev", track.container.parent().parent()),
+        next: $("a.next", track.container.parent().parent()),
+        beforePagination: $.noop
+      });
+
+      track.install(plugin);
+      track.start();
+    });
+
+    describe("going forward", function() {
+      it("should be called with track and event", function() {
+        spyOn(plugin.options, "beforePagination");
+        track.goToPage(2);
+        expect(plugin.options.beforePagination).toHaveBeenCalledWith(track, {
+          name: "next",
+          page: 2,
+          cover: false,
+          items: jasmine.any(Object)
+        });
+      });
+    });
+
+    describe("going backwards", function() {
+      it("should be called with track and event", function() {
+        track.goToPage(2);
+        spyOn(plugin.options, "beforePagination");
+        track.goToPage(1);
+        expect(plugin.options.beforePagination).toHaveBeenCalledWith(track, {
+          name: "prev",
+          page: 1,
+          cover: false,
+          items: jasmine.any(Object)
+        });
+      });
     });
   });
 

@@ -4,7 +4,7 @@
  * version: 0.3.0
  *
  * Navigator
- * version: 0.1.0
+ * version: 0.2.0
  *
  */
 (function($, window, document) {
@@ -18,7 +18,8 @@
    */
   $.silverTrackPlugin("Navigator", {
     defaults: {
-      disabledClass: "disabled"
+      disabledClass: "disabled",
+      beforePagination: null
     },
 
     initialize: function(options) {
@@ -58,6 +59,12 @@
 
     onTotalPagesUpdate: function() {
       this.afterAnimation();
+    },
+
+    beforePagination: function(track, event) {
+      if (this.options.beforePagination) {
+        this.options.beforePagination(track, event);
+      }
     },
 
     _enable: function(element) {
