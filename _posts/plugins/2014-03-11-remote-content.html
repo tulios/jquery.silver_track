@@ -40,6 +40,11 @@ This plugin provides a way to load content through ajax. Example in the end of t
     <td>A string containing the URL to which the request is sent or a function that returns an url. If this option is a function, it will receive a reference of track, the page number and the perPage value, if not RemoteContent will try to replace the substrings <em>{page}</em> and <em>{perPage}</em> with the current values</td>
     <td></td>
   </tr>
+  <tr>
+    <td>ajaxFunction</td>
+    <td>A custom function for ajax. It defaults to $.ajax, if defined the provided function will receive the same options of $.ajax. It allows other ajax implementations such as <a href="http://foliotek.github.io/AjaxQ/">ajaxQ</a> or something based on promises</td>
+    <td>null</td>
+  </tr>
 </table>
 
 <h4>
