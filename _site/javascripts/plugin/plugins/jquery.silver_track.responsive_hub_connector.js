@@ -1,9 +1,13 @@
 /*!
- * jQuery SilverTrack - Responsive Hub Connector Plugin
+ * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.2.2
+ * version: 0.3.0
+ *
+ * ResponsiveHub Connector
+ * version: 0.1.0
+ *
+ * This plugin depends on modernizr.mediaqueries.js
  */
-
 (function($, window, document) {
 
   /*

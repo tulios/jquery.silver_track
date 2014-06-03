@@ -27,7 +27,7 @@
     mode: "horizontal",
     autoHeight: false,
     cover: false,
-    duration: "slow",
+    duration: 600,
     easing: "swing",
     /*
      * Args: movement, duration, easing, afterCallback
