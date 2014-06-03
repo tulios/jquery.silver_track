@@ -51,3 +51,87 @@ header {
 .loading:before {
   content: "loading... this could take some time, sorry it's just an example =]";
 }
+
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px solid;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+
+.menu {
+  padding: 20px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.menu:before,
+.menu:after {
+  content: " ";
+  display: table;
+}
+
+.menu li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu .option {
+  float: left;
+  margin-right: 20px;
+}
+
+.menu > ul li:last-child {
+  margin-right: 0;
+}
+
+.submenu {
+  position: relative;
+}
+
+.submenu ul {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  background-clip: padding-box;
+}
+
+.submenu.open ul {
+  display: block;
+}
+
+.submenu ul li a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+}
+
+.submenu ul li a:hover,
+.submenu ul li a:focus {
+  text-decoration: none;
+  color: #262626;
+  background-color: #f5f5f5;
+}

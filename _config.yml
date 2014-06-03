@@ -1,4 +1,4 @@
 safe: true
 lsi: false
-pygments: true
+highlighter: pygments
 permalink: /:categories/:title.html

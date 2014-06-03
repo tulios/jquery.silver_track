@@ -1,20 +1,38 @@
-<h2>Menu</h2>
 <nav class="menu">
   <ul>
+    <li class="option">
+      <a href="http://tulios.github.io/jquery.silver_track/">Home</a>
+    </li>
     {% for post in site.categories.root %}
-      <li{% if post.title == page.title %} class="current"{% endif %}><a href="{% if root_path != '' %}.{% endif %}.{{ post.url }}">{{ post.title }}</a></li>
+      <li class="option{% if post.title == page.title %} current{% endif %}"><a href="{% if root_path != '' %}.{% endif %}.{{ post.url }}">{{ post.title }}</a></li>
     {% endfor %}
-  </ul>
-  <h3>How To's:</h3>
-  <ul>
-    {% for post in site.categories.how_tos reversed %}
-      <li{% if post.title == page.title %} class="current"{% endif %}><a href="{% if root_path != '' %}.{% endif %}.{{ post.url }}">{{ post.title }}</a></li>
-    {% endfor %}
-  </ul>
-  <h3>Built-in Plugins:</h3>
-  <ul>
-    {% for post in site.categories.plugins reversed %}
-      <li{% if post.title == page.title %} class="current"{% endif %}><a href="{% if root_path != '' %}.{% endif %}.{{ post.url }}">{{ post.title }}</a></li>
-    {% endfor %}
+
+    <li class="option">
+      <div class="submenu">
+        <a data-toggle="dropdown" href="#">
+          <span>How To's</span>
+          <b class="caret"></b>
+        </a>
+        <ul>
+          {% for post in site.categories.how_tos reversed %}
+            <li{% if post.title == page.title %} class="current"{% endif %}><a href="{% if root_path != '' %}.{% endif %}.{{ post.url }}">{{ post.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </li>
+
+    <li class="option">
+      <div class="submenu">
+        <a data-toggle="dropdown" href="#">
+          <span>Built-in Plugins</span>
+          <b class="caret"></b>
+        </a>
+        <ul>
+          {% for post in site.categories.plugins reversed %}
+            <li{% if post.title == page.title %} class="current"{% endif %}><a href="{% if root_path != '' %}.{% endif %}.{{ post.url }}">{{ post.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </li>
   </ul>
 </nav>

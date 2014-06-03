@@ -16,6 +16,7 @@
     <![endif]-->
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="../javascripts/libs/bootstrap.dropdown.js"></script>
     <script type="text/javascript" src="../javascripts/libs/jquery-easing-1.3.0.js"></script>
     <script type="text/javascript" src="../javascripts/libs/modernizr.mediaqueries.transform3d.js"></script>
     <script type="text/javascript" src="../javascripts/libs/responsive-hub.js"></script>
@@ -45,6 +46,60 @@
           <a href="https://github.com/tulios/jquery.silver_track" id="view-on-github" class="button" target="_blank"><span>View on GitHub</span></a>
         </section>
 
+        <nav class="menu">
+  <ul>
+    <li class="option">
+      <a href="http://tulios.github.io/jquery.silver_track/">Home</a>
+    </li>
+    
+      <li class="option"><a href="../root/options.html">Options</a></li>
+    
+      <li class="option"><a href="../root/methods.html">Methods</a></li>
+    
+
+    <li class="option">
+      <div class="submenu">
+        <a data-toggle="dropdown" href="#">
+          <span>How To's</span>
+          <b class="caret"></b>
+        </a>
+        <ul>
+          
+            <li class="current"><a href="../how_tos/creating-a-plugin.html">Creating a plugin</a></li>
+          
+            <li><a href="../how_tos/defining-a-recipe.html">Defining a recipe</a></li>
+          
+            <li><a href="../how_tos/getting-started.html">Getting Started</a></li>
+          
+        </ul>
+      </div>
+    </li>
+
+    <li class="option">
+      <div class="submenu">
+        <a data-toggle="dropdown" href="#">
+          <span>Built-in Plugins</span>
+          <b class="caret"></b>
+        </a>
+        <ul>
+          
+            <li><a href="../plugins/bullet-navigator.html">Bullet Navigator</a></li>
+          
+            <li><a href="../plugins/navigator.html">Navigator</a></li>
+          
+            <li><a href="../plugins/remote-content.html">Remote Content</a></li>
+          
+            <li><a href="../plugins/responsive-hub-connector.html">ResponsiveHub Connector</a></li>
+          
+            <li><a href="../plugins/css3-animation.html">Css3 Animation</a></li>
+          
+        </ul>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+
 
 <h2>
   Creating a plugin
@@ -68,8 +123,7 @@ SilverTrack was designed to be extensible through plugins, so it provides a clea
 <span class="cm">   */</span>
   <span class="nx">initialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{}</span>
   <span class="c1">// more callbacks</span>
-<span class="p">});</span>
-</code></pre></div>
+<span class="p">});</span></code></pre></div>
 
 <p>
 For our plugin, let's assume the following code:
@@ -93,8 +147,7 @@ For our plugin, let's assume the following code:
       <span class="p">}</span>
     <span class="p">});</span>
   <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div>
+<span class="p">});</span></code></pre></div>
 
 <p>
 We will use the same markup of the <a href="http://tulios.github.io/jquery.silver_track/">getting started track</a>, just surrounding the images with a link. The code to create the track and install our plugin is:
@@ -108,8 +161,7 @@ We will use the same markup of the <a href="http://tulios.github.io/jquery.silve
   <span class="nx">track</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="k">new</span> <span class="nx">SilverTrack</span><span class="p">.</span><span class="nx">Plugins</span><span class="p">.</span><span class="nx">ConfirmWhenItemClicked</span><span class="p">());</span>
 
   <span class="nx">track</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
-<span class="p">});</span>
-</code></pre></div>
+<span class="p">});</span></code></pre></div>
 
 <p>
 and presto!
@@ -206,8 +258,7 @@ For a complete list of callbacks and their usage check the table below.
   <span class="nx">page</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="nx">cover</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
   <span class="nx">items</span><span class="o">:</span> <span class="p">[]</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 <p>
 <strong>Event 2</strong>: beforeAdjustHeight and afterAdjustHeight
@@ -216,46 +267,9 @@ For a complete list of callbacks and their usage check the table below.
 <div class="highlight"><pre><code class="js"><span class="p">{</span>
   <span class="nx">items</span><span class="o">:</span> <span class="p">[],</span>
   <span class="nx">newHeight</span><span class="o">:</span> <span class="mi">150</span>
-<span class="p">}</span>
-</code></pre></div>
+<span class="p">}</span></code></pre></div>
 
 </section>
-
-  <h2>Menu</h2>
-<nav class="menu">
-  <ul>
-    
-      <li><a href="../root/options.html">Options</a></li>
-    
-      <li><a href="../root/methods.html">Methods</a></li>
-    
-  </ul>
-  <h3>How To's:</h3>
-  <ul>
-    
-      <li class="current"><a href="../how_tos/creating-a-plugin.html">Creating a plugin</a></li>
-    
-      <li><a href="../how_tos/defining-a-recipe.html">Defining a recipe</a></li>
-    
-      <li><a href="../how_tos/getting-started.html">Getting Started</a></li>
-    
-  </ul>
-  <h3>Built-in Plugins:</h3>
-  <ul>
-    
-      <li><a href="../plugins/bullet-navigator.html">Bullet Navigator</a></li>
-    
-      <li><a href="../plugins/navigator.html">Navigator</a></li>
-    
-      <li><a href="../plugins/remote-content.html">Remote Content</a></li>
-    
-      <li><a href="../plugins/responsive-hub-connector.html">ResponsiveHub Connector</a></li>
-    
-      <li><a href="../plugins/css3-animation.html">Css3 Animation</a></li>
-    
-  </ul>
-</nav>
-
 
   <footer>
     <hr>

@@ -16,6 +16,7 @@
     <![endif]-->
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="../javascripts/libs/bootstrap.dropdown.js"></script>
     <script type="text/javascript" src="../javascripts/libs/jquery-easing-1.3.0.js"></script>
     <script type="text/javascript" src="../javascripts/libs/modernizr.mediaqueries.transform3d.js"></script>
     <script type="text/javascript" src="../javascripts/libs/responsive-hub.js"></script>
@@ -44,6 +45,60 @@
           <a href="https://github.com/tulios/jquery.silver_track/tarball/master" id="download-tar-gz" class="button" target="_blank"><span>Download .tar.gz</span></a>
           <a href="https://github.com/tulios/jquery.silver_track" id="view-on-github" class="button" target="_blank"><span>View on GitHub</span></a>
         </section>
+
+        <nav class="menu">
+  <ul>
+    <li class="option">
+      <a href="http://tulios.github.io/jquery.silver_track/">Home</a>
+    </li>
+    
+      <li class="option"><a href="../root/options.html">Options</a></li>
+    
+      <li class="option"><a href="../root/methods.html">Methods</a></li>
+    
+
+    <li class="option">
+      <div class="submenu">
+        <a data-toggle="dropdown" href="#">
+          <span>How To's</span>
+          <b class="caret"></b>
+        </a>
+        <ul>
+          
+            <li><a href="../how_tos/creating-a-plugin.html">Creating a plugin</a></li>
+          
+            <li class="current"><a href="../how_tos/defining-a-recipe.html">Defining a recipe</a></li>
+          
+            <li><a href="../how_tos/getting-started.html">Getting Started</a></li>
+          
+        </ul>
+      </div>
+    </li>
+
+    <li class="option">
+      <div class="submenu">
+        <a data-toggle="dropdown" href="#">
+          <span>Built-in Plugins</span>
+          <b class="caret"></b>
+        </a>
+        <ul>
+          
+            <li><a href="../plugins/bullet-navigator.html">Bullet Navigator</a></li>
+          
+            <li><a href="../plugins/navigator.html">Navigator</a></li>
+          
+            <li><a href="../plugins/remote-content.html">Remote Content</a></li>
+          
+            <li><a href="../plugins/responsive-hub-connector.html">ResponsiveHub Connector</a></li>
+          
+            <li><a href="../plugins/css3-animation.html">Css3 Animation</a></li>
+          
+        </ul>
+      </div>
+    </li>
+  </ul>
+</nav>
+
 
 
 <h2>
@@ -80,8 +135,7 @@ We will create a recipe with the basic track we learn at <a href="http://tulios.
       <span class="nx">next</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;a.next&quot;</span><span class="p">,</span> <span class="nx">parent</span><span class="p">)</span>
     <span class="p">}));</span>
   <span class="p">});</span>
-<span class="p">});</span>
-</code></pre></div>
+<span class="p">});</span></code></pre></div>
 
 <p>
 With all recipes defined, in our case just "basic", we can create a new instance of SilverTrack using one of these recipes. Look that in our recipe we have a default easing function and duration but is possible to set another values, let's create three tracks, each one with a different pair of values. For a more generic solution let's keep the recipe name and options in data attributes, like:
@@ -94,8 +148,7 @@ With all recipes defined, in our case just "basic", we can create a new instance
       <span class="c">&lt;!-- items ... --&gt;</span>
     <span class="nt">&lt;/div&gt;</span>
   <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</code></pre></div>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
 
 <p>
 the "boot" code:
@@ -106,8 +159,7 @@ the "boot" code:
   <span class="kd">var</span> <span class="nx">recipe</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;recipe&quot;</span><span class="p">);</span>
   <span class="kd">var</span> <span class="nx">opts</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;opts&quot;</span><span class="p">);</span>
   <span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackRecipes</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">recipe</span><span class="p">,</span> <span class="nx">container</span><span class="p">,</span> <span class="nx">opts</span><span class="p">).</span><span class="nx">start</span><span class="p">();</span>
-<span class="p">});</span>
-</code></pre></div>
+<span class="p">});</span></code></pre></div>
 
 <p>
 and the magic happens!
@@ -197,8 +249,7 @@ It is very common to have more complex recipes that are just variations of the b
       <span class="nx">container</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.bullet-pagination&quot;</span><span class="p">,</span> <span class="nx">track</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">parents</span><span class="p">(</span><span class="s2">&quot;.track&quot;</span><span class="p">))</span>
     <span class="p">}));</span>
   <span class="p">});</span>
-<span class="p">});</span>
-</code></pre></div>
+<span class="p">});</span></code></pre></div>
 
 <p>
 With our current "boot" code we just need to change <em>data-recipe</em> to "complex", and it's done!
@@ -211,8 +262,7 @@ With our current "boot" code we just need to change <em>data-recipe</em> to "com
       <span class="c">&lt;!-- items ... --&gt;</span>
     <span class="nt">&lt;/div&gt;</span>
   <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</code></pre></div>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
 
 <p>
 and presto!
@@ -243,42 +293,6 @@ and presto!
 </div>
 
 </section>
-
-  <h2>Menu</h2>
-<nav class="menu">
-  <ul>
-    
-      <li><a href="../root/options.html">Options</a></li>
-    
-      <li><a href="../root/methods.html">Methods</a></li>
-    
-  </ul>
-  <h3>How To's:</h3>
-  <ul>
-    
-      <li><a href="../how_tos/creating-a-plugin.html">Creating a plugin</a></li>
-    
-      <li class="current"><a href="../how_tos/defining-a-recipe.html">Defining a recipe</a></li>
-    
-      <li><a href="../how_tos/getting-started.html">Getting Started</a></li>
-    
-  </ul>
-  <h3>Built-in Plugins:</h3>
-  <ul>
-    
-      <li><a href="../plugins/bullet-navigator.html">Bullet Navigator</a></li>
-    
-      <li><a href="../plugins/navigator.html">Navigator</a></li>
-    
-      <li><a href="../plugins/remote-content.html">Remote Content</a></li>
-    
-      <li><a href="../plugins/responsive-hub-connector.html">ResponsiveHub Connector</a></li>
-    
-      <li><a href="../plugins/css3-animation.html">Css3 Animation</a></li>
-    
-  </ul>
-</nav>
-
 
   <footer>
     <hr>
