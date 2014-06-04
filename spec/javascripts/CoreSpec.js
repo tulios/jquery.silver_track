@@ -731,4 +731,30 @@ describe("$.silverTrack", function() {
     });
   });
 
+  describe("#findPluginByName", function() {
+    var plugin1, plugin2;
+
+    beforeEach(function() {
+      plugin1 = {PluginName: "SomePlugin1"};
+      plugin2 = {PluginName: "SomePlugin2"};
+
+      track = helpers.basic();
+      track.install(plugin1);
+      track.install(plugin2);
+    });
+
+    describe("when the plugin exists", function() {
+      it("should return the plugin that matches", function() {
+        var expected = track.findPluginByName("SomePlugin2");
+        expect(expected.PluginName).toBe("SomePlugin2");
+      });
+    });
+
+    describe("when does not exist", function() {
+      it("should return null", function() {
+        expect(track.findPluginByName("Wrong")).toBe(null);
+      });
+    });
+  });
+
 });
