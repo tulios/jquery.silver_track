@@ -1,10 +1,10 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.3.0
+ * version: 0.4.0
  *
  * Remote Content
- * version: 0.2.0
+ * version: 0.3.0
  *
  */
 (function($, window, document) {
@@ -69,10 +69,8 @@
     initialize: function(options) {
       this.track = null;
       this.options = options;
-      this.ajaxCache = {};
       this.ajaxFunction = this.options.ajaxFunction || this._ajax;
-      this.filled = false;
-      this.loadContentEnabled = true;
+      this._defaultOptions();
     },
 
     onInstall: function(track) {
@@ -82,6 +80,28 @@
 
     afterStart: function() {
       this.options.beforeStart(this.track);
+      this._boot();
+    },
+
+    afterAnimation: function(track, event) {
+      this.loadContentEnabled = true;
+    },
+
+    reload: function() {
+      this.track.restart();
+      this.track.reloadItems();
+      this.track.container.empty();
+      this._defaultOptions();
+      this._boot();
+    },
+
+    _defaultOptions: function() {
+      this.ajaxCache = {};
+      this.filled = false;
+      this.loadContentEnabled = true;
+    },
+
+    _boot: function() {
       if (this.options.lazy) {
 
         this._loadContent(this.track.currentPage, function() {
@@ -92,10 +112,6 @@
       } else {
         this.filled = true;
       }
-    },
-
-    afterAnimation: function(track, event) {
-      this.loadContentEnabled = true;
     },
 
     _updateNavigationControls: function() {

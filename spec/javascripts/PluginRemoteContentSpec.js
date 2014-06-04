@@ -4,13 +4,13 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
   var plugin = null;
 
   var mockAjaxOnePage = function() {
-    spyOn($, "ajax").andCallFake(function(e) {
+    spyOn(plugin, "ajaxFunction").andCallFake(function(e) {
       e.success(helpers.ajaxResponses.onePage);
     });
   }
 
   var mockAjaxMultiplePages = function(verificationCallback) {
-    spyOn($, "ajax").andCallFake(function(e) {
+    spyOn(plugin, "ajaxFunction").andCallFake(function(e) {
       e.success(helpers.ajaxResponses.multiplePages);
       if (verificationCallback) {
         verificationCallback(e);
@@ -423,6 +423,92 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
           track.next();
           expect(track.goToPage).toHaveBeenCalledWith(track.currentPage + 1);
         });
+      });
+    });
+  });
+
+  describe("#reload", function() {
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.RemoteContent({url: "some/url/{page}"});
+    });
+
+    describe("defaults", function() {
+      beforeEach(function() {
+        track.install(plugin);
+      });
+
+      it("should restarts the track", function() {
+        spyOn(track, "restart");
+        plugin.reload();
+        expect(track.restart).toHaveBeenCalled();
+      });
+
+      it("should reload the track items", function() {
+        spyOn(track, "reloadItems");
+        plugin.reload();
+        expect(track.reloadItems).toHaveBeenCalled();
+      });
+
+      it("should empty the track container", function() {
+        track.container.append($("<div></div>"));
+        expect(track.container.find("div").length).toBe(1);
+        plugin.reload();
+        expect(track.container.find("div").length).toBe(0);
+      });
+
+      it("should empty the ajax cache", function() {
+        plugin.ajaxCache["1"] = true;
+        plugin.ajaxCache["2"] = true;
+        expect(plugin.ajaxCache).not.toEqual({});
+        plugin.reload();
+        expect(plugin.ajaxCache).toEqual({});
+      });
+
+      it("should flag the plugin as unfilled", function() {
+        plugin.filled = true;
+        expect(plugin.filled).toBe(true);
+        plugin.reload();
+        expect(plugin.filled).toBe(false);
+      });
+
+      it("should flag the plugin as load content enabled", function() {
+        plugin.loadContentEnabled = false;
+        expect(plugin.loadContentEnabled).toBe(false);
+        plugin.reload();
+        expect(plugin.loadContentEnabled).toBe(true);
+      });
+    });
+
+    describe("when lazy true", function() {
+      beforeEach(function() {
+        plugin.options.lazy = true;
+        track.install(plugin);
+      });
+
+      it("should fetches the content again", function() {
+        mockAjaxOnePage();
+        plugin.reload();
+        expect(plugin.ajaxFunction).toHaveBeenCalled();
+      });
+    });
+
+    describe("when lazy false", function() {
+      beforeEach(function() {
+        plugin.options.lazy = false;
+        track.install(plugin);
+      });
+
+      it("should not fetch any content", function() {
+        mockAjaxOnePage();
+        plugin.reload();
+        expect(plugin.ajaxFunction).not.toHaveBeenCalled();
+      });
+
+      it("should flag the plugin as filled", function() {
+        plugin.filled = false;
+        expect(plugin.filled).toBe(false);
+        plugin.reload();
+        expect(plugin.filled).toBe(true);
       });
     });
   });

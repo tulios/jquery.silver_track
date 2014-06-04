@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.3.0
+ * version: 0.4.0
  */
 
 (function ($, window, document) {
