@@ -107,6 +107,7 @@
 
 <section id="main_content">
   <script type="text/javascript" src="../javascripts/plugin_remote_content_example.js"></script>
+<script type="text/javascript" src="../javascripts/plugin_remote_content_example2.js"></script>
 
 <p>
 This plugin provides a way to load content through ajax. Example in the end of the page.
@@ -129,12 +130,12 @@ This plugin provides a way to load content through ajax. Example in the end of t
   </tr>
   <tr>
     <td>type</td>
-    <td>The type of request to make ("POST" or "GET"). This parameter is sent direct to <a href="https://api.jquery.com/jQuery.ajax/">jQuery.ajax</a> function</td>
+    <td>The type of request to make ("POST" or "GET"). This parameter is sent direct to ajaxFunction</td>
     <td>GET</td>
   </tr>
   <tr>
     <td>params</td>
-    <td>Data to be sent to the server. This parameter is sent to option <em>"data"</em> of <a href="https://api.jquery.com/jQuery.ajax/">jQuery.ajax</a> function</td>
+    <td>Data to be sent to the server. This parameter is sent to option <em>"data"</em> of ajaxFunction</td>
     <td>{}</td>
   </tr>
   <tr>
@@ -145,7 +146,7 @@ This plugin provides a way to load content through ajax. Example in the end of t
   <tr>
     <td>ajaxFunction</td>
     <td>A custom function for ajax. It defaults to $.ajax, if defined the provided function will receive the same options of $.ajax. It allows other ajax implementations such as <a href="http://foliotek.github.io/AjaxQ/">ajaxQ</a> or something based on promises</td>
-    <td>null</td>
+    <td>$.ajax</td>
   </tr>
 </table>
 
@@ -195,6 +196,25 @@ This plugin provides a way to load content through ajax. Example in the end of t
     <td>track, jqXHR, textStatus, errorThrown</td>
   </tr>
 </table>
+
+<h4>
+  Methods
+</h4>
+
+<table>
+  <tr>
+    <th>name</th>
+    <th>description</th>
+    <th>parameters</th>
+  </tr>
+  <tr>
+    <td>reload</td>
+    <td>Reload the content of track. This method flushes the cache and removes the items. If the track is <em>lazy</em> the first page is fetched after the reload</td>
+    <td></td>
+  </tr>
+</table>
+
+<h4>Example</h4>
 
 <p>
 For our example, we will use a server called <a href="https://github.com/tulios/jquery.silver_track/blob/master/spec/server.rb">"echo"</a> that responds with the same JSON that we set through the parameter json, it will also return the total pages number that we set with the parameter total_pages.
@@ -288,6 +308,53 @@ and it's done!
 </p>
 
 <div class="track">
+  <div class="view-port">
+    <div class="slider-container">
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+
+<h4>Reloading with another content</h4>
+
+<p>
+  The RemoteContent plugin has a method to reload the content of the track flushing all the cache, with this method we can load another content to the track just changing the URL before call it. We will use some helper functions like the first example, the only modification is that the new function will generate an URL for a one type only.
+</p>
+
+<p>
+  The code of the buttons will be like:
+</p>
+
+<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.commands button[data-type]&quot;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">type</span> <span class="o">=</span> <span class="nx">button</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">);</span>
+
+  <span class="nx">button</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">plugin</span> <span class="o">=</span> <span class="nx">track</span><span class="p">.</span><span class="nx">findPluginByName</span><span class="p">(</span><span class="s2">&quot;RemoteContent&quot;</span><span class="p">);</span>
+    <span class="nx">plugin</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">url</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">track</span><span class="p">,</span> <span class="nx">page</span><span class="p">,</span> <span class="nx">perPage</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// URL with the selected type</span>
+      <span class="k">return</span> <span class="nx">urlToEchoServer</span><span class="p">(</span><span class="nx">track</span><span class="p">,</span> <span class="nx">page</span><span class="p">,</span> <span class="nx">perPage</span><span class="p">,</span> <span class="nx">type</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">plugin</span><span class="p">.</span><span class="nx">reload</span><span class="p">();</span>
+  <span class="p">});</span>
+<span class="p">});</span></code></pre></div>
+
+<div class="commands">
+  <ul class="button-group">
+    <li><button class="button big active" data-type="food">Food</button></li>
+    <li><button class="button big" data-type="people">People</button></li>
+    <li><button class="button big" data-type="nature">Nature</button></li>
+    <li><button class="button big" data-type="sports">Sports</button></li>
+  </ul>
+</div>
+
+<div class="track sample2">
   <div class="view-port">
     <div class="slider-container">
     </div>

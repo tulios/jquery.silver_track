@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.3.0
+ * version: 0.4.0
  */
 
 (function ($, window, document) {
@@ -154,6 +154,17 @@
       this.calculateTotalPages = false;
       this.totalPages = this._abs(totalPages);
       this._executeAll("onTotalPagesUpdate");
+    },
+
+    findPluginByName: function(name) {
+      for (var i = 0; i < this.plugins.length; i++) {
+        var plugin = this.plugins[i];
+        if (plugin.PluginName === name) {
+          return plugin;
+        }
+      }
+
+      return null;
     },
 
     _init: function() {

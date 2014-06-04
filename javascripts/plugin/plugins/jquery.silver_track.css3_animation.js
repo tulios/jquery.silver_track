@@ -1,7 +1,7 @@
 /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
- * version: 0.2.2
+ * version: 0.4.0
  *
  * CSS3 Animation
  * version: 0.1.0
