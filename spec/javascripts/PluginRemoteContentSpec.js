@@ -69,6 +69,10 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
       expect(plugin.options.lazy).toBe(true);
     });
 
+    it("should have a default 'prefetchPages'", function() {
+      expect(plugin.options.prefetchPages).toBe(0);
+    });
+
     it("should have a default 'type'", function() {
       expect(plugin.options.type).toBe("GET");
     });
@@ -109,9 +113,7 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
   describe("Initialization", function() {
     describe("when lazy true", function() {
       beforeEach(function() {
-        plugin = new SilverTrack.Plugins.RemoteContent({
-          url: "some/url/{page}"
-        });
+        plugin = createPlugin({url: "some/url/{page}"});
       });
 
       it("should call 'beforeStart' with an instance of the track", function() {
@@ -151,12 +153,25 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
       });
     });
 
+    describe("when lazy true and prefetchPages > 0", function() {
+      beforeEach(function(done) {
+        plugin = createPlugin({url: "some/url/{page}", prefetchPages: 2});
+        track.install(plugin);
+        mockAjaxMultiplePages();
+      });
+
+      it("should load the next page in advance", function() {
+        expect(plugin.ajaxCache).toEqual({});
+        track.start();
+        expect(plugin.ajaxCache["some/url/1"]).toBe(true);
+        expect(plugin.ajaxCache["some/url/2"]).toBe(true);
+        expect(plugin.ajaxCache["some/url/3"]).toBe(true);
+      });
+    });
+
     describe("when lazy false", function() {
       beforeEach(function() {
-        plugin = new SilverTrack.Plugins.RemoteContent({
-          lazy: false,
-          url: "some/url/{page}"
-        });
+        plugin = createPlugin({lazy: false, url: "some/url/{page}"});
       });
 
       it("should call 'beforeStart' with an instance of the track", function() {
@@ -208,9 +223,7 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
         spyOn($, "ajax");
         spyOn(obj, "customFunction");
 
-        plugin = new SilverTrack.Plugins.RemoteContent({
-          ajaxFunction: obj.customFunction
-        });
+        plugin = createPlugin({ajaxFunction: obj.customFunction});
       });
 
       it("should use the provided function", function() {
@@ -365,8 +378,7 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
         it("should call 'beforeSend'", function() {
           spyOn(plugin.options, "beforeSend").andCallThrough();
           track.start();
-          expect(plugin.options.beforeSend).
-            toHaveBeenCalledWith(track, jasmine.any(Object), jasmine.any(Object));
+          expect(plugin.options.beforeSend).toHaveBeenCalledWith(track, jasmine.any(Object), jasmine.any(Object), {prefetch: false});
         });
 
         it("should add the url into the cache", function() {
@@ -383,21 +395,21 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
 
           var perPage = track.options.perPage;
           var data = helpers.ajaxResponses.multiplePages;
-          expect(plugin.options.process).toHaveBeenCalledWith(track, perPage, data);
+          expect(plugin.options.process).toHaveBeenCalledWith(track, perPage, data, {prefetch: false});
         });
 
         it("should call 'beforeAppend'", function() {
           mockAjaxMultiplePages();
           spyOn(plugin.options, "beforeAppend");
           track.start();
-          expect(plugin.options.beforeAppend).toHaveBeenCalledWith(track, jasmine.any(Object));
+          expect(plugin.options.beforeAppend).toHaveBeenCalledWith(track, jasmine.any(Object), {prefetch: false});
         });
 
         it("should call 'afterAppend'", function() {
           mockAjaxMultiplePages();
           spyOn(plugin.options, "afterAppend");
           track.start();
-          expect(plugin.options.afterAppend).toHaveBeenCalledWith(track, jasmine.any(Object));
+          expect(plugin.options.afterAppend).toHaveBeenCalledWith(track, jasmine.any(Object), {prefetch: false});
         });
 
         it("should call 'updateTotalPages'", function() {
@@ -422,6 +434,57 @@ describe("SilverTrack.Plugins.RemoteContent", function() {
           track.start();
           track.next();
           expect(track.goToPage).toHaveBeenCalledWith(track.currentPage + 1);
+        });
+      });
+
+      describe("and the url is not in the cache and prefetch is enabled", function() {
+        beforeEach(function(done) {
+          plugin = createPlugin({url: "some/url/{page}", prefetchPages: 2});
+          track.install(plugin);
+          mockAjaxMultiplePages();
+          track.start();
+        });
+
+        describe("and there is no more pages to load", function() {
+          it("should not try to load anything", function() {
+            track.updateTotalPages(3);
+            track.next();
+            track.next();
+            expect(plugin.ajaxFunction.calls.length).toBe(3);
+            expect(Object.keys(plugin.ajaxCache).length).toBe(3);
+          });
+        });
+
+        describe("and prefetch pages was disabled", function() {
+          it("should not try to load anything", function() {
+            plugin.prefetchEnabled = false;
+            track.next();
+            track.next();
+            expect(plugin.ajaxFunction.calls.length).toBe(3);
+            expect(Object.keys(plugin.ajaxCache).length).toBe(3);
+          });
+        });
+
+        describe("and prefetch pages has an invalid value", function() {
+          it("should not try to load anything", function() {
+            plugin.options.prefetchPages = false;
+            track.next();
+            track.next();
+            expect(plugin.ajaxFunction.calls.length).toBe(3);
+            expect(Object.keys(plugin.ajaxCache).length).toBe(3);
+          });
+        });
+
+        describe("and has more pages to load", function() {
+          it("should load the next pages in advance", function() {
+            expect(Object.keys(plugin.ajaxCache).length).toBe(3);
+            expect(track.currentPage).toBe(1);
+            track.next();
+            track.next();
+            expect(track.currentPage).toBe(3);
+            expect(plugin.ajaxFunction.calls.length).toBe(5);
+            expect(Object.keys(plugin.ajaxCache).length).toBe(5);
+          });
         });
       });
     });
