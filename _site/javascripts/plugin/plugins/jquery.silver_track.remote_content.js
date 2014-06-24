@@ -4,66 +4,27 @@
  * version: 0.4.0
  *
  * Remote Content
- * version: 0.3.0
+ * version: 0.4.0
  *
  */
 (function($, window, document) {
 
-  /*
-   * track.install(new SilverTrack.Plugins.RemoteContent({
-   *
-   *   // A string or a function to generate the URL
-   *   url: function(track, page, perPage) {
-   *     return "/my/url/page/" + page;
-   *   },
-   *
-   *   beforeStart: function(track) {
-   *   },
-   *
-   *   beforeSend: function(track) {
-   *   },
-   *
-   *   // It should return an array with the elements to be appended to
-   *   // the container
-   *   process: function(track, perPage, json) {
-   *     var data = json.data;
-   *     var array = [];
-   *
-   *     for (var i = 0; i < perPage; i++) {
-   *       array.push(
-   *         $("<div></div>", {"class": "item"}).
-   *         append($("<img>", {"src": data[i].img_url})).
-   *         append($("<p></p>", {"text": data[i].title}))
-   *       );
-   *     }
-   *
-   *     return array;
-   *   },
-   *
-   *   beforeAppend: function(track, items) {
-   *   },
-   *
-   *   updateTotalPages: function(track, json) {
-   *     track.updateTotalPages(json.total_pages);
-   *   }
-   * }));
-   *
-   */
   $.silverTrackPlugin("RemoteContent", {
     defaults: {
       lazy: true,
+      prefetchPages: 0,
 
       type: "GET",
       params: {},
 
       ajaxFunction: null,
       beforeStart: function(track) {},
-      beforeSend: function(track, jqXHR, settings) {},
-      beforeAppend: function(track) {},
-      afterAppend: function(track) {},
-      process: function(track, perPage, data) {},
+      beforeSend: function(track, jqXHR, settings, opts) {},
+      beforeAppend: function(track, items, opts) {},
+      afterAppend: function(track, items, opts) {},
+      process: function(track, perPage, data, opts) {},
       updateTotalPages: function(track, data) {},
-      onError: function(track, jqXHR, textStatus, errorThrown) {}
+      onError: function(track, jqXHR, textStatus, errorThrown, opts) {}
     },
 
     initialize: function(options) {
@@ -99,6 +60,7 @@
       this.ajaxCache = {};
       this.filled = false;
       this.loadContentEnabled = true;
+      this.prefetchEnabled = true;
     },
 
     _boot: function() {
@@ -139,39 +101,84 @@
           $.extend(this._ajaxDefaults(), {
             url: url,
             success: function(data) {
-              self._onSuccess(url, data);
+              self._onSuccess(url, data, {prefetch: false});
               contentLoadedCallback.apply(self);
+              self._prefetchContent(page);
             }
           })
         );
 
       } else {
         contentLoadedCallback.apply(self);
+        this._prefetchContent(page);
       }
     },
 
-    _onSuccess: function(url, data) {
-      this.ajaxCache[url] = true;
-      var items = this.options.process(this.track, this.track.options.perPage, data) || [];
+    _prefetchContent: function(page) {
+      if (!this.prefetchEnabled ||
+          !this.options.prefetchPages ||
+          page + 1 > this.track.totalPages) {
+        return;
+      }
 
-      this.options.beforeAppend(this.track, items);
+      var self = this;
+      var queue = [];
+      var prefetchOpts = {prefetch: true, currentPage: this.track.currentPage};
+      var prefetchedPage = page + 1
+
+      for (var i = 0; i < this.options.prefetchPages; i++) {
+        if (prefetchedPage > this.track.totalPages) {
+          this.prefetchEnabled = false;
+          break;
+        }
+
+        var url = this._generateUrl(prefetchedPage++);
+        if (this.ajaxCache[url]) {
+          continue;
+        }
+
+        queue.push(function(prefetchUrl, opts) {
+          var params = $.extend(self._ajaxDefaults(opts), {
+            url: prefetchUrl,
+            success: function(data) {
+              self._onSuccess(prefetchUrl, data, opts);
+              if (queue.length > 0) {
+                queue.shift().apply(self);
+              }
+            }
+          });
+
+          return function() { this.ajaxFunction(params) }
+        }(url, prefetchOpts));
+      }
+
+      if (queue.length > 0) {
+        queue.shift().apply(self);
+      }
+    },
+
+    _onSuccess: function(url, data, opts) {
+      this.ajaxCache[url] = true;
+      var items = this.options.process(this.track, this.track.options.perPage, data, opts) || [];
+
+      this.options.beforeAppend(this.track, items, opts);
       this._updateItemsPosition(items);
-      this.options.afterAppend(this.track, items);
+      this.options.afterAppend(this.track, items, opts);
 
       this.options.updateTotalPages(this.track, data);
       this.track.reloadItems();
     },
 
-    _onBeforeSend: function(jqXHR, settings) {
-      this.options.beforeSend(this.track, jqXHR, settings);
+    _onBeforeSend: function(jqXHR, settings, opts) {
+      this.options.beforeSend(this.track, jqXHR, settings, opts);
     },
 
-    _onError: function(jqXHR, textStatus, errorThrown) {
+    _onError: function(jqXHR, textStatus, errorThrown, opts) {
       if (window.console) {
-        console.info('SilverTrack.Plugins.RemoteContent - Error:', textStatus);
+        console.info('SilverTrack.Plugins.RemoteContent - Error:', [textStatus, errorThrown, opts]);
       }
 
-      this.options.onError(this.track, jqXHR, textStatus, errorThrown);
+      this.options.onError(this.track, jqXHR, textStatus, errorThrown, opts);
     },
 
     _updateItemsPosition: function(items) {
@@ -234,17 +241,19 @@
       $.ajax(opts);
     },
 
-    _ajaxDefaults: function() {
+    _ajaxDefaults: function(prefetchOpts) {
       var self = this;
+      var opts = $.extend({prefetch: false}, prefetchOpts);
+
       return {
         context: this.track.container,
         type: this.options.type,
         data: this.options.params,
         beforeSend: function(jqXHR, settings) {
-          self._onBeforeSend(jqXHR, settings);
+          self._onBeforeSend(jqXHR, settings, opts);
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          self._onError(jqXHR, textStatus, errorThrown);
+          self._onError(jqXHR, textStatus, errorThrown, opts);
         }
       }
     }

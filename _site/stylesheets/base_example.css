@@ -27,6 +27,14 @@
   height: 552px;
 }
 
+.track-480 {
+  width: 466px;
+}
+
+.track-480 .view-port  {
+  width: 466px;
+}
+
 .slider-container {
   position: relative;
   height: 138px;
