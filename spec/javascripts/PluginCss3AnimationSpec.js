@@ -203,10 +203,24 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
       });
     });
 
-    it("should apply the movement with translate3d", function() {
-      plugin.cssAnimate(args.movement, args.duration, args.easing, args.afterCallback);
-      var style = track.container.attr("style");
-      expect(style).toMatch(new RegExp("transform: translate3d\\(" + args.movement.left + ", 0px, 0px\\)"));
+    describe("with movement on left", function() {
+      it("should apply the movement with translate3d", function() {
+        plugin.cssAnimate(args.movement, args.duration, args.easing, args.afterCallback);
+        var style = track.container.attr("style");
+        expect(style).toMatch(new RegExp("transform: translate3d\\(" + args.movement.left + ", 0px, 0px\\)"));
+      });
+    });
+
+    describe("with movement on top", function() {
+      beforeEach(function() {
+        args.movement = {top: "-80px"};
+      });
+
+      it("should apply the movement with translate3d", function() {
+        plugin.cssAnimate(args.movement, args.duration, args.easing, args.afterCallback);
+        var style = track.container.attr("style");
+        expect(style).toMatch(new RegExp("transform: translate3d\\(0px, " + args.movement.top + ", 0px\\)"));
+      });
     });
   });
 

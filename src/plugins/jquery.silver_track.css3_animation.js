@@ -68,7 +68,7 @@
         clearTimeout(timeout);
       });
 
-      if (!!movement.left) {
+      if (!!movement.left || !!movement.top) {
         this._applyTransform3d(element, movement);
 
       } else {
@@ -119,7 +119,9 @@
     },
 
     _applyTransform3d: function(element, movement) {
-      element.css(this._toCompatibleVersion("transform", "translate3d(" + movement.left + ", 0px, 0px)"));
+      var left = movement.left || "0px";
+      var top = movement.top || "0px";
+      element.css(this._toCompatibleVersion("transform", "translate3d(" + left + ", " + top + ", 0px)"));
     },
 
     _toDuration: function(number) {
