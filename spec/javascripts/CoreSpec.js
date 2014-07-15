@@ -813,6 +813,12 @@ describe("$.silverTrack", function() {
       expect(track.container.css("left")).toBe("0px");
     });
 
+    it("should call 'beforeRestart'", function() {
+      spyOn(plugin, 'beforeRestart');
+      track.restart();
+      expect(plugin.beforeRestart).toHaveBeenCalledWith(track);
+    });
+
     it("should call 'afterRestart'", function() {
       spyOn(plugin, 'afterRestart');
       track.restart();

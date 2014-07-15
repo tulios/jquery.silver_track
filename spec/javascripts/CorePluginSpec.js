@@ -51,6 +51,10 @@ describe("$.silverTrackPlugin", function() {
       expect(plugin.afterStart).toBeDefined();
     });
 
+    it("should define 'beforeRestart'", function() {
+      expect(plugin.beforeRestart).toBeDefined();
+    });
+
     it("should define 'afterRestart'", function() {
       expect(plugin.afterRestart).toBeDefined();
     });

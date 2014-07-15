@@ -137,6 +137,7 @@
         opts.page = this.currentPage;
       }
 
+      this._executeAll("beforeRestart");
       this.container.css("height", "");
       this._getItems(true).css("top", "");
 
@@ -413,6 +414,7 @@
       onInstall: function(track) {},
       beforeStart: function(track) {},
       afterStart: function(track) {},
+      beforeRestart: function(track) {},
       afterRestart: function(track) {},
       onTotalPagesUpdate: function(track){},
 
