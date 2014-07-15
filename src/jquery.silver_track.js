@@ -34,7 +34,8 @@
      * - easing and afterCallback may be optional
      * - movement will be {left: someValue} or {height: someValue}
      */
-    animateFunction: null
+    animateFunction: null,
+    animationAxis: "x"
   };
 
   var SilverTrack = function (container, options) {
@@ -46,7 +47,7 @@
     this.totalPages = 1;
     this.plugins = [];
 
-    this._items = null;
+    this.reloadItems();
   };
 
   SilverTrack.prototype = {
@@ -72,18 +73,17 @@
       var useCover = this.options.cover && (page === 1);
       var direction = page > this.currentPage ? "next" : "prev";
       var items = useCover ? this._getCover() : this._calculateItemsForPagination(page);
-      var isHorizontal = this.options.mode === "horizontal";
 
       if (!this._canPaginate(page)) {
         return;
       }
 
       if (items.length > 0) {
-        var shift = this._calculateItemLeft(items.get(0));
+        var shift = this._calculateItemPosition(items.get(0));
         var event = {name: direction, page: page, cover: useCover, items: items};
 
-        if (items.length < this.options.perPage && !useCover && isHorizontal) {
-          shift -= this.itemWidth * (this.options.perPage - items.length);
+        if (items.length < this.options.perPage && !useCover && (this.isModeHorizontal() || this.isAxisY())) {
+          shift -= this._calculateMaxShiftAvailable(items);
         }
 
         this.currentPage = page;
@@ -109,6 +109,14 @@
 
     hasNext: function() {
       return !(this.currentPage === this.totalPages || this.totalPages <= 1);
+    },
+
+    isModeHorizontal: function() {
+      return this.options.mode === "horizontal";
+    },
+
+    isAxisY: function() {
+      return this.options.animationAxis === "y"
     },
 
     /*
@@ -168,6 +176,7 @@
     },
 
     _init: function() {
+      this.animatedAttribute = this.isAxisY() ? "top" : "left";
       this._positionElements();
       if (this.calculateTotalPages) {
         this._calculateTotalPages();
@@ -196,7 +205,9 @@
 
     _slide: function(shift, event, duration) {
       var self = this;
-      var movement = {"left": "-" + shift + "px"};
+      var movement = {};
+      movement[this.animatedAttribute] = "-" + shift + "px";
+
       var afterCallback = function() {
         self.paginationEnabled = true;
         self._executeAll("afterAnimation", [event]);
@@ -210,10 +221,10 @@
       if (this.options.autoHeight === true) {
         var newHeight = 0;
 
-        if (this.options.mode === "horizontal") {
+        if (this.isModeHorizontal()) {
           newHeight = $(items[0]).outerHeight(true);
 
-        } else if (this.options.mode === "vertical") {
+        } else {
           items.each(function(index, value) {
             newHeight += $(value).outerHeight(true);
           });
@@ -237,14 +248,14 @@
     },
 
     _positionElements: function() {
-      this.container.css({"left": "0px"});
-      this.itemWidth = this._calculateItemWidth();
-      this.coverWidth = this._calculateCoverWidth();
+      this._calculateItemDimension();
+      this._calculateCoverDimention();
+      this.container.css(this.animatedAttribute, "0px");
 
-      if (this.options.mode === "horizontal") {
+      if (this.isModeHorizontal()) {
         this._positionHorizontal();
 
-      } else if (this.options.mode === "vertical") {
+      } else {
         this._positionVertical();
       }
     },
@@ -261,6 +272,15 @@
     },
 
     _positionVertical: function() {
+      if (this.isAxisY()) {
+        this._positionVerticalAxisY();
+
+      } else {
+        this._positionVerticalAxisX();
+      }
+    },
+
+    _positionVerticalAxisX: function() {
       var width = 0;
       var height = 0;
 
@@ -286,6 +306,22 @@
       this.container.css("width", width + this.itemWidth + "px");
     },
 
+    _positionVerticalAxisY: function() {
+      var width = 0;
+      var height = 0;
+
+      var perPage = this.options.perPage;
+      var useCover = this.options.cover;
+
+      this._getItems(true).each(function(index, value) {
+        var item = $(value);
+        item.css({"top": height + "px", "left": width + "px"});
+        height += item.outerHeight(true);
+      });
+
+      this.container.css({"width": width + this.itemWidth + "px", "height": height + this.itemHeight});
+    },
+
     _calculateTotalPages: function() {
       this.totalPages = Math.ceil(this._getItems().length/this.options.perPage);
 
@@ -294,12 +330,13 @@
       }
     },
 
-    _calculateContainerLeft: function() {
-      return this._abs(this.container.css("left"));
+    _calculateMaxShiftAvailable: function(items) {
+      var amount = this.options.perPage - items.length;
+      return (this.isAxisY() ? this.itemHeight : this.itemWidth) * amount
     },
 
-    _calculateItemLeft: function(item) {
-      return this._abs($(item).css("left"));
+    _calculateItemPosition: function(item) {
+      return this._abs($(item).css(this.animatedAttribute));
     },
 
     _calculateItemsForPagination: function(page) {
@@ -315,14 +352,23 @@
       return items.length * this.itemWidth;
     },
 
-    _calculateItemWidth: function() {
+    _calculateItemDimension: function() {
       var complement = this.options.cover ? ":eq(1)" : ":first";
       var item = $("." + this.options.itemClass + complement, this.container);
-      return item.outerWidth(true);
+      this.itemWidth = item.outerWidth(true);
+      this.itemHeight = item.outerHeight(true);
     },
 
-    _calculateCoverWidth: function() {
-      return this.options.cover ? this._getCover().outerWidth(true) : 0;
+    _calculateCoverDimention: function() {
+      if (this.options.cover) {
+        var coverItem = this._getCover();
+        this.coverWidth = coverItem.outerWidth(true);
+        this.coverHeight = coverItem.outerWidth(true);
+
+      } else {
+        this.coverWidth = 0;
+        this.coverHeight = 0;
+      }
     },
 
     _validateAnimationEasing: function() {

@@ -1,6 +1,7 @@
 describe("$.silverTrack", function() {
   var track = null;
   var plugin = null;
+  var items = null;
 
   beforeEach(function() {
     jasmine.Clock.useMock();
@@ -24,6 +25,7 @@ describe("$.silverTrack", function() {
       expect(track.options.duration).toBe(600);
       expect(track.options.easing).toBe("swing");
       expect(track.options.animateFunction).toBe(null);
+      expect(track.options.animationAxis).toBe("x");
     });
 
     it("should allow the user to override the default values", function() {
@@ -33,7 +35,8 @@ describe("$.silverTrack", function() {
         cover: true,
         mode: "vertical",
         autoHeight: true,
-        animateFunction: $.noop
+        animateFunction: $.noop,
+        animationAxis: "y"
       });
 
       expect(track.options.perPage).toBe(1);
@@ -42,6 +45,7 @@ describe("$.silverTrack", function() {
       expect(track.options.mode).toBe("vertical");
       expect(track.options.autoHeight).toBe(true);
       expect(track.options.animateFunction).toEqual(jasmine.any(Function));
+      expect(track.options.animationAxis).toBe("y");
     });
 
     it("should keep the instance in a data attribute", function() {
@@ -87,13 +91,39 @@ describe("$.silverTrack", function() {
       });
 
       it("should calculate 'itemWidth'", function() {
+        expect(track.itemWidth).toBe(undefined);
         track.start();
         expect(track.itemWidth).toBe(240);
       });
 
-      it("should set container 'left' to '0px'", function() {
-        track.start();
-        expect(track.container.css("left")).toBe("0px");
+      describe("with animationAxis 'y'", function() {
+        it("should calculate 'animatedAttribute'", function() {
+          expect(track.animatedAttribute).toBe(undefined);
+          track.options.animationAxis = "y";
+          track.start();
+          expect(track.animatedAttribute).toBe("top");
+        });
+      });
+
+      describe("with animationAxis with another value", function() {
+        it("should calculate 'animatedAttribute'", function() {
+          expect(track.animatedAttribute).toBe(undefined);
+          track.start();
+          expect(track.animatedAttribute).toBe("left");
+        });
+      });
+
+      describe("when initializing the container animated attribute", function() {
+        it("should set container 'left' to '0px' when 'animatedAttribute' is 'left'", function() {
+          track.start();
+          expect(track.container.css("left")).toBe("0px");
+        });
+
+        it("should set container 'top' to '0px' when 'animatedAttribute' is 'top'", function() {
+          track.options.animationAxis = "y";
+          track.start();
+          expect(track.container.css("top")).toBe("0px");
+        });
       });
 
       it("should calculate 'totalPages' based on DOM elements", function() {
@@ -300,117 +330,284 @@ describe("$.silverTrack", function() {
     });
 
     describe("without cover", function() {
-      beforeEach(function() {
-        track = helpers.basic();
-        track.start();
-        track.install(plugin);
+      describe("axis 'x'", function() {
+        beforeEach(function() {
+          track = helpers.basic();
+          track.install(plugin);
+          track.start();
+          items = track._calculateItemsForPagination(1);
 
-        expect(track.currentPage).toBe(1);
-        expect(track._calculateContainerLeft()).toBe(0);
-        expect(track.itemWidth).toBe(240);
-        expect(track.options.perPage).toBe(4);
-      });
+          expect(track.currentPage).toBe(1);
+          expect(track._calculateItemPosition(items.get(0))).toBe(0);
+          expect(track.itemWidth).toBe(240);
+          expect(track.options.perPage).toBe(4);
+        });
 
-      it("should animate to first item of the informed page", function() {
-        track.goToPage(2);
-        expect(track.currentPage).toBe(2);
-        expect(track._calculateContainerLeft()).toBe(240 * 4);
-      });
-
-      it("should animate just enough items", function() {
-        track.goToPage(3);
-        expect(track.currentPage).toBe(3);
-        expect(track._calculateContainerLeft()).toBe(240 * 5); // 3 + 1
-      });
-
-      describe("going forward", function() {
-        it("should call 'beforePagination' with the proper event", function() {
-          spyOn(plugin, 'beforePagination');
+        it("should animate to first item of the informed page", function() {
           track.goToPage(2);
-          expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
-            name: "next",
-            page: 2,
-            cover: false,
-            items: jasmine.any(Object)
+          expect(track.currentPage).toBe(2);
+
+          items = track._calculateItemsForPagination(2);
+          expect(track._calculateItemPosition(items.get(0))).toBe(240 * 4);
+        });
+
+        it("should animate just enough items", function() {
+          track.goToPage(3);
+          expect(track.currentPage).toBe(3);
+
+          items = track._calculateItemsForPagination(3);
+
+          var shift = track._calculateItemPosition(items.get(0));
+          shift -= track._calculateMaxShiftAvailable(items);
+
+          expect(shift).toBe(240 * 5); // 3 + 1
+        });
+
+        describe("going forward", function() {
+          it("should call 'beforePagination' with the proper event", function() {
+            spyOn(plugin, 'beforePagination');
+            track.goToPage(2);
+            expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
+              name: "next",
+              page: 2,
+              cover: false,
+              items: jasmine.any(Object)
+            });
+          });
+        });
+
+        describe("going backwards", function() {
+          it("should call 'beforePagination' with the proper event", function() {
+            track.goToPage(2);
+            spyOn(plugin, 'beforePagination');
+            track.goToPage(1);
+            expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
+              name: "prev",
+              page: 1,
+              cover: false,
+              items: jasmine.any(Object)
+            });
           });
         });
       });
 
-      describe("going backwards", function() {
-        it("should call 'beforePagination' with the proper event", function() {
+      describe("axis 'y' and mode 'vertical'", function() {
+        beforeEach(function() {
+          $(".track").addClass("axis-y");
+          track = helpers.basic({mode: "vertical", animationAxis: "y"});
+          track.install(plugin);
+          track.start();
+
+          items = track._calculateItemsForPagination(1);
+
+          expect(track.currentPage).toBe(1);
+          expect(track._calculateItemPosition(items.get(0))).toBe(0);
+          expect(track.itemHeight).toBe(166);
+          expect(track.options.perPage).toBe(4);
+        });
+
+        it("should animate to first item of the informed page", function() {
           track.goToPage(2);
-          spyOn(plugin, 'beforePagination');
-          track.goToPage(1);
-          expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
-            name: "prev",
-            page: 1,
-            cover: false,
-            items: jasmine.any(Object)
+          expect(track.currentPage).toBe(2);
+
+          items = track._calculateItemsForPagination(2);
+          expect(track._calculateItemPosition(items.get(0))).toBe(166 * 4);
+        });
+
+        it("should animate just enough items", function() {
+          track.goToPage(3);
+          expect(track.currentPage).toBe(3);
+
+          items = track._calculateItemsForPagination(3);
+
+          var shift = track._calculateItemPosition(items.get(0));
+          shift -= track._calculateMaxShiftAvailable(items);
+
+          expect(shift).toBe(166 * 5); // 3 + 1
+        });
+
+        describe("going forward", function() {
+          it("should call 'beforePagination' with the proper event", function() {
+            spyOn(plugin, 'beforePagination');
+            track.goToPage(2);
+            expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
+              name: "next",
+              page: 2,
+              cover: false,
+              items: jasmine.any(Object)
+            });
+          });
+        });
+
+        describe("going backwards", function() {
+          it("should call 'beforePagination' with the proper event", function() {
+            track.goToPage(2);
+            spyOn(plugin, 'beforePagination');
+            track.goToPage(1);
+            expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
+              name: "prev",
+              page: 1,
+              cover: false,
+              items: jasmine.any(Object)
+            });
           });
         });
       });
     });
 
     describe("with cover", function() {
-      beforeEach(function() {
-        loadFixtures("cover.html");
-        track = helpers.cover();
-        track.install(plugin);
-        track.start();
+      describe("axis 'x'", function() {
+        beforeEach(function() {
+          loadFixtures("cover.html");
+          track = helpers.cover();
+          track.install(plugin);
+          track.start();
 
-        expect(track.options.cover).toBe(true);
-        expect(track.currentPage).toBe(1);
-        expect(track._calculateContainerLeft()).toBe(0);
-        expect(track.itemWidth).toBe(240);
-        expect(track.options.perPage).toBe(4);
-      });
+          items = track._getCover();
 
-      it("should animate to first item of the informed page", function() {
-        track.goToPage(2);
-        expect(track.currentPage).toBe(2);
-        expect(track._calculateContainerLeft()).toBe(956); // shift the cover
-      });
+          expect(track.options.cover).toBe(true);
+          expect(track.currentPage).toBe(1);
+          expect(track._calculateItemPosition(items.get(0))).toBe(0);
+          expect(track.itemWidth).toBe(240);
+          expect(track.options.perPage).toBe(4);
+        });
 
-      it("should animate just enough items", function() {
-        track.goToPage(3);
-        expect(track.currentPage).toBe(3);
-        expect(track._calculateContainerLeft()).toBe(1196); // 3 + 1
-      });
-
-      it("should consider the cover as a page", function() {
-        expect(track._getCover().outerWidth(true)).toBe(956);
-        track.goToPage(2);
-        expect(track.currentPage).toBe(2);
-        expect(track._calculateContainerLeft()).toBe(956);
-
-        track.goToPage(1);
-        expect(track.currentPage).toBe(1);
-        expect(track._calculateContainerLeft()).toBe(0);
-      });
-
-      describe("going forward", function() {
-        it("should call 'beforePagination' with the proper event", function() {
-          spyOn(plugin, 'beforePagination');
+        it("should animate to first item of the informed page", function() {
           track.goToPage(2);
-          expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
-            name: "next",
-            page: 2,
-            cover: false,
-            items: jasmine.any(Object)
+          expect(track.currentPage).toBe(2);
+          items = track._calculateItemsForPagination(2);
+
+          expect(track._calculateItemPosition(items.get(0))).toBe(956); // shift the cover
+        });
+
+        it("should animate just enough items", function() {
+          track.goToPage(3);
+          expect(track.currentPage).toBe(3);
+          items = track._calculateItemsForPagination(3);
+
+          var shift = track._calculateItemPosition(items.get(0));
+          shift -= track._calculateMaxShiftAvailable(items);
+
+          expect(shift).toBe(1196); // 3 + 1
+        });
+
+        it("should consider the cover as a page", function() {
+          expect(track._getCover().outerWidth(true)).toBe(956);
+          track.goToPage(2);
+          expect(track.currentPage).toBe(2);
+          items = track._calculateItemsForPagination(2);
+          expect(track._calculateItemPosition(items.get(0))).toBe(956);
+
+          track.goToPage(1);
+          expect(track.currentPage).toBe(1);
+          items = track._getCover();
+          expect(track._calculateItemPosition(items.get(0))).toBe(0);
+        });
+
+        describe("going forward", function() {
+          it("should call 'beforePagination' with the proper event", function() {
+            spyOn(plugin, 'beforePagination');
+            track.goToPage(2);
+            expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
+              name: "next",
+              page: 2,
+              cover: false,
+              items: jasmine.any(Object)
+            });
+          });
+        });
+
+        describe("going backwards", function() {
+          it("should call 'beforePagination' with the proper event", function() {
+            track.goToPage(2);
+            spyOn(plugin, 'beforePagination');
+            track.goToPage(1);
+            expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
+              name: "prev",
+              page: 1,
+              cover: true,
+              items: jasmine.any(Object)
+            });
           });
         });
       });
 
-      describe("going backwards", function() {
-        it("should call 'beforePagination' with the proper event", function() {
+      describe("axis 'y' and mode 'vertical'", function() {
+        beforeEach(function() {
+          loadFixtures("cover.html");
+          $(".track:last").addClass("axis-y");
+          $(".track:last .view-port h2").remove();
+          $(".track:last .item.cover > img:first").remove();
+
+          track = helpers.cover({mode: "vertical", animationAxis: "y", perPage: 2});
+          track.install(plugin);
+          track.start();
+
+          items = track._getCover();
+
+          expect(track.options.cover).toBe(true);
+          expect(track.currentPage).toBe(1);
+          expect(track._calculateItemPosition(items.get(0))).toBe(0);
+          expect(track.itemHeight).toBe(304);
+          expect(track.options.perPage).toBe(2);
+        });
+
+        it("should animate to first item of the informed page", function() {
           track.goToPage(2);
-          spyOn(plugin, 'beforePagination');
+          expect(track.currentPage).toBe(2);
+          items = track._calculateItemsForPagination(2);
+
+          expect(track._calculateItemPosition(items.get(0))).toBe(592); // shift the cover
+        });
+
+        it("should animate just enough items", function() {
+          track.goToPage(4);
+          expect(track.currentPage).toBe(4);
+          items = track._calculateItemsForPagination(4);
+
+          var shift = track._calculateItemPosition(items.get(0));
+          shift -= track._calculateMaxShiftAvailable(items);
+
+          expect(shift).toBe(1504); // 3 + 1
+        });
+
+        it("should consider the cover as a page", function() {
+          expect(track._getCover().outerHeight(true)).toBe(592);
+          track.goToPage(2);
+          expect(track.currentPage).toBe(2);
+          items = track._calculateItemsForPagination(2);
+          expect(track._calculateItemPosition(items.get(0))).toBe(592);
+
           track.goToPage(1);
-          expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
-            name: "prev",
-            page: 1,
-            cover: true,
-            items: jasmine.any(Object)
+          expect(track.currentPage).toBe(1);
+          items = track._getCover();
+          expect(track._calculateItemPosition(items.get(0))).toBe(0);
+        });
+
+        describe("going forward", function() {
+          it("should call 'beforePagination' with the proper event", function() {
+            spyOn(plugin, 'beforePagination');
+            track.goToPage(2);
+            expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
+              name: "next",
+              page: 2,
+              cover: false,
+              items: jasmine.any(Object)
+            });
+          });
+        });
+
+        describe("going backwards", function() {
+          it("should call 'beforePagination' with the proper event", function() {
+            track.goToPage(2);
+            spyOn(plugin, 'beforePagination');
+            track.goToPage(1);
+            expect(plugin.beforePagination).toHaveBeenCalledWith(track, {
+              name: "prev",
+              page: 1,
+              cover: true,
+              items: jasmine.any(Object)
+            });
           });
         });
       });
@@ -422,11 +619,12 @@ describe("$.silverTrack", function() {
         track.start();
        });
 
-      it("should animate the whole page as in vertical does not exist enough items", function() {
+      it("should animate the whole page even if in vertical does not exist enough items", function() {
         expect(track.totalPages).toBe(3);
         track.goToPage(3);
         expect(track.currentPage).toBe(3);
-        expect(track._calculateContainerLeft()).toBe(480); // third page (0, 240, 480)
+        items = track._calculateItemsForPagination(3);
+        expect(track._calculateItemPosition(items.get(0))).toBe(480); // third page (0, 240, 480)
       });
     });
 
@@ -554,6 +752,36 @@ describe("$.silverTrack", function() {
       track.currentPage = 1;
       expect(track.currentPage).toBe(1);
       expect(track.hasPrev()).toBe(false);
+    });
+  });
+
+  describe("#isModeHorizontal", function() {
+    it("should be true when 'mode' is 'horizontal'", function() {
+      track.options.mode = "horizontal";
+      expect(track.isModeHorizontal()).toBe(true);
+    });
+
+    it("should be false when 'mode' has another value", function() {
+      track.options.mode = "vertical";
+      expect(track.isModeHorizontal()).toBe(false);
+
+      track.options.mode = "another";
+      expect(track.isModeHorizontal()).toBe(false);
+    });
+  });
+
+  describe("#isAxisY", function() {
+    it("should be true when 'animationAxis' is 'y'", function() {
+      track.options.animationAxis = "y";
+      expect(track.isAxisY()).toBe(true);
+    });
+
+    it("should be false when 'animationAxis' has another value", function() {
+      track.options.animationAxis = "x";
+      expect(track.isAxisY()).toBe(false);
+
+      track.options.animationAxis = "z";
+      expect(track.isAxisY()).toBe(false);
     });
   });
 

@@ -58,6 +58,13 @@ h2 {
   width: 946px;
 }
 
+.axis-y .view-port,
+.axis-y .track .inner {
+  width: 240px;
+  height: 660px;
+}
+
+
 .view-port {
   overflow: hidden;
   position: relative;
