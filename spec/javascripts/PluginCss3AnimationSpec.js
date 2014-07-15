@@ -152,7 +152,28 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
     });
   });
 
-  describe("after restart", function() {
+  describe("beforeRestart", function() {
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.Css3Animation();
+      plugin.fallback = false;
+      track.install(plugin);
+      track.start();
+    });
+
+    it("should reset transitions and transforms", function() {
+      var style = track.container.attr("style");
+      expect(style).toMatch(new RegExp("transition: -(moz|webkit)-transform"));
+      expect(style).toMatch(new RegExp("-(moz|webkit)-transition: -(moz|webkit)-transform"));
+
+      plugin.beforeRestart(track);
+
+      style = track.container.attr("style");
+      expect(style).not.toMatch(new RegExp("transition: -(moz|webkit)-transform"));
+      expect(style).not.toMatch(new RegExp("-(moz|webkit)-transition: -(moz|webkit)-transform"));
+    });
+  });
+
+  describe("afterRestart", function() {
     beforeEach(function() {
       plugin = new SilverTrack.Plugins.Css3Animation();
       plugin.fallback = false;

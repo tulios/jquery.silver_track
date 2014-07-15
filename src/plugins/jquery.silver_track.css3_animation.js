@@ -49,6 +49,11 @@
       this._setupTransition();
     },
 
+    beforeRestart: function(track) {
+      track.container.css(this._toCompatibleVersion("transition", ""));
+      track.container.css(this._toCompatibleVersion("transform", ""));
+    },
+
     afterRestart: function() {
       this._setupTransition();
     },
