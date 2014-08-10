@@ -15,7 +15,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="../javascripts/libs/bootstrap.dropdown.js"></script>
     <script type="text/javascript" src="../javascripts/libs/jquery-easing-1.3.0.js"></script>
     <script type="text/javascript" src="../javascripts/libs/modernizr.mediaqueries.transform3d.js"></script>
@@ -112,7 +112,7 @@
 SilverTrack was designed to be extensible through plugins, so it provides a clean way to define one. To explain the internals of the missing art of plugin crafters we will create an <strong>example plugin</strong> that presents an alert to the user when an item is clicked. To create our plugin we will use the method <em>$.silverTrackPlugin</em>, this method receives the plugin name and an object that will handle all the callbacks during the life cycle of our track.
 </p>
 
-<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackPlugin</span><span class="p">(</span><span class="s2">&quot;PluginName&quot;</span><span class="p">,</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackPlugin</span><span class="p">(</span><span class="s2">&quot;PluginName&quot;</span><span class="p">,</span> <span class="p">{</span>
   <span class="nx">defaults</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">attribute</span><span class="o">:</span> <span class="s2">&quot;default value&quot;</span>
   <span class="p">},</span>
@@ -129,7 +129,7 @@ SilverTrack was designed to be extensible through plugins, so it provides a clea
 For our plugin, let's assume the following code:
 </p>
 
-<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackPlugin</span><span class="p">(</span><span class="s2">&quot;ConfirmWhenItemClicked&quot;</span><span class="p">,</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">$</span><span class="p">.</span><span class="nx">silverTrackPlugin</span><span class="p">(</span><span class="s2">&quot;ConfirmWhenItemClicked&quot;</span><span class="p">,</span> <span class="p">{</span>
   <span class="nx">defaults</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">message</span><span class="o">:</span> <span class="s2">&quot;Really?&quot;</span>
   <span class="p">},</span>
@@ -153,7 +153,7 @@ For our plugin, let's assume the following code:
 We will use the same markup of the <a href="http://tulios.github.io/jquery.silver_track/">getting started track</a>, just surrounding the images with a link. The code to create the track and install our plugin is:
 </p>
 
-<div class="highlight"><pre><code class="js"><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">var</span> <span class="nx">container</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.my-track&quot;</span><span class="p">);</span>
   <span class="kd">var</span> <span class="nx">track</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">&quot;.slider-container&quot;</span><span class="p">).</span><span class="nx">silverTrack</span><span class="p">();</span>
 
@@ -253,7 +253,7 @@ For a complete list of callbacks and their usage check the table below.
 <strong>Event 1</strong>: beforeAnimation, afterAnimation and beforePagination
 </p>
 
-<div class="highlight"><pre><code class="js"><span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span>
   <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;prev&quot;</span><span class="p">,</span> <span class="c1">// or &quot;next&quot;</span>
   <span class="nx">page</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
   <span class="nx">cover</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
@@ -264,7 +264,7 @@ For a complete list of callbacks and their usage check the table below.
 <strong>Event 2</strong>: beforeAdjustHeight and afterAdjustHeight
 </p>
 
-<div class="highlight"><pre><code class="js"><span class="p">{</span>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="p">{</span>
   <span class="nx">items</span><span class="o">:</span> <span class="p">[],</span>
   <span class="nx">newHeight</span><span class="o">:</span> <span class="mi">150</span>
 <span class="p">}</span></code></pre></div>

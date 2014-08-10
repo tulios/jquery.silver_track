@@ -1,3 +1,9 @@
+#main_content:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .view-port {
   overflow: hidden;
   position: relative;
@@ -19,8 +25,18 @@
   height: 690px;
 }
 
+.track.vertical2 {
+  float: left;
+  margin-right: 40px;
+}
+
+.track.vertical2:last-child {
+  margin-right: 0;
+}
+
 .track.vertical2, .track.vertical2 .view-port {
   width: 231px;
+  height: 552px;
 }
 
 .track.vertical2 .view-port .slider-container {
@@ -75,6 +91,24 @@
   display: inline-block;
 }
 
+.small-item.vertical-cover {
+  height: 690px;
+}
+
+.small-item.vertical-cover .message {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 40px;
+}
+
+.small-item.vertical-cover .message h2 {
+  font-size: 26px;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
 .track {
   position: relative;
   background-color: white;
@@ -93,6 +127,27 @@
   height: 64px;
   background: url("../images/arrows.png");
   background-repeat: no-repeat;
+}
+
+.track.axis-y a.prev,
+.track.axis-y a.next {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+
+  left: 50%;
+  margin-left: -32px;
+}
+
+.track.axis-y a.next {
+  top: initial;
+  bottom: 0;
+}
+
+.track.axis-y a.prev {
+  top: 0;
+  margin-top: 0;
 }
 
 .track a.prev.disabled,

@@ -44,6 +44,11 @@ $(".slider-container").silverTrack({
     <td>horizontal</td>
   </tr>
   <tr>
+    <td>animationAxis</td>
+    <td>The direction of the animation (x or y). To animate in "y" axis you will need the mode "vertical" too</td>
+    <td>x</td>
+  </tr>
+  <tr>
     <td>autoHeight</td>
     <td>If it will adjust the track height after each pagination</td>
     <td>false</td>
@@ -96,6 +101,12 @@ Using:
       <div class="my-item"><img src="http://lorempixel.com/230/134/city/6/"></div>
       <div class="my-item"><img src="http://lorempixel.com/230/134/city/7/"></div>
       <div class="my-item"><img src="http://lorempixel.com/230/134/city/8/"></div>
+
+      <div class="my-item"><img src="http://lorempixel.com/230/134/fashion/1/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/fashion/2/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/fashion/3/"></div>
+      <div class="my-item"><img src="http://lorempixel.com/230/134/fashion/4/"></div>
+
       <div class="my-item"><img src="http://lorempixel.com/230/134/city/9/"></div>
       <div class="my-item"><img src="http://lorempixel.com/230/134/city/10/"></div>
     </div>
@@ -137,6 +148,75 @@ Using:
   </div>
 
   <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+
+<p>
+Using:
+</p>
+
+{% highlight js %}
+{itemClass: "small-item", perPage: 5, mode: "vertical", animationAxis: "y"}
+{% endhighlight %}
+
+<div class="track vertical axis-y third-example">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/1/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/2/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/3/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/4/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/5/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/6/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/7/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/8/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/9/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/cats/10/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/nature/1/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/nature/2/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/nature/3/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/nature/4/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/nature/5/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/nature/6/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/nature/7/"></div>
+    </div>
+
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+
+<p>
+Using:
+</p>
+
+{% highlight js %}
+{itemClass: "small-item", cover: true, perPage: 5, mode: "vertical", animationAxis: "y"}
+{% endhighlight %}
+
+<div class="track vertical axis-y fourth-example">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="small-item vertical-cover">
+        <div class="message">
+          <h2>Arrow down</h2>
+        </div>
+        <img src="../images/example/vertical_cover1.png">
+      </div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/1/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/2/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/3/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/4/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/5/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/6/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/7/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/8/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/9/"></div>
+      <div class="small-item"><img src="http://lorempixel.com/188/134/animals/10/"></div>
+    </div>
+
     <a href="#" class="prev disabled"></a>
     <a href="#" class="next disabled"></a>
   </div>

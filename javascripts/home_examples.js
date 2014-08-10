@@ -55,11 +55,27 @@ $(function() {
     next: $("a.next", container)
   }));
 
-  track.install(new SilverTrack.Plugins.Css3Animation({
-    autoHeightDuration: 600,
-    autoHeightEasing: "easeInOutCubic",
-    autoHeightDelay: 800
+  track.install(new SilverTrack.Plugins.Css3Animation());
+
+  track.start();
+
+  // =========================================================================
+  // Sample 4
+  // =========================================================================
+  container = $(".track.sample4");
+  track = container.find(".slider-container").silverTrack({
+    duration: 600,
+    easing: "easeInOutQuad",
+    mode: "vertical",
+    animationAxis: "y"
+  });
+
+  track.install(new SilverTrack.Plugins.Navigator({
+    prev: $("a.prev", container),
+    next: $("a.next", container)
   }));
+
+  track.install(new SilverTrack.Plugins.Css3Animation());
 
   track.start();
 });
