@@ -124,6 +124,21 @@ describe("SilverTrack.Plugins.BulletNavigator", function() {
       bullets = getBullets(plugin, track);
     });
 
+    it("should recreate the bullets based on the new track attributes", function() {
+      track.options.perPage = 1;
+      track.restart();
+      bullets = getBullets(plugin, track);
+      expect(bullets.length).toBe(9);
+    });
+
+    it("should setup the click of the new bullets", function() {
+      spyOn(plugin, "_setupBulletClick").andCallThrough();
+      track.restart();
+      bullets = getBullets(plugin, track);
+      expect(bullets.length).toBe(3);
+      expect(plugin._setupBulletClick).toHaveBeenCalled();
+    });
+
     it("should add the active class to the 'currentPage' bullet", function() {
       track.currentPage = 3;
       track.restart({keepCurrentPage: true});
