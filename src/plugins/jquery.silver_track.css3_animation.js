@@ -4,7 +4,7 @@
  * version: 0.4.0
  *
  * CSS3 Animation
- * version: 0.1.0
+ * version: 0.1.1
  *
  * This plugin depends on modernizr.transforms3d.js
  */
@@ -95,10 +95,23 @@
 
       // pre configuring container
       if (this.options.setupTransitionProperty) {
-        element.css(this._toCompatibleVersion("transition-property", "transform", function(prefix, value) {
+        var eachPrefixCallback = function(prefix, value) {
           var transform = "-" + prefix + "-" + value;
           return autoHeight ? transform + ", height" : transform;
-        }));
+        }
+
+        var vanillaCallback = function(value) {
+          return autoHeight ? value + ", height" : value;
+        }
+
+        element.css(
+          this._toCompatibleVersion(
+            "transition-property",
+            "transform",
+            eachPrefixCallback,
+            vanillaCallback
+          )
+        );
       }
 
       if (this.options.setupTransitionDuration) {
@@ -137,14 +150,14 @@
       return number + (this.options.delayUnit || this.options.durationUnit);
     },
 
-    _toCompatibleVersion: function(name, value, eachCallback) {
+    _toCompatibleVersion: function(name, value, eachCallback, vanillaCallback) {
       var output = {};
       $.each(BrowserPrefixes, function() {
         var str = !!eachCallback ? eachCallback(this, value) : value;
         output["-" + this + "-" + name] = str;
       });
 
-      output[name] = value;
+      output[name] = !!vanillaCallback ? vanillaCallback(value) : value;
       return output;
     },
 

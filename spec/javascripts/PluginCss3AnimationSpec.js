@@ -148,7 +148,7 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
 
     it("should configure the animation duration in ms, the timing function in cubic-bezier and property with transform", function() {
       var easingRegex = bezierMap[easing].replace("(", "\\(").replace(")", "\\)");
-      expect(style).toMatch(new RegExp("transition: -(moz|webkit)-transform " + duration + "ms " + easingRegex));
+      expect(style).toMatch(new RegExp("transition: (-(moz|webkit)-)?transform " + duration + "ms " + easingRegex));
     });
   });
 
@@ -162,14 +162,14 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
 
     it("should reset transitions and transforms", function() {
       var style = track.container.attr("style");
-      expect(style).toMatch(new RegExp("transition: -(moz|webkit)-transform"));
-      expect(style).toMatch(new RegExp("-(moz|webkit)-transition: -(moz|webkit)-transform"));
+      expect(style).toMatch(new RegExp("transition: (-(moz|webkit)-)?transform"));
+      expect(style).toMatch(new RegExp("(-(moz|webkit)-)?transition: (-(moz|webkit)-)?transform"));
 
       plugin.beforeRestart(track);
 
       style = track.container.attr("style");
-      expect(style).not.toMatch(new RegExp("transition: -(moz|webkit)-transform"));
-      expect(style).not.toMatch(new RegExp("-(moz|webkit)-transition: -(moz|webkit)-transform"));
+      expect(style).not.toMatch(new RegExp("transition: (-(moz|webkit)-)?transform"));
+      expect(style).not.toMatch(new RegExp("(-(moz|webkit)-)?transition: (-(moz|webkit)-)?transform"));
     });
   });
 
