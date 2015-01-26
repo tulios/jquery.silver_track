@@ -190,9 +190,10 @@ describe("$.silverTrack", function() {
 
         expect($(items[6]).css("left")).toBe("240px");
         expect($(items[6]).css("top")).toBe("332px");
-
+        
         expect($(items[7]).css("left")).toBe("240px");
         expect($(items[7]).css("top")).toBe("498px");
+
       });
 
       it("should add the width of the container", function() {
