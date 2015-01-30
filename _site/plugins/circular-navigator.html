@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../javascripts/plugin/plugins/jquery.silver_track.css3_animation.js" charset="utf-8"></script>
     <script type="text/javascript" src="../javascripts/plugin/plugins/jquery.silver_track.circular_navigator.js" charset="utf-8"></script>
 
-    <title>Navigator - jQuery.silver_track </title>
+    <title>Circular Navigator - jQuery.silver_track </title>
   </head>
 
   <body>
@@ -84,7 +84,7 @@
         </a>
         <ul>
           
-            <li class="current"><a href="../plugins/navigator.html">Navigator</a></li>
+            <li><a href="../plugins/navigator.html">Navigator</a></li>
           
             <li><a href="../plugins/bullet-navigator.html">Bullet Navigator</a></li>
           
@@ -94,7 +94,7 @@
           
             <li><a href="../plugins/css3-animation.html">Css3 Animation</a></li>
           
-            <li><a href="../plugins/circular-navigator.html">Circular Navigator</a></li>
+            <li class="current"><a href="../plugins/circular-navigator.html">Circular Navigator</a></li>
           
         </ul>
       </div>
@@ -105,14 +105,14 @@
 
 
 <h2>
-  Navigator
+  Circular Navigator
 </h2>
 
 <section id="main_content">
-  <script type="text/javascript" src="../javascripts/plugin_navigator_example.js"></script>
+  <script type="text/javascript" src="../javascripts/plugin_circular_navigator_example.js"></script>
 
 <p>
-This plugin provides a simple way to attach the next and previous actions.
+This plugin provides a simple way to make navigation circular.
 </p>
 
 <h4>
@@ -126,36 +126,19 @@ This plugin provides a simple way to attach the next and previous actions.
     <th>default</th>
   </tr>
   <tr>
-    <td>disabledClass</td>
-    <td>Class applied to disable the navigation element</td>
-    <td>disabled</td>
+    <td>autoPlay</td>
+    <td>Allows your track to foward one page by 'duration option' time. It automatically disabled when mouse is over the track.</td>
+    <td>false</td>
   </tr>
   <tr>
-    <td>prev</td>
-    <td>Element that will receive the "previous" function</td>
-    <td></td>
+    <td>duration</td>
+    <td>time to auto play</td>
+    <td>3000</td>
   </tr>
   <tr>
-    <td>next</td>
-    <td>Element that will receive the "next" function</td>
-    <td></td>
-  </tr>
-</table>
-
-<h4>
-  Callbacks
-</h4>
-
-<table>
-  <tr>
-    <th>name</th>
-    <th>description</th>
-    <th>arguments</th>
-  </tr>
-  <tr>
-    <td>beforePagination</td>
-    <td>It is called before any pagination, it happens before any animation. To see the format of event go to <a href="http://tulios.github.io/jquery.silver_track/how_tos/creating-a-plugin.html">Creating a plugin</a> for more reference</td>
-    <td>track, event</td>
+    <td>clonedClass</td>
+    <td>Class applied to the cloned items that makes track circular</td>
+    <td>"cloned"</td>
   </tr>
 </table>
 
@@ -163,9 +146,18 @@ This plugin provides a simple way to attach the next and previous actions.
   Installation
 </h4>
 
+<p>
+Circular Navigator Plugin requires the Navigator Plugin
+</p>
+
 <div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">track</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="k">new</span> <span class="nx">SilverTrack</span><span class="p">.</span><span class="nx">Plugins</span><span class="p">.</span><span class="nx">Navigator</span><span class="p">({</span>
   <span class="nx">prev</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.my-track a.prev&quot;</span><span class="p">),</span>
   <span class="nx">next</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;.my-track a.next&quot;</span><span class="p">)</span>
+<span class="p">}));</span>
+
+<span class="nx">track</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="k">new</span> <span class="nx">SilverTrack</span><span class="p">.</span><span class="nx">Plugins</span><span class="p">.</span><span class="nx">CircularNavigator</span><span class="p">({</span>
+  <span class="nx">autoPlay</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">duration</span><span class="o">:</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">1000</span> <span class="c1">// 3s</span>
 <span class="p">}));</span></code></pre></div>
 
 <div class="track">
@@ -181,6 +173,8 @@ This plugin provides a simple way to attach the next and previous actions.
       <div class="item"><img src="http://lorempixel.com/230/134/nature/8/"></div>
       <div class="item"><img src="http://lorempixel.com/230/134/nature/9/"></div>
       <div class="item"><img src="http://lorempixel.com/230/134/nature/10/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/1/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/2/"></div>
     </div>
   </div>
 
@@ -190,6 +184,13 @@ This plugin provides a simple way to attach the next and previous actions.
   </div>
 </div>
 
+<h4>
+  To do
+</h4>
+
+<p>
+The Circular Navigator Plugin have some limitations. So, you can't yet connect this plugin with Bullet Plugin, ResponsiveHub Connector and Css3 Animation.
+</p>
 </section>
 
   <footer>
