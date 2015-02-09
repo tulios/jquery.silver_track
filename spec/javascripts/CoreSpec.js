@@ -306,6 +306,29 @@ describe("$.silverTrack", function() {
         expect(track.currentPage).toBe(1);
       });
 
+      describe("call functions in order", function() {
+        it("should call all 'before pagination' function before change the current page", function() {
+          track.install(plugin)
+
+          spyOn(track, "_slide");
+          spyOn(track, "_adjustHeight");
+
+          var currentPage = track.currentPage;
+          var beforePaginationValidated = false;
+
+          spyOn(plugin, "beforePagination").andCallFake(function() {
+            expect(track.currentPage).toEqual(currentPage);
+            beforePaginationValidated = true;
+          });
+
+          track.goToPage(currentPage + 1);
+
+          expect(plugin.beforePagination).toHaveBeenCalled();
+          expect(track.currentPage).toEqual(currentPage + 1);
+          expect(beforePaginationValidated).toEqual(true);
+        });
+      });
+
       describe("'animate' option", function() {
         beforeEach(function() {
           spyOn(track, "_slide");

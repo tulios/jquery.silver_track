@@ -86,8 +86,8 @@
           shift -= this._calculateMaxShiftAvailable(items);
         }
 
-        this.currentPage = page;
         this._executeAll("beforePagination", [event]);
+        this.currentPage = page;
         this.paginationEnabled = false;
 
         this._slide(shift, event, duration);
