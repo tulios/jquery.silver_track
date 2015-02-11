@@ -49,15 +49,6 @@
       this._setupTransition();
     },
 
-    beforeRestart: function(track) {
-      track.container.css(this._toCompatibleVersion("transition", ""));
-      track.container.css(this._toCompatibleVersion("transform", ""));
-    },
-
-    afterRestart: function() {
-      this._setupTransition();
-    },
-
     cssAnimate: function(movement, duration, easing, afterCallback) {
       var timeout = 0;
       var element = this.track.container;
@@ -73,6 +64,8 @@
         clearTimeout(timeout);
       });
 
+      this._setupTransition(duration);
+
       if (!!movement.left || !!movement.top) {
         this._applyTransform3d(element, movement);
 
@@ -83,7 +76,7 @@
       timeout = setTimeout(function() { animationEnded() }, duration);
     },
 
-    _setupTransition: function() {
+    _setupTransition: function(animationDuration) {
       var autoHeight = this.track.options.autoHeight;
       var element = this.track.container;
       var values;
@@ -116,6 +109,12 @@
 
       if (this.options.setupTransitionDuration) {
         var duration = this._toDuration(this.track.options.duration);
+
+        if (animationDuration === 0) {
+          duration = this._toDuration(0);
+          this._cleanElementTransition();
+        }
+
         var autoHeightDuration = this._toDuration(this.options.autoHeightDuration || this.track.options.duration);
         values = autoHeight ? [duration, autoHeightDuration] : [duration];
         element.css(this._toCompatibleVersion("transition-duration", values.join(", ")));
@@ -134,6 +133,10 @@
         values = autoHeight ? [delay, autoHeightDelay] : [delay];
         element.css(this._toCompatibleVersion("transition-delay", values.join(", ")));
       }
+    },
+
+    _cleanElementTransition: function() {
+      this.track.container.css(this._toCompatibleVersion("transition", ""));
     },
 
     _applyTransform3d: function(element, movement) {

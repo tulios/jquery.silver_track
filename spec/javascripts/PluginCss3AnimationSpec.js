@@ -152,27 +152,6 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
     });
   });
 
-  describe("beforeRestart", function() {
-    beforeEach(function() {
-      plugin = new SilverTrack.Plugins.Css3Animation();
-      plugin.fallback = false;
-      track.install(plugin);
-      track.start();
-    });
-
-    it("should reset transitions and transforms", function() {
-      var style = track.container.attr("style");
-      expect(style).toMatch(new RegExp("transition: (-(moz|webkit)-)?transform"));
-      expect(style).toMatch(new RegExp("(-(moz|webkit)-)?transition: (-(moz|webkit)-)?transform"));
-
-      plugin.beforeRestart(track);
-
-      style = track.container.attr("style");
-      expect(style).not.toMatch(new RegExp("transition: (-(moz|webkit)-)?transform"));
-      expect(style).not.toMatch(new RegExp("(-(moz|webkit)-)?transition: (-(moz|webkit)-)?transform"));
-    });
-  });
-
   describe("afterRestart", function() {
     beforeEach(function() {
       plugin = new SilverTrack.Plugins.Css3Animation();
@@ -242,6 +221,14 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
         var style = track.container.attr("style");
         expect(style).toMatch(new RegExp("transform: translate3d\\(0px, " + args.movement.top + ", 0px\\)"));
       });
+    });
+  });
+
+  describe("_cleanElementTransition", function() {
+    it("should clean transition css value", function() {
+      plugin._cleanElementTransition();
+      var style = track.container.attr("style");
+      expect(style).not.toMatch(new RegExp("transition"))
     });
   });
 
@@ -433,4 +420,45 @@ describe("SilverTrack.Plugins.Css3Animation", function() {
     });
   });
 
+  describe("when track is restarted with 'animate' false", function() {
+    beforeEach(function() {
+      animated = false;
+
+      args = {
+        movement: {left: "-50px"},
+        duration: 0,
+        easing: easing,
+        afterCallback: $.noop
+      };
+
+      spyOn(args, "afterCallback");
+      plugin = new SilverTrack.Plugins.Css3Animation();
+      plugin.fallback = false;
+      track.install(plugin);
+      track.start();
+    });
+
+    describe("cssAnimate", function() {
+      it("should call '_setupTransition'", function() {
+        spyOn(plugin, "_getTransitionEndEvent");
+        spyOn(plugin, "_setupTransition");
+        plugin.cssAnimate(args.movement, args.duration, args.easing, args.afterCallback);
+
+        expect(plugin._setupTransition).toHaveBeenCalledWith(args.duration);
+      });
+    });
+
+    describe("_setupTransition", function() {
+      it("should setup 'transition-duration' eql zero", function() {
+        plugin._setupTransition(duration);
+        expect(track.container.css("transition-duration")).toMatch(new RegExp(duration));
+      });
+
+      it("should call 'clean-element-transition", function() {
+        spyOn(plugin, "_cleanElementTransition");
+        plugin._setupTransition(args.duration);
+        expect(plugin._cleanElementTransition).toHaveBeenCalled();
+      });
+    });
+  });
 });
