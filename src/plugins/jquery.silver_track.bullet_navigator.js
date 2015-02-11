@@ -37,6 +37,10 @@
       this._setupBulletClick();
     },
 
+    afterAnimation: function() {
+      this._setupBulletClick();
+    },
+
     beforePagination: function(track, event) {
       var bullet = this._getBulletByPage(event.page);
       this._updateBullets(bullet);
@@ -71,11 +75,13 @@
 
     _setupBulletClick: function() {
       var self = this;
-      this._getBullets().click(function(e) {
+      var bullets = this._getBullets();
+      bullets.click(function(e) {
         e.preventDefault();
         var bullet = $(this);
         self._updateBullets(bullet);
         self.track.goToPage(bullet.data("page"));
+        bullets.unbind("click");
       });
     },
 
