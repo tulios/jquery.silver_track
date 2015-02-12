@@ -10,7 +10,8 @@ jQuery(function() {
   }));
 
   track.install(new SilverTrack.Plugins.CircularNavigator({
-    autoPlay: false
+    autoPlay: true,
+    duration: 5000
   }));
 
   track.install(new SilverTrack.Plugins.Css3Animation({

@@ -22,7 +22,7 @@
   $.silverTrackPlugin("CircularNavigator", {
     defaults: {
       autoPlay: true,
-      duration: 3000,
+      duration: 5000,
       clonedClass: "cloned"
     },
 
@@ -49,6 +49,7 @@
       this.totalDefaultPages = this.track.totalPages;
       this._setupTrack();
       this._bindClick();
+      if (this.options.autoPlay === true) this._turnOnAutoPlay(this.trackElements);
     },
 
     afterRestart: function() {
@@ -57,6 +58,13 @@
 
     beforePagination: function() {
       this._enableButtons()
+    },
+
+    _enableButtons: function() {
+      if (this._hasManyPages()) {
+        this.prevButton.removeClass(this.navigatorPlugin.options.disabledClass);
+        this.nextButton.removeClass(this.navigatorPlugin.options.disabledClass);
+      }
     },
 
     afterAnimation: function() {
@@ -84,13 +92,6 @@
 
       if (this.track.currentPage === this.clonedPage && this.fowardPage === 1) {
         this.track.restart({page: 1, animate: false});
-      }
-    },
-
-    _enableButtons: function() {
-      if (this._hasManyPages()) {
-        this.prevButton.removeClass(this.navigatorPlugin.options.disabledClass);
-        this.nextButton.removeClass(this.navigatorPlugin.options.disabledClass);
       }
     },
 
@@ -191,6 +192,53 @@
         return items - this.track.options.perPage;
       }
       return items;
+    },
+
+    _turnOnAutoPlay: function(elements) {
+      this._mouseOverTrack(elements);
+      this._mouseOutTrack(elements);
+      this._turnOnListener();
+    },
+
+    _turnOnListener: function() {
+      var self = this;
+
+      if(this.options.autoPlay === true) {
+        this.timeout = setInterval(function() {
+          self.track.next();
+        }, self.options.duration);
+      }
+    },
+
+    _mouseOverTrack: function(elements) {
+      var self = this;
+
+      elements.forEach(function(el) {
+        el.mouseenter(function() {
+          self._breakListener();
+        });
+      });
+    },
+
+    _mouseOutTrack: function(elements) {
+      var self = this;
+
+      elements.forEach(function(el) {
+        el.mouseleave(function() {
+          self._wakeUpListener();
+        });
+      });
+    },
+
+    _breakListener: function() {
+      clearTimeout(this.timeout);
+      this.options.autoPlay = false;
+    },
+
+    _wakeUpListener: function() {
+      clearTimeout(this.timeout);
+      this.options.autoPlay = true;
+      this._turnOnListener();
     }
   })
 

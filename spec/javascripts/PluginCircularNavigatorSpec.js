@@ -195,4 +195,42 @@ describe("SilverTrack.Plugins.CircularNavigator", function() {
       });
     });
   });
+
+  describe("when the autoPlay option is true", function() {
+    beforeEach(function() {
+      jasmine.Clock.useMock()
+      loadFixtures("basic.html");
+      $.fx.off = true;
+      track = helpers.basic();
+      circularPlugin = new SilverTrack.Plugins.CircularNavigator({autoPlay: true, durtion: 5000});
+      navigatorPlugin = new SilverTrack.Plugins.Navigator({
+        prev: $("a.prev", track.container.parent().parent()),
+        next: $("a.next", track.container.parent().parent())
+      });
+
+      track.install(navigatorPlugin);
+      track.install(circularPlugin);
+      track.start();
+      nextCall = spyOn(track, "next");
+    });
+  
+    it("autoPlay options should be true", function() {
+      expect(circularPlugin.options.autoPlay).toEqual(true);
+    });
+
+    it("should call next 1 time", function() {
+      jasmine.Clock.tick(5100)
+      expect(nextCall.callCount).toEqual(1);
+    });
+
+    it("should call next 2 time", function() {
+      jasmine.Clock.tick(10100)
+      expect(nextCall.callCount).toEqual(2);
+    });
+
+    it("should call next 3 times", function() {
+      jasmine.Clock.tick(15100)
+      expect(nextCall.callCount).toEqual(3);
+    });
+  });
 });
