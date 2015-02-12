@@ -13,6 +13,13 @@ jQuery(function() {
     autoPlay: false
   }));
 
+  track.install(new SilverTrack.Plugins.Css3Animation({
+    delayUnit: "s",
+    autoHeightDuration: 300,
+    autoHeightEasing: "easeInOutCubic",
+    autoHeightDelay: 1
+  }));
+
   track.install(new SilverTrack.Plugins.ResponsiveHubConnector({
     layouts: ["phone", "small-tablet", "tablet", "web"],
     onReady: function(track, options, event) {

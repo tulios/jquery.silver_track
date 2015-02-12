@@ -1,10 +1,19 @@
-/*!
+ /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
  * version: 0.4.0
  *
- * Circular Navigator
- * version: 0.1.0
+ * Navigator
+ * version: 0.2.0
+ *
+ */
+ /*!
+ * jQuery SilverTrack
+ * https://github.com/tulios/jquery.silver_track
+ * version: 0.4.0
+ *
+ * Navigator
+ * version: 0.2.0
  *
  */
 
@@ -12,133 +21,122 @@
 
   $.silverTrackPlugin("CircularNavigator", {
     defaults: {
-      autoPlay: false,
+      autoPlay: true,
       duration: 3000,
       clonedClass: "cloned"
     },
 
     initialize: function(options) {
-      this.options = options;
+      this.options = options
     },
 
-    onInstall: function(track) { 
+    onInstall: function(track) {
       this.track = track;
-    },
-
-    afterStart: function(track) {
-      var perPage = this.track.options.perPage;
-
-      this.itemsCount = this.track._getItems().length;
-      this.numLastItems = this.itemsCount % perPage;
-      this.totalDefaultPages = this.track.totalPages;
-      this.goingLeft = false;
-
-      this.fowardPage = this.track.currentPage;
-      this._changeFowardPage();
       this.navigatorPlugin = this.track.findPluginByName("Navigator");
 
-      this._listenClick();
-
-      this.breakPlayElements = [
+      this.trackElements = [
         this.track.container,
         this.navigatorPlugin.prev,
         this.navigatorPlugin.next
       ]
+      this.prevButton = this.trackElements[1];
+      this.nextButton = this.trackElements[2];
 
-      this.prevButton = this.breakPlayElements[1];
-      this.nextButton = this.breakPlayElements[2];
+      var items = this.track._getItems().length
+    },
 
-      if(this.options.autoPlay === true) {
-        this._turnOnAutoPlay(this.breakPlayElements)
-      }
-
-      if (this.numLastItems === 0) {
-        this.numLastItems = this.track.options.perPage;
-      }
-
-      if (this._hasManyPages()) {
-        this.beforePagination();
-        this.afterAnimation();
-      }
+    afterStart: function() {
+      this.totalDefaultPages = this.track.totalPages;
+      this._setupTrack();
+      this._bindClick();
     },
 
     afterRestart: function() {
-      if (this._hasManyPages()) {
-        this._enableButtons();
-      }
-
-      if (this.track.currentPage === this.totalDefaultPages + 1 &&
-          this.goingLeft === true) {
-        this.track.goToPage(this.track.totalPages - 1);
-        this.goingLeft = false;
-      }
+      this._enableButtons()
     },
 
     beforePagination: function() {
-      if (this.track.currentPage === this._lastCompletedPage() &&
-          this.track.totalPages === this.totalDefaultPages) {
-
-        this._appendItems();
-        this.track.reloadItems();
-      }
+      this._enableButtons()
     },
 
     afterAnimation: function() {
-      this._enableButtons();
+      this._setupTrack();
+      this._tryToDeleteCloned();
+      if (this.track.hasNext() === false && this.fowardPage === 1 ) {
+        this.track.restart({page: 1, animate: false});
+        return
+      }
+
+      if (this.track.currentPage === this.clonedPage && this.fowardPage === this.clonedPage) {
+        this.track.goToPage(this.clonedPage - 1);
+        this._changeFowardPage();
+        return
+      }
+
       this._changeFowardPage();
 
       if (this.track.currentPage === this._lastCompletedPage() &&
           this.track.totalPages === this.totalDefaultPages) {
-
-        this.track.restart({ keepCurrentPage: true, animate: false });
+        this._appendItems();
+        this.track.restart({keepCurrentPage: true, animate: false});
+        return
       }
 
-      if (this.track.currentPage === this.track.totalPages && 
-          this.track.totalPages > this.totalDefaultPages && 
-          this.goingLeft === false ) {
-
-        this.track.reloadItems();
+      if (this.track.currentPage === this.clonedPage && this.fowardPage === 1) {
         this.track.restart({page: 1, animate: false});
-        this._deleteClonedItems();
       }
     },
 
-    _listenClick: function() {
-      var self = this
-      this.navigatorPlugin.options.prev.click(function() {
-        if (self.track.currentPage === 1 &&
-            self.fowardPage === self.totalDefaultPages) {
-          self._appendItems();
-          self.goingLeft = true;
-          self.track.restart({ page: self.totalDefaultPages + 1, animate: false });
+    _enableButtons: function() {
+      if (this._hasManyPages()) {
+        this.prevButton.removeClass(this.navigatorPlugin.options.disabledClass);
+        this.nextButton.removeClass(this.navigatorPlugin.options.disabledClass);
+      }
+    },
+
+    _setupTrack: function() {
+      this.itemsCount = this.track._getItems().length;
+      this.clonedPage = this.totalDefaultPages + 1;
+      this.lastCompletedPage = this._lastCompletedPage();
+      this._enableButtons();
+      if (this.track.currentPage !== this.clonedPage) this._changeFowardPage();
+    },
+
+    _bindClick: function() {
+      this._teleportWhenClick();
+    },
+
+    _changeFowardPage: function() {
+      var currentPage = this.track.currentPage;
+
+      if (currentPage === 1) {
+        this.fowardPage = this.clonedPage;
+      } else if (currentPage === this.clonedPage) {
+        this.fowardPage = 1;
+      } else {
+        this.fowardPage = 0;
+      }
+    },
+
+    _teleportWhenClick: function() {
+      var self = this;
+
+      this.prevButton.click(function() {
+        if (self.track.hasPrev() === false && self.fowardPage === self.clonedPage) {
+          self._backTeleport();
         }
-      })
+      });
     },
 
-    _deleteClonedItems: function() {
-      var items = this.track._getItems().length
-
-      for (var el = 0; el <= items - 1; el ++) {
-        var item = this.track._getItems().eq(el)
-        if (item.hasClass(this.options.clonedClass)) {
-          item.remove();
-        }
-      }
-      this.track.reloadItems();
-      this.track.restart({ keepCurrentPage: true, animate: false });
-    },
-
-    _ifCloned: function() {
-      if (this.track._getItems().last().hasClass(this.options.clonedClass)) {
-        return true;
-      }
-      return false;
+    _backTeleport: function() {
+      this._appendItems();
+      this.track.restart({page: this.clonedPage, animate: false});
     },
 
     _appendItems: function() {
       if (this._ifCloned() === true) return;
       var items = this.track._getItems().
-        slice(0, 4).
+        slice(0, this.track.options.perPage).
         clone().
         addClass(this.options.clonedClass);
 
@@ -146,26 +144,27 @@
       this.track.reloadItems();
     },
 
-    _lastCompletedPage: function() {
-      return Math.trunc(this.itemsCount / this.track.options.perPage);
-    },
-
-    _enableButtons: function() {
-      if (this.track.currentPage === 1) {
-        this._enablePrevButton();
-      }
-
-      if (this.track.currentPage === this.track.totalPages) {
-        this._enableNextButton();
+    _tryToDeleteCloned: function() {
+      var currentPage = this.track.currentPage;
+      if (this._ifCloned() === true &&
+          currentPage !== this.totalDefaultPages &&
+          currentPage !== this.clonedPage &&
+          currentPage !== this.lastCompletedPage) {
+        this._deleteClonedItems();
       }
     },
 
-    _enablePrevButton: function() {
-      this.prevButton.removeClass(this.navigatorPlugin.options.disabledClass);
-    },
+    _deleteClonedItems: function() {
+      var items = this.track._getItems().length;
 
-    _enableNextButton: function() {
-      this.nextButton.removeClass(this.navigatorPlugin.options.disabledClass);
+      for (var el = 0; el <= items - 1; el ++) {
+        var item = this.track._getItems().eq(el);
+        if (item.hasClass(this.options.clonedClass)) {
+          item.remove();
+        }
+      }
+      this.track.reloadItems();
+      this.track.restart({ keepCurrentPage: true, animate: false });
     },
 
     _hasManyPages: function() {
@@ -175,63 +174,23 @@
       return false;
     },
 
-    _changeFowardPage: function(){
-      this.fowardPage = this.track.currentPage;
-      if (this.track.currentPage === 1) {
-        this.fowardPage = this.totalDefaultPages;
-
-      } else if (this.track.currentPage === this.totalDefaultPages &&
-                 this.track.totalPages > this.totalDefaultPages) {
-        this.fowardPage = 1;
+    _ifCloned: function() {
+      if (this.track._getItems().last().hasClass(this.options.clonedClass)) {
+        return true;
       }
+      return false;
     },
 
-    _turnOnAutoPlay: function(elements) {
-      this._mouseOverTrack(elements);
-      this._mouseOutTrack(elements);
-      this._turnOnListener();
+    _lastCompletedPage: function() {
+      return Math.trunc(this._originalItemsCount() / this.track.options.perPage);
     },
 
-    _turnOnListener: function() {
-      var self = this;
-
-      if(this.options.autoPlay === true) {
-        timeout = setTimeout(function() {
-          self.track.next();
-          self._turnOnListener();
-        }, this.options.duration);
+    _originalItemsCount: function() {
+      var items = this.itemsCount;
+      if (this._ifCloned() === true) {
+        return items - this.track.options.perPage;
       }
-    },
-
-    _breakListener: function() {
-      clearTimeout(timeout);
-      this.options.autoPlay = false;
-    },
-
-    _wakeUpListener: function() {
-      clearTimeout(timeout);
-      this.options.autoPlay = true;
-      this._turnOnListener();
-    },
-
-    _mouseOverTrack: function(elements) {
-      var self = this;
-
-      elements.forEach(function(el) {
-        el.mouseenter(function() {
-          self._breakListener();
-        });
-      });
-    },
-
-    _mouseOutTrack: function(elements) {
-      var self = this;
-
-      elements.forEach(function(el) {
-        el.mouseleave(function() {
-          self._wakeUpListener();
-        });
-      });
+      return items;
     }
   })
 
