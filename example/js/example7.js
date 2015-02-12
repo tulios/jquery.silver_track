@@ -10,7 +10,15 @@ jQuery(function() {
   }));
 
   track.install(new SilverTrack.Plugins.CircularNavigator({
-    autoPlay: false
+    autoPlay: true,
+    duration: 5000
+  }));
+
+  track.install(new SilverTrack.Plugins.Css3Animation({
+    delayUnit: "s",
+    autoHeightDuration: 300,
+    autoHeightEasing: "easeInOutCubic",
+    autoHeightDelay: 1
   }));
 
   track.install(new SilverTrack.Plugins.ResponsiveHubConnector({
