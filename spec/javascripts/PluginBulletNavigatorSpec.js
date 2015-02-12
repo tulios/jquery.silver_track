@@ -148,4 +148,64 @@ describe("SilverTrack.Plugins.BulletNavigator", function() {
     });
   });
 
+  describe("after animation", function() {
+    var bullets = null;
+
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.BulletNavigator({
+        container: $(".bullet-pagination", track.container.parent())
+      });
+
+      track.install(plugin);
+      track.start();
+
+      bullets = getBullets(plugin, track);
+    });
+
+    it("should call '_setupBulletClick'", function() {
+      spyOn(plugin,"_setupBulletClick");
+      plugin.afterAnimation();
+      expect(plugin._setupBulletClick).toHaveBeenCalled();
+    });
+
+    it("should able bullet click", function() {
+      var bullet1 = $(bullets[0]);
+      var bullet2 = $(bullets[1]);
+
+      bullet2.click();
+      plugin.afterAnimation();
+      bullet1.click();
+
+      expect(track.currentPage).toBe(1);
+      expect(bullet1.hasClass(plugin.options.activeClass)).toBe(true);
+      expect(bullet2.hasClass(plugin.options.activeClass)).toBe(false);
+    });
+  });
+
+  describe("click behavior", function() {
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.BulletNavigator({
+        container: $(".bullet-pagination", track.container.parent())
+      });
+
+      track.install(plugin);
+      track.start();
+
+      bullets = getBullets(plugin, track);
+    });
+
+    it("should disable bullet click during page transition", function() {
+      var bullet1 = $(bullets[0]);
+      var bullet2 = $(bullets[1]);
+
+      expect(track.currentPage).toBe(1);
+      bullet2.click();
+      expect(track.currentPage).toBe(2);
+      bullet1.click();
+
+      expect(track.currentPage).toBe(2);
+      expect(bullet2.hasClass(plugin.options.activeClass)).toBe(true);
+      expect(bullet1.hasClass(plugin.options.activeClass)).toBe(false);
+    });
+  })
 });
