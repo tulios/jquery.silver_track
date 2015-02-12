@@ -83,8 +83,10 @@ $(function() {
   // Sample 5
   // =========================================================================
 
-  var container = $(".track.sample5");
+  container = $(".track.sample5");
   var track = container.find(".slider-container").silverTrack();
+
+  track.install(new SilverTrack.Plugins.Css3Animation());
 
   track.install(new SilverTrack.Plugins.Navigator({
     prev: $("a.prev", container),
@@ -93,7 +95,7 @@ $(function() {
 
   track.install(new SilverTrack.Plugins.CircularNavigator({
     autoPlay: true,
-    duration: 6000
+    duration: 5000
   }));
 
   track.start();

@@ -7,6 +7,8 @@ $(function() {
     next: $("a.next", container)
   }));
 
+  track.install(new SilverTrack.Plugins.Css3Animation());
+
   track.install(new SilverTrack.Plugins.CircularNavigator({
     autoPlay: false,
     duration: 3000
