@@ -336,3 +336,8 @@ h2 {
 .example-4 a.next {
   margin-top: -68px;
 }
+
+.example-7 a.prev,
+.example-7 a.next {
+  margin-top: -69px;
+}

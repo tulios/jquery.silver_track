@@ -48,7 +48,7 @@
 
     afterRestart: function() {
       this._clearBullets();
-      this._createBullets()
+      this._createBullets();
 
       var bullet = this._getBulletByPage(this.track.currentPage);
       this._updateBullets(bullet);
