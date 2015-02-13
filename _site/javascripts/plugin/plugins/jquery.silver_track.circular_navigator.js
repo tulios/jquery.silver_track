@@ -24,7 +24,7 @@
     onInstall: function(track) {
       this.track = track;
       this.navigatorPlugin = this.track.findPluginByName("Navigator");
-      
+
       this.trackElements = [
         this.track.container,
         this.navigatorPlugin.prev,
@@ -100,11 +100,11 @@
 
     _changeFowardPage: function() {
       var currentPage = this.track.currentPage;
-      
+
       if (currentPage === 1) {
         this.fowardPage = this.clonedPage;
       } else if (currentPage === this.clonedPage) {
-        this.fowardPage = 1; 
+        this.fowardPage = 1;
       } else {
         this.fowardPage = 0;
       }
@@ -139,7 +139,7 @@
     _tryToDeleteCloned: function() {
       var currentPage = this.track.currentPage;
       if (this._ifCloned() === true &&
-          currentPage !== this.totalDefaultPages && 
+          currentPage !== this.totalDefaultPages &&
           currentPage !== this.clonedPage &&
           currentPage !== this.lastCompletedPage) {
         this._deleteClonedItems();

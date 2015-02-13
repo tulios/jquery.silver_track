@@ -85,7 +85,7 @@ $(function() {
 
   container = $(".track.sample5");
   var track = container.find(".slider-container").silverTrack();
-  
+
   track.install(new SilverTrack.Plugins.Css3Animation());
 
   track.install(new SilverTrack.Plugins.Navigator({

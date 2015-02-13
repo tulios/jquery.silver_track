@@ -27,7 +27,7 @@ This plugin provides a simple way to make navigation circular.
   </tr>
   <tr>
     <td>duration</td>
-    <td>time to auto play</td>
+    <td>time to auto play in milliseconds</td>
     <td>3000</td>
   </tr>
   <tr>
@@ -42,7 +42,7 @@ This plugin provides a simple way to make navigation circular.
 </h4>
 
 <p>
-Circular Navigator Plugin requires the Navigator Plugin
+Circular Navigator Plugin requires the <a href="http://tulios.github.io/jquery.silver_track/plugins/navigator.html">Navigator Plugin</a>
 </p>
 
 {% highlight js %}
@@ -51,13 +51,10 @@ track.install(new SilverTrack.Plugins.Navigator({
   next: $(".my-track a.next")
 }));
 
-track.install(new SilverTrack.Plugins.CircularNavigator({
-  autoPlay: true,
-  duration: 3 * 1000 // 3s
-}));
+track.install(new SilverTrack.Plugins.CircularNavigator());
 {% endhighlight %}
 
-<div class="track">
+<div class="track sample1">
   <div class="view-port">
     <div class="slider-container">
       <div class="item"><img src="http://lorempixel.com/230/134/nature/1/"></div>
@@ -82,7 +79,48 @@ track.install(new SilverTrack.Plugins.CircularNavigator({
 </div>
 
 <h4>
-  To do
+  Give life to your track
+</h4>
+
+<p> In this way, autoplay allows your track to foward one page by 'duration option'  time. It automatically disabled when mouse is over the track.
+
+{% highlight js %}
+  track.install(new SilverTrack.Plugins.Navigator({
+  prev: $(".my-track a.prev"),
+  next: $(".my-track a.next")
+}));
+
+track.install(new SilverTrack.Plugins.CircularNavigator({
+  autoPlay: true,
+  duration: 5 * 1000 // 5s
+}));
+{% endhighlight %}
+
+<div class="track sample2">
+  <div class="view-port">
+    <div class="slider-container">
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/1/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/2/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/3/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/4/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/5/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/6/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/7/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/8/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/9/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/nature/10/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/1/"></div>
+      <div class="item"><img src="http://lorempixel.com/230/134/city/2/"></div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <a href="#" class="prev disabled"></a>
+    <a href="#" class="next disabled"></a>
+  </div>
+</div>
+<h4>
+  Caveats
 </h4>
 
 <p>
