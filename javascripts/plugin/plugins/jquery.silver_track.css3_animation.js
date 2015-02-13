@@ -4,7 +4,7 @@
  * version: 0.4.0
  *
  * CSS3 Animation
- * version: 0.1.0
+ * version: 0.1.1
  *
  * This plugin depends on modernizr.transforms3d.js
  */
@@ -49,15 +49,6 @@
       this._setupTransition();
     },
 
-    beforeRestart: function(track) {
-      track.container.css(this._toCompatibleVersion("transition", ""));
-      track.container.css(this._toCompatibleVersion("transform", ""));
-    },
-
-    afterRestart: function() {
-      this._setupTransition();
-    },
-
     cssAnimate: function(movement, duration, easing, afterCallback) {
       var timeout = 0;
       var element = this.track.container;
@@ -73,6 +64,8 @@
         clearTimeout(timeout);
       });
 
+      this._setupTransition(duration);
+
       if (!!movement.left || !!movement.top) {
         this._applyTransform3d(element, movement);
 
@@ -83,7 +76,7 @@
       timeout = setTimeout(function() { animationEnded() }, duration);
     },
 
-    _setupTransition: function() {
+    _setupTransition: function(animationDuration) {
       var autoHeight = this.track.options.autoHeight;
       var element = this.track.container;
       var values;
@@ -95,14 +88,33 @@
 
       // pre configuring container
       if (this.options.setupTransitionProperty) {
-        element.css(this._toCompatibleVersion("transition-property", "transform", function(prefix, value) {
+        var eachPrefixCallback = function(prefix, value) {
           var transform = "-" + prefix + "-" + value;
           return autoHeight ? transform + ", height" : transform;
-        }));
+        }
+
+        var vanillaCallback = function(value) {
+          return autoHeight ? value + ", height" : value;
+        }
+
+        element.css(
+          this._toCompatibleVersion(
+            "transition-property",
+            "transform",
+            eachPrefixCallback,
+            vanillaCallback
+          )
+        );
       }
 
       if (this.options.setupTransitionDuration) {
         var duration = this._toDuration(this.track.options.duration);
+
+        if (animationDuration === 0) {
+          duration = this._toDuration(0);
+          this._cleanElementTransition();
+        }
+
         var autoHeightDuration = this._toDuration(this.options.autoHeightDuration || this.track.options.duration);
         values = autoHeight ? [duration, autoHeightDuration] : [duration];
         element.css(this._toCompatibleVersion("transition-duration", values.join(", ")));
@@ -123,6 +135,10 @@
       }
     },
 
+    _cleanElementTransition: function() {
+      this.track.container.css(this._toCompatibleVersion("transition", ""));
+    },
+
     _applyTransform3d: function(element, movement) {
       var left = movement.left || "0px";
       var top = movement.top || "0px";
@@ -137,14 +153,14 @@
       return number + (this.options.delayUnit || this.options.durationUnit);
     },
 
-    _toCompatibleVersion: function(name, value, eachCallback) {
+    _toCompatibleVersion: function(name, value, eachCallback, vanillaCallback) {
       var output = {};
       $.each(BrowserPrefixes, function() {
         var str = !!eachCallback ? eachCallback(this, value) : value;
         output["-" + this + "-" + name] = str;
       });
 
-      output[name] = value;
+      output[name] = !!vanillaCallback ? vanillaCallback(value) : value;
       return output;
     },
 

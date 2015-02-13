@@ -4,7 +4,7 @@
  * version: 0.4.0
  *
  * Bullet Navigator
- * version: 0.1.0
+ * version: 0.1.1
  *
  */
 (function($, window, document) {
@@ -32,15 +32,13 @@
     },
 
     afterStart: function() {
-      var self = this;
       this._createBullets();
       this._getBulletByPage(1).addClass(this.options.activeClass);
-      this._getBullets().click(function(e) {
-        e.preventDefault();
-        var bullet = $(this);
-        self._updateBullets(bullet);
-        self.track.goToPage(bullet.data("page"));
-      });
+      this._setupBulletClick();
+    },
+
+    afterAnimation: function() {
+      this._setupBulletClick();
     },
 
     beforePagination: function(track, event) {
@@ -49,8 +47,12 @@
     },
 
     afterRestart: function() {
+      this._clearBullets();
+      this._createBullets()
+
       var bullet = this._getBulletByPage(this.track.currentPage);
       this._updateBullets(bullet);
+      this._setupBulletClick();
     },
 
     onTotalPagesUpdate: function() {
@@ -69,6 +71,18 @@
       for (var i = 0; i < this.track.totalPages; i++) {
         this.container.append(this._createBullet(i + 1));
       }
+    },
+
+    _setupBulletClick: function() {
+      var self = this;
+      var bullets = this._getBullets();
+      bullets.click(function(e) {
+        e.preventDefault();
+        var bullet = $(this);
+        self._updateBullets(bullet);
+        self.track.goToPage(bullet.data("page"));
+        bullets.unbind("click");
+      });
     },
 
     _updateBullets: function(bullet) {

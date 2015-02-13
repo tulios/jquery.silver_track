@@ -78,4 +78,25 @@ $(function() {
   track.install(new SilverTrack.Plugins.Css3Animation());
 
   track.start();
+
+  // =========================================================================
+  // Sample 5
+  // =========================================================================
+
+  container = $(".track.sample5");
+  var track = container.find(".slider-container").silverTrack();
+
+  track.install(new SilverTrack.Plugins.Css3Animation());
+
+  track.install(new SilverTrack.Plugins.Navigator({
+    prev: $("a.prev", container),
+    next: $("a.next", container)
+  }));
+
+  track.install(new SilverTrack.Plugins.CircularNavigator({
+    autoPlay: true,
+    duration: 5000
+  }));
+
+  track.start();
 });
