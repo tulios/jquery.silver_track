@@ -21,7 +21,7 @@
 
   $.silverTrackPlugin("CircularNavigator", {
     defaults: {
-      autoPlay: true,
+      autoPlay: false,
       duration: 5000,
       clonedClass: "cloned"
     },
