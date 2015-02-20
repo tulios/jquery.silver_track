@@ -198,11 +198,10 @@ describe("SilverTrack.Plugins.CircularNavigator", function() {
 
   describe("when the autoPlay option is true", function() {
     beforeEach(function() {
-      jasmine.Clock.useMock()
       loadFixtures("basic.html");
       $.fx.off = true;
       track = helpers.basic();
-      circularPlugin = new SilverTrack.Plugins.CircularNavigator({autoPlay: true, durtion: 5000});
+      circularPlugin = new SilverTrack.Plugins.CircularNavigator({autoPlay: true, duration: 200});
       navigatorPlugin = new SilverTrack.Plugins.Navigator({
         prev: $("a.prev", track.container.parent().parent()),
         next: $("a.next", track.container.parent().parent())
@@ -211,7 +210,6 @@ describe("SilverTrack.Plugins.CircularNavigator", function() {
       track.install(navigatorPlugin);
       track.install(circularPlugin);
       track.start();
-      nextCall = spyOn(track, "next");
     });
   
     it("autoPlay options should be true", function() {
@@ -219,18 +217,27 @@ describe("SilverTrack.Plugins.CircularNavigator", function() {
     });
 
     it("should call next 1 time", function() {
-      jasmine.Clock.tick(5100)
-      expect(nextCall.callCount).toEqual(1);
+      waitsFor(function() { if (track.currentPage === 2) return true }, "change the current page", 300);
+
+      runs(function() {
+        expect(track.currentPage).toEqual(2);
+      })
     });
 
-    it("should call next 2 time", function() {
-      jasmine.Clock.tick(10100)
-      expect(nextCall.callCount).toEqual(2);
+    it("should call next 2 times", function() {
+      waitsFor(function() { if (track.currentPage === 3) return true }, "change the current page", 500);
+
+      runs(function() {
+        expect(track.currentPage).toEqual(3);
+      })
     });
 
     it("should call next 3 times", function() {
-      jasmine.Clock.tick(15100)
-      expect(nextCall.callCount).toEqual(3);
+      waitsFor(function() { if (track.currentPage === 1) return true }, "change the current page", 700);
+
+      runs(function() {
+        expect(track.currentPage).toEqual(1);
+      })
     });
   });
 });
