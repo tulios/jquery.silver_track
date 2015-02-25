@@ -57,7 +57,11 @@
     },
 
     beforePagination: function() {
-      this._enableButtons()
+      this._enableButtons();
+    },
+
+    beforeAnimation: function() {
+      this._removeLastBullet();
     },
 
     _enableButtons: function() {
@@ -111,6 +115,7 @@
       bullets.click(function(event) {
         self._appendItems();
         self.track.restart({keepCurrentPage: true, animate: true});
+        self._removeLastBullet();
       });
     },
 
