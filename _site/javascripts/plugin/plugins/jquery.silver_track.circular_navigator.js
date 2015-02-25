@@ -1,10 +1,10 @@
-/*!
+ /*!
  * jQuery SilverTrack
  * https://github.com/tulios/jquery.silver_track
  * version: 0.4.0
  *
- * Circular Navigator
- * version: 0.1.0
+ * Navigator
+ * version: 0.2.0
  *
  */
 
@@ -12,8 +12,8 @@
 
   $.silverTrackPlugin("CircularNavigator", {
     defaults: {
-      autoPlay: false,
-      duration: 5000,
+      autoPlay: true,
+      duration: 3000,
       clonedClass: "cloned"
     },
 
@@ -30,6 +30,7 @@
         this.navigatorPlugin.prev,
         this.navigatorPlugin.next
       ]
+      trackElements = this.trackElements
       this.prevButton = this.trackElements[1];
       this.nextButton = this.trackElements[2];
 
@@ -37,18 +38,30 @@
     },
 
     afterStart: function() {
+      if (this.track.findPluginByName("BulletNavigator")) {
+        this.bulletPlugin = this.track.findPluginByName("BulletNavigator");
+        this.trackElements.push(this.bulletPlugin.options.container);
+        this._setupBulletClick();
+      }
+
       this.totalDefaultPages = this.track.totalPages;
       this._setupTrack();
       this._bindClick();
+
       if (this.options.autoPlay === true) this._turnOnAutoPlay(this.trackElements);
     },
 
     afterRestart: function() {
-      this._enableButtons()
+      this._enableButtons();
+      this._removeLastBullet();
     },
 
     beforePagination: function() {
-      this._enableButtons()
+      this._enableButtons();
+    },
+
+    beforeAnimation: function() {
+      this._removeLastBullet();
     },
 
     _enableButtons: function() {
@@ -61,7 +74,9 @@
     afterAnimation: function() {
       this._setupTrack();
       this._tryToDeleteCloned();
-      if (this.track.hasNext() === false && this.fowardPage === 1 ) {
+      this._removeLastBullet();
+
+      if (this.track.hasNext() === false && this.fowardPage === 1) {
         this.track.restart({page: 1, animate: false});
         return
       }
@@ -84,6 +99,24 @@
       if (this.track.currentPage === this.clonedPage && this.fowardPage === 1) {
         this.track.restart({page: 1, animate: false});
       }
+    },
+
+    _removeLastBullet: function() {
+      if (this.bulletPlugin) {
+        if (this.bulletPlugin._getBullets().length > this.totalDefaultPages) {
+          this.bulletPlugin._getBullets().last().remove();
+        }
+      }
+    },
+
+    _setupBulletClick: function() {
+      var bullets = this.bulletPlugin.container
+      var self = this;
+      bullets.click(function(event) {
+        self._appendItems();
+        self.track.restart({keepCurrentPage: true, animate: true});
+        self._removeLastBullet();
+      });
     },
 
     _setupTrack: function() {
@@ -123,6 +156,7 @@
     _backTeleport: function() {
       this._appendItems();
       this.track.restart({page: this.clonedPage, animate: false});
+      this._removeLastBullet();
     },
 
     _appendItems: function() {
@@ -178,7 +212,7 @@
     },
 
     _originalItemsCount: function() {
-      var items = this.itemsCount;
+      var items = this.track._getItems().length;
       if (this._ifCloned() === true) {
         return items - this.track.options.perPage;
       }
