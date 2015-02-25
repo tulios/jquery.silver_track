@@ -12,7 +12,7 @@
 
   $.silverTrackPlugin("CircularNavigator", {
     defaults: {
-      autoPlay: true,
+      autoPlay: false,
       duration: 5000,
       clonedClass: "cloned"
     },
@@ -188,15 +188,16 @@
     _turnOnAutoPlay: function(elements) {
       this._mouseOverTrack(elements);
       this._mouseOutTrack(elements);
-      this._turnOnListener();
+      requestAnimationFrame(this._turnOnListener.bind(this));
     },
 
     _turnOnListener: function() {
       var self = this;
 
-      if(this.options.autoPlay === true) {
-        this.timeout = setInterval(function() {
+      if(self.options.autoPlay === true) {
+        this.timeout = setTimeout(function() {
           self.track.next();
+          requestAnimationFrame(self._turnOnListener.bind(self));
         }, self.options.duration);
       }
     },
@@ -229,7 +230,7 @@
     _wakeUpListener: function() {
       clearTimeout(this.timeout);
       this.options.autoPlay = true;
-      this._turnOnListener();
+      requestAnimationFrame(this._turnOnListener.bind(this));
     }
   })
 
