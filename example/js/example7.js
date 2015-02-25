@@ -9,6 +9,10 @@ jQuery(function() {
     next: $("a.next", parent)
   }));
 
+  track.install(new SilverTrack.Plugins.BulletNavigator({
+    container: $(".bullet-pagination", parent)
+  }));
+
   track.install(new SilverTrack.Plugins.CircularNavigator({
     autoPlay: true,
     duration: 5000
@@ -43,6 +47,5 @@ jQuery(function() {
       track.restart({keepCurrentPage: true});
     }
   }));
-
   track.start();
 });
