@@ -986,6 +986,32 @@ describe("$.silverTrack", function() {
     });
   });
 
+  describe("#uninstall", function() {
+    beforeEach(function() {
+      track = helpers.basic();
+    });
+
+    it("should remove the plugin", function() {
+      track.install(plugin);
+      expect(track.plugins.indexOf(plugin)).not.toBe(-1);
+
+      track.uninstall(plugin);
+      expect(track.plugins.indexOf(plugin)).toBe(-1);
+    });
+
+    it("should call 'onUninstall'", function() {
+      spyOn(plugin, "onUninstall");
+      track.install(plugin);
+      track.uninstall(plugin);
+      expect(plugin.onUninstall).toHaveBeenCalledWith(track);
+    });
+
+    it("should return the silverTrack instance", function() {
+      track.install(plugin);
+      expect(track.uninstall(plugin)).toBe(track);
+    });
+  });
+
   describe("#findPluginByName", function() {
     var plugin1, plugin2;
 
