@@ -221,6 +221,44 @@ describe("$.silverTrack", function() {
     });
   });
 
+  describe("#destroy", function() {
+
+    var anotherPlugin;
+
+    beforeEach(function() {
+      $.silverTrackPlugin("Generic2", {});
+      anotherPlugin = new SilverTrack.Plugins.Generic2();
+
+      track = helpers.basic();
+      track.install(plugin);
+      track.install(anotherPlugin);
+    });
+
+    it("should call onUninstall on every installed plugin", function() {
+      spyOn(plugin, "onUninstall");
+      spyOn(anotherPlugin, "onUninstall");
+
+      track.destroy();
+
+      expect(plugin.onUninstall).toHaveBeenCalledWith(track);
+      expect(anotherPlugin.onUninstall).toHaveBeenCalledWith(track);
+    });
+
+    it("should remove silver track instance from the container data", function() {
+      expect($("#basic").data("silverTrackInstance")).toBe(track);
+      track.destroy();
+      expect($("#basic").data("silverTrackInstance")).toBe(undefined);
+    });
+
+    it("should cancel all references to external objects", function() {
+      track.destroy();
+
+      expect(track.plugins).toBe(null);
+      expect(track.container).toBe(null);
+      expect(track.options.animateFunction).toBe(null);
+    });
+  });
+
   describe("#goToPage", function() {
     describe("when animating with $.fn.animate", function() {
       var easing = "easeInOutQuad";
