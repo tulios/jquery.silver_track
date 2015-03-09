@@ -28,6 +28,25 @@ describe("SilverTrack.Plugins.BulletNavigator", function() {
     });
   });
 
+  describe("on uninstall", function() {
+
+    beforeEach(function() {
+      plugin = new SilverTrack.Plugins.BulletNavigator({
+        container: $(".bullet-pagination", track.container.parent())
+      });
+
+      track.install(plugin);
+      track.start();
+    });
+
+    it("should remove all created bullets", function() {
+      plugin.onUninstall();
+      var bullets = getBullets(plugin, track);
+      expect(bullets.length).toBe(0);
+    });
+
+  });
+
   describe("bullet creation", function() {
     var bullets = null;
 
@@ -168,7 +187,7 @@ describe("SilverTrack.Plugins.BulletNavigator", function() {
       expect(plugin._setupBulletClick).toHaveBeenCalled();
     });
 
-    it("should able bullet click", function() {
+    it("should set activeClass correctly", function() {
       var bullet1 = $(bullets[0]);
       var bullet2 = $(bullets[1]);
 

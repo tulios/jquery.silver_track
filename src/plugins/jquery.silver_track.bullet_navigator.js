@@ -31,6 +31,10 @@
       this.track = track;
     },
 
+    onUninstall: function(track) {
+      this._clearBullets();
+    },
+
     afterStart: function() {
       this._createBullets();
       this._getBulletByPage(1).addClass(this.options.activeClass);
