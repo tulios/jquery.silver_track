@@ -43,6 +43,10 @@ describe("$.silverTrackPlugin", function() {
       expect(plugin.onInstall).toBeDefined();
     });
 
+    it("should define 'onUninstall'", function() {
+      expect(plugin.onUninstall).toBeDefined();
+    });
+
     it("should define 'beforeStart'", function() {
       expect(plugin.beforeStart).toBeDefined();
     });

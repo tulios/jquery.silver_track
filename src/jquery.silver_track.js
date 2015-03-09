@@ -412,6 +412,7 @@
       initialize: function(options) {},
 
       onInstall: function(track) {},
+      onUninstall: function(track) {},
       beforeStart: function(track) {},
       afterStart: function(track) {},
       beforeRestart: function(track) {},
