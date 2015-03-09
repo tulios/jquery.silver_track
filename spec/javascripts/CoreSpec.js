@@ -77,6 +77,19 @@ describe("$.silverTrack", function() {
 
   });
 
+  describe("#isSilverTrackInstalled", function() {
+
+    it("should return true if already initialized on the node", function() {
+      var track = helpers.basic();
+      expect( $("#basic").isSilverTrackInstalled()).toBe(true);
+    });
+
+    it("should return false if not initialized on the node", function() {
+      expect($("#basic").isSilverTrackInstalled()).toBe(false);
+    });
+
+  });
+
   describe("#start", function() {
     describe("common behavior", function() {
       beforeEach(function() {
