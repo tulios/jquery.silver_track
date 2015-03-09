@@ -155,6 +155,15 @@
       return this;
     },
 
+    uninstall: function(plugin) {
+      var pluginIndex = this.plugins.indexOf(plugin);
+      if (pluginIndex != -1 ) {
+        this._callFunction(plugin, "onUninstall");
+        this.plugins.splice(pluginIndex, 1);
+      }
+      return this;
+    },
+
     reloadItems: function() {
       this._items = null;
     },
