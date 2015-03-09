@@ -189,7 +189,7 @@ describe("SilverTrack.Plugins.CircularNavigator", function() {
 
     describe("#initialize", function() {
       it("should setup track options", function () {
-        var options = null;
+        var options = {};
         circularPlugin.initialize(options);
         expect(circularPlugin.options).toEqual(options);
       });
