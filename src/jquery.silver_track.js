@@ -62,6 +62,21 @@
       this._executeAll("afterStart");
     },
 
+    destroy: function() {
+      $.each(this.plugins, function(index, plugin) {
+        // Here, we do not call 'uninstall' on each plugin to be faster
+        // After all, 'uninstall' will rearrange the plugins array on every call
+        this._callFunction(plugin, "onUninstall");
+      }.bind(this));
+      this.plugins = null;
+
+      this.container.removeData(instanceName);
+      this.container = null;
+
+      // We reset options because 'animateFunction' can hold references to external objects
+      this.options = $.extend({}, $.fn.silverTrack.options);
+    },
+
     /*
      * page: Number
      * opts: {animate: true|false}
