@@ -31,24 +31,24 @@ describe("SilverTrack.Plugins.Navigator", function() {
 
   describe("on uninstall", function() {
 
-    beforeEach(function() {
-      plugin.onUninstall(track);
-    });
-
     it("remove click handlers", function() {
-      spyOn(plugin, "_handlePreviousPageClick");
-      spyOn(plugin, "_handleNextPageClick");
-
       expect(plugin.prev).not.toBe(null);
-      expect(plugin.prev).not.toBe(null);
+      expect(plugin.next).not.toBe(null);
 
-      expect(plugin._handlePreviousPageClick).not.toHaveBeenCalled();
-      expect(plugin._handleNextPageClick).not.toHaveBeenCalled();
+      spyOn(plugin.prev, "off");
+      spyOn(plugin.next, "off");
+
+      plugin.onUninstall(track);
+
+      expect(plugin.prev.off).toHaveBeenCalledWith("click");
+      expect(plugin.next.off).toHaveBeenCalledWith("click");
     });
 
     it("remove disabled class", function() {
       expect(plugin.prev).not.toBe(null);
-      expect(plugin.prev).not.toBe(null);
+      expect(plugin.next).not.toBe(null);
+
+      plugin.onUninstall(track);
 
       expect(plugin.prev.hasClass(plugin.options.disabledClass)).toBe(false);
       expect(plugin.next.hasClass(plugin.options.disabledClass)).toBe(false);
