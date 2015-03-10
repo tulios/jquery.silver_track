@@ -36,6 +36,13 @@
       this.track = track;
     },
 
+    onUninstall: function(track) {
+      this.prev.off("click");
+      this.next.off("click");
+      this._enable(this.prev);
+      this._enable(this.next);
+    },
+
     afterStart: function() {
       this.afterAnimation();
     },
