@@ -1,4 +1,5 @@
 describe("SilverTrack.Plugins.Navigator", function() {
+
   var track = null;
   var plugin = null;
 
@@ -26,6 +27,33 @@ describe("SilverTrack.Plugins.Navigator", function() {
     it("should have a default 'beforePagination' callback", function() {
       expect(plugin.options.beforePagination).toBe(null);
     });
+  });
+
+  describe("on uninstall", function() {
+
+    beforeEach(function() {
+      plugin.onUninstall(track);
+    });
+
+    it("remove click handlers", function() {
+      spyOn(plugin, "_handlePreviousPageClick");
+      spyOn(plugin, "_handleNextPageClick");
+
+      expect(plugin.prev).not.toBe(null);
+      expect(plugin.prev).not.toBe(null);
+
+      expect(plugin._handlePreviousPageClick).not.toHaveBeenCalled();
+      expect(plugin._handleNextPageClick).not.toHaveBeenCalled();
+    });
+
+    it("remove disabled class", function() {
+      expect(plugin.prev).not.toBe(null);
+      expect(plugin.prev).not.toBe(null);
+
+      expect(plugin.prev.hasClass(plugin.options.disabledClass)).toBe(false);
+      expect(plugin.next.hasClass(plugin.options.disabledClass)).toBe(false);
+    });
+
   });
 
   describe("when configuring the items", function() {
@@ -111,4 +139,21 @@ describe("SilverTrack.Plugins.Navigator", function() {
     });
   });
 
+  describe("methods", function() {
+    describe("#goToNextPage", function() {
+      it("forwards call to track", function() {
+        spyOn(track, "next");
+        plugin.goToNextPage();
+        expect(track.next).toHaveBeenCalled();
+      });
+    });
+
+    describe("#goToPreviousPage", function() {
+      it("forwards call to track", function() {
+        spyOn(track, "prev");
+        plugin.goToPreviousPage();
+        expect(track.prev).toHaveBeenCalled();
+      });
+    });
+  });
 });
