@@ -28,16 +28,8 @@
       this.prev = this.options.prev;
       this.next = this.options.next;
 
-      var self = this;
-      this.prev.addClass(this.options.disabledClass).click(function(e) {
-        e.preventDefault();
-        self.track.prev();
-      });
-
-      this.next.addClass(this.options.disabledClass).click(function(e) {
-        e.preventDefault();
-        self.track.next();
-      });
+      this.prev.addClass(this.options.disabledClass).click(this._handlePreviousPageClick.bind(this));
+      this.next.addClass(this.options.disabledClass).click(this._handleNextPageClick.bind(this));
     },
 
     onInstall: function(track) {
@@ -65,6 +57,24 @@
       if (this.options.beforePagination) {
         this.options.beforePagination(track, event);
       }
+    },
+
+    goToNextPage: function() {
+      this.track.next();
+    },
+
+    goToPreviousPage: function() {
+      this.track.prev();
+    },
+
+    _handlePreviousPageClick: function(e) {
+      e.preventDefault();
+      this.goToPreviousPage();
+    },
+
+    _handleNextPageClick: function(e) {
+      e.preventDefault();
+      this.goToNextPage();
     },
 
     _enable: function(element) {
