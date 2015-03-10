@@ -21,6 +21,11 @@
     return container.data(instanceName);
   };
 
+  $.fn.isSilverTrackInstalled = function() {
+    var container = $(this);
+    return container.data(instanceName) != null;
+  };
+
   $.fn.silverTrack.options = {
     perPage: 4,
     itemClass: "item",
