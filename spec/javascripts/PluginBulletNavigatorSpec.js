@@ -40,9 +40,14 @@ describe("SilverTrack.Plugins.BulletNavigator", function() {
     });
 
     it("should remove all created bullets", function() {
-      plugin.onUninstall();
+      plugin.onUninstall(track);
       var bullets = getBullets(plugin, track);
       expect(bullets.length).toBe(0);
+    });
+
+    it("should remove track reference", function() {
+      plugin.onUninstall(track);
+      expect(plugin.track).toBe(null);
     });
 
   });

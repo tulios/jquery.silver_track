@@ -33,6 +33,7 @@
 
     onUninstall: function(track) {
       this._clearBullets();
+      this.track = null;
     },
 
     afterStart: function() {

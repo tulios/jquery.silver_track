@@ -54,6 +54,11 @@ describe("SilverTrack.Plugins.Navigator", function() {
       expect(plugin.next.hasClass(plugin.options.disabledClass)).toBe(false);
     });
 
+    it("remove track reference", function() {
+      plugin.onUninstall(track);
+      expect(plugin.track).toBe(null);
+    });
+
   });
 
   describe("when configuring the items", function() {

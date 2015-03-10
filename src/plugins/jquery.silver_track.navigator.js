@@ -41,6 +41,7 @@
       this.next.off("click");
       this._enable(this.prev);
       this._enable(this.next);
+      this.track = null;
     },
 
     afterStart: function() {
