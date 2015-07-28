@@ -208,7 +208,7 @@
     },
 
     _lastCompletedPage: function() {
-      return Math.trunc(this._originalItemsCount() / this.track.options.perPage);
+      return Math.floor(this._originalItemsCount() / this.track.options.perPage);
     },
 
     _originalItemsCount: function() {
